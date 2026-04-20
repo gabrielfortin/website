@@ -220,17 +220,42 @@
     gap: 16px;
   }
 
-  .article-item { 
-    background: #ffffff; 
+  .article-item {
+    background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px; 
-    padding: 2rem; 
-    text-decoration: none; 
+    border-radius: 12px;
+    padding: 0;
+    text-decoration: none;
     color: #1a1a18;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: block;
+    display: flex;
+    align-items: stretch;
     position: relative;
     overflow: hidden;
+  }
+
+  .article-item-body {
+    flex: 1;
+    padding: 2rem;
+  }
+
+  .article-thumb {
+    width: 200px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 0 11px 11px 0;
+  }
+
+  .article-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .article-item:hover .article-thumb img {
+    transform: scale(1.05);
   }
 
   .article-item::before {
@@ -378,7 +403,11 @@
       font-size: 24px;
     }
 
-    .article-item {
+    .article-thumb {
+      display: none;
+    }
+
+    .article-item-body {
       padding: 1.5rem;
     }
 
@@ -437,23 +466,33 @@
   
   <div class="articles-list">
     <a href="./refonte-stm-2026/index.html" class="article-item">
-      <div class="article-meta">
-        <span class="article-date">15 FEV 2026</span>
-        <span class="article-category">Transport</span>
+      <div class="article-item-body">
+        <div class="article-meta">
+          <span class="article-date">15 FEV 2026</span>
+          <span class="article-category">Transport</span>
+        </div>
+        <h3>L'impact de la refonte STM 2026 au Plateau-Mont-Royal</h3>
+        <p>Analyses détaillées de l'impact des changements des lignes de la STM dans le secteur nord-ouest en vue de l'arrivée de la branche A3 du REM. Découvrez comment cette refonte transformera la mobilité locale.</p>
+        <span class="article-arrow">Lire l'article →</span>
       </div>
-      <h3>L'impact de la refonte STM 2026 au Plateau-Mont-Royal</h3>
-      <p>Analyses détaillées de l'impact des changements des lignes de la STM dans le secteur nord-ouest en vue de l'arrivée de la branche A3 du REM. Découvrez comment cette refonte transformera la mobilité locale.</p>
-      <span class="article-arrow">Lire l'article →</span>
+      <div class="article-thumb">
+        <img src="./refonte-stm-2026/1.jpg" alt="Carte de la ligne 11">
+      </div>
     </a>
 
     <a href="./le-rem-et-le-plateau/index.html" class="article-item">
-      <div class="article-meta">
-        <span class="article-date">15 NOV 2025</span>
-        <span class="article-category">Transport</span>
+      <div class="article-item-body">
+        <div class="article-meta">
+          <span class="article-date">15 NOV 2025</span>
+          <span class="article-category">Transport</span>
+        </div>
+        <h3>L'arrivée du REM et son impact sur le Plateau</h3>
+        <p>Analyse complète de l'arrivée du Réseau Express Métropolitain et de son impact sur le Plateau-Mont-Royal. Quels changements pour la mobilité, le développement urbain et la qualité de vie?</p>
+        <span class="article-arrow">Lire l'article →</span>
       </div>
-      <h3>L'arrivée du REM et son impact sur le Plateau</h3>
-      <p>Analyse complète de l'arrivée du Réseau Express Métropolitain et de son impact sur le Plateau-Mont-Royal. Quels changements pour la mobilité, le développement urbain et la qualité de vie?</p>
-      <span class="article-arrow">Lire l'article →</span>
+      <div class="article-thumb">
+        <img src="./le-rem-et-le-plateau/unnamed.jpg" alt="Carte du REM branche A4">
+      </div>
     </a>
 
   </div>
