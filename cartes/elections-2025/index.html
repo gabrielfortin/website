@@ -513,7 +513,7 @@
       <div class="modal-loader" id="modal-loader">
         <div class="spinner"></div>
         <p>Chargement de la carte…</p>
-        <p id="modal-warning" style="display:none; max-width:340px; text-align:center; font-size:13px; color:#b45309; background:#fef3c7; border:1px solid #fde68a; border-radius:8px; padding:10px 16px; margin-top:0.5rem;">⚠️ Cette carte est volumineuse et peut prendre du temps à charger.</p>
+        <p style="max-width:320px;text-align:center;font-size:13px;color:#92400e;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px 14px;margin-top:0.75rem;line-height:1.5;">⚠️ Ces cartes sont volumineuses et peuvent prendre quelques secondes à charger.</p>
       </div>
       <iframe class="modal-iframe" id="modal-iframe" src="" title="Carte interactive"></iframe>
     </div>
@@ -521,21 +521,11 @@
 </div>
 
 <script>
-  const WARN_THRESHOLD = 20 * 1024 * 1024;
-
-  async function openModal(url, title) {
+  function openModal(url, title) {
     document.getElementById('modal-title').textContent = title;
     document.getElementById('modal-loader').classList.remove('hidden');
-    document.getElementById('modal-warning').style.display = 'none';
     document.getElementById('modal-iframe').src = url;
     document.getElementById('modal').classList.add('open');
-    try {
-      const res = await fetch(url, { method: 'HEAD' });
-      const size = parseInt(res.headers.get('content-length') || '0');
-      if (size > WARN_THRESHOLD) {
-        document.getElementById('modal-warning').style.display = 'block';
-      }
-    } catch (e) {}
   }
 
   function closeModal() {
