@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="../../favico.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le REM et le Plateau — Gabriel Fortin</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #2c2c2c;
+    background: #f8f9fa;
+  }
+
+  /* NAVIGATION */
+  nav {
+    background: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .nav-logo {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1a3a6c;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .nav-logo:hover {
+    color: #2d6aad;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #2c2c2c;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .nav-links a:hover {
+    color: #1a3a6c;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #1a3a6c;
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  .nav-pill {
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    color: white !important;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .nav-pill::after {
+    display: none;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    padding: 3rem 2rem;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+
+  .breadcrumb a {
+    color: #1a3a6c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .breadcrumb a:hover {
+    color: #2d6aad;
+  }
+
+  .breadcrumb span {
+    color: #6b6b66;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    color: #1a3a6c;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .article-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b6b66;
+  }
+
+  /* ARTICLE CONTENT */
+  .article-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .article-content h2 {
+    font-size: 1.8rem;
+    color: #1a3a6c;
+    margin: 2rem 0 1rem 0;
+    padding-top: 1rem;
+  }
+
+  .article-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .article-content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: #2c2c2c;
+  }
+
+  .article-content img {
+    max-width: 420px;
+    width: 100%;
+    height: auto;
+    margin: 0.5rem 1.5rem 1rem 0;
+    border-radius: 8px;
+    float: left;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .article-content p {
+    overflow: hidden;
+  }
+
+  .article-content .clearfix {
+    clear: both;
+  }
+
+  .highlight-section {
+    background: linear-gradient(135deg, rgba(26, 58, 108, 0.05), rgba(45, 106, 173, 0.05));
+    padding: 1.5rem;
+    border-left: 4px solid #1a3a6c;
+    margin: 2rem 0;
+    border-radius: 8px;
+  }
+
+  .highlight-section h3 {
+    color: #1a3a6c;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .highlight-section p {
+    margin: 0.5rem 0;
+    color: #2c2c2c;
+  }
+
+  .cta-link {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .cta-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(26, 58, 108, 0.25);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin: 2rem 0;
+  }
+
+  /* FOOTER */
+  footer {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 3rem 2rem;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  footer p {
+    margin-bottom: 1rem;
+    color: #2c2c2c;
+  }
+
+  footer a {
+    color: #1a3a6c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  footer a:hover {
+    color: #2d6aad;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .article-content {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+
+    .article-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      padding: 2rem 1rem;
+    }
+
+    .hero h1 {
+      font-size: 1.5rem;
+    }
+
+    .article-content {
+      margin: 1rem;
+      padding: 1rem;
+    }
+
+    .breadcrumb {
+      flex-wrap: wrap;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a class="nav-logo" href="../../index.html">Gabriel Fortin</a>
+  <div class="nav-links">
+    <a href="../../cartes/index.html">Cartes</a>
+    <a href="../../articles/index.html">Articles</a>
+    <a href="../../applications/index.html">Applications</a>
+    <a href="../../plans/index.html">Plans</a>
+    <a href="../../donnees/index.html">Données</a>
+    <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="../../index.html">Accueil</a>
+      <span>/</span>
+      <a href="../index.html">Articles</a>
+      <span>/</span>
+      <span>Le REM et le Plateau</span>
+    </div>
+    <h1>L'arrivée du REM et son impact sur le Plateau</h1>
+    <div class="article-meta">
+      <div class="meta-item">📅 15 novembre 2025</div>
+      <div class="meta-item">🏷️ Urbanisme</div>
+      <div class="meta-item">⏱️ 4 min de lecture</div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE CONTENT -->
+<section class="article-content">
+  <p>14 nouvelles stations du Réseau Express Métropolitain entreront en service ce lundi 17 novembre! Il s'agit de la plus importante ouverture de stations de métro à Montréal depuis plus de 50 ans.</p>
+
+  <p>Après l'ouverture du tronçon entre Brossard, sur la rive-sud de Montréal, et la Gare Centrale en 2023, c'est la branche A4 - Deux-Montagnes qui ouvrira pour relier la rive-nord, Laval et Montréal.</p>
+
+  <img src="./unnamed.jpg" alt="Carte du REM branche A4">
+
+  <div class="clearfix"></div>
+  <div class="highlight-section">
+    <h3>🚇 Accès en bus depuis le Plateau</h3>
+    <p>Pour les résidents du Plateau-Mont-Royal, cette arrivée est une excellente nouvelle : la station McGill se trouve à deux pas de Milton-Parc, et la station Édouard-Montpetit sera facilement accessible grâce à la ligne de bus 51.</p>
+    <p>C'est pourquoi il est essentiel d'améliorer notre réseau d'autobus, par exemple avec notre proposition de réseau express bus, afin d'assurer une bonne connexion entre le REM et nos quartiers.</p>
+  </div>
+
+  <img src="./unnamed-2.jpg" alt="Carte des accès au REM depuis le Plateau">
+
+  <div class="clearfix"></div>
+  <div class="highlight-section">
+    <h3>🚴 Mobilité active et connectivité</h3>
+    <p>Avec la nouvelle voie cyclable sur Saint-Urbain et le prolongement de celle sur Côte-Sainte-Catherine, accéder à ces deux stations à vélo sera désormais plus rapide, confortable et sécuritaire.</p>
+    <p>La réussite d'une ligne de transport collectif structurante dépend de sa connectivité avec les autres modes. Continuons d'investir dans un réseau intégré, efficace et réellement adapté à nos déplacements quotidiens 💚🚇🚲</p>
+  </div>
+
+  <h2>Enjeux et opportunités pour le Plateau</h2>
+
+  <p><strong>Opportunités:</strong></p>
+  <ul style="margin-left: 2rem; margin-bottom: 1.5rem; line-height: 2;">
+    <li>Accès rapide aux deux stations principales (McGill et Édouard-Montpetit)</li>
+    <li>Connexion améliorée vers la rive-nord et Laval</li>
+    <li>Potentiel d'augmentation de la densité résidentielle et commerciale</li>
+    <li>Réduction des émissions de carbone avec un meilleur accès au transport collectif</li>
+  </ul>
+
+  <p><strong>Défis à relever:</strong></p>
+  <ul style="margin-left: 2rem; margin-bottom: 1.5rem; line-height: 2;">
+    <li>Amélioration du réseau d'autobus pour assurer une bonne connexion</li>
+    <li>Expansion des voies cyclables pour favoriser l'accessibilité multimodale</li>
+    <li>Gestion de la congestion et des changements d'utilisation des terres</li>
+    <li>Maintien du caractère unique du Plateau-Mont-Royal</li>
+  </ul>
+
+  <p><strong>Conclusion:</strong> L'arrivée du REM représente une opportunité majeure pour le Plateau-Mont-Royal de renforcer sa position comme quartier urbain dynamique et bien desservi. Avec des investissements appropriés dans le transport actif et les services de bus de qualité, le Plateau peut devenir un modèle d'intégration réussie d'une nouvelle infrastructure majeure.</p>
+</section>
+
+<hr>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <p>© 2026 Gabriel Fortin. Tous droits réservés.</p>
+    </div>
+    <div>
+      <p>
+        <a href="../../index.html">Accueil</a> • 
+        <a href="../index.html">Articles</a> • 
+        <a href="./index.html">Le REM et le Plateau</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

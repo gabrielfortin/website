@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="../favico.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Articles — Gabriel Fortin</title>
+<style>
+  /* ANIMATIONS */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideInDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* BASE */
+  *, *::before, *::after { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+  }
+
+  body { 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+    color: #1a1a18;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 2rem; 
+    height: 64px; 
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: sticky; 
+    top: 0; 
+    z-index: 100;
+    animation: slideInDown 0.6s ease-out;
+  }
+
+  .nav-logo { 
+    font-size: 16px; 
+    font-weight: 700; 
+    letter-spacing: -0.3px; 
+    color: #1a3a6c;
+    text-decoration: none;
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-links { 
+    display: flex; 
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .nav-links a { 
+    font-size: 14px; 
+    color: #6b6b66; 
+    text-decoration: none; 
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #1a3a6c, #2d6aad);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: #1a3a6c;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  .nav-pill { 
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    color: #fff !important;
+    padding: 8px 18px; 
+    border-radius: 24px; 
+    font-size: 13px !important; 
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(26, 58, 108, 0.3);
+    text-decoration: none;
+  }
+
+  .nav-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 58, 108, 0.4);
+  }
+
+  /* HERO */
+  .hero { 
+    position: relative; 
+    overflow: hidden; 
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(26, 58, 108, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -100px;
+    right: -100px;
+  }
+
+  .hero-content { 
+    max-width: 900px; 
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 2rem;
+    font-size: 13px;
+  }
+
+  .breadcrumb a {
+    color: #1a3a6c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .breadcrumb span {
+    color: #6b6b66;
+  }
+
+  h1 { 
+    font-size: 42px; 
+    font-weight: 700; 
+    line-height: 1.2; 
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #1a3a6c 0%, #2d6aad 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .hero-desc { 
+    font-size: 16px; 
+    line-height: 1.8; 
+    color: #6b6b66; 
+    max-width: 600px;
+    animation: fadeInUp 0.8s ease-out 0.1s backwards;
+  }
+
+  /* SECTIONS */
+  .section { 
+    max-width: 900px; 
+    margin: 0 auto; 
+    padding: 3rem 2rem;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .section-label { 
+    font-size: 12px; 
+    font-weight: 700; 
+    letter-spacing: 0.12em; 
+    text-transform: uppercase; 
+    color: #1a3a6c;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    border-radius: 50%;
+  }
+
+  /* ARTICLES LIST */
+  .articles-list { 
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .article-item { 
+    background: #ffffff; 
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px; 
+    padding: 2rem; 
+    text-decoration: none; 
+    color: #1a1a18;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .article-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #1a3a6c, #2d6aad);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .article-item:hover::before {
+    transform: scaleX(1);
+  }
+
+  .article-item:hover { 
+    border-color: rgba(26, 58, 108, 0.2);
+    transform: translateX(4px);
+    box-shadow: 0 8px 24px rgba(26, 58, 108, 0.12);
+  }
+
+  .article-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .article-date {
+    font-size: 12px;
+    color: #1a3a6c;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .article-category {
+    display: inline-flex;
+    background: linear-gradient(135deg, rgba(26, 58, 108, 0.1), rgba(45, 106, 173, 0.1));
+    color: #1a3a6c;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(26, 58, 108, 0.2);
+  }
+
+  .article-item h3 { 
+    font-size: 20px; 
+    font-weight: 600; 
+    margin-bottom: 0.75rem;
+  }
+
+  .article-item p  { 
+    font-size: 15px; 
+    color: #6b6b66; 
+    line-height: 1.6;
+  }
+
+  .article-arrow { 
+    font-size: 14px; 
+    color: #1a3a6c;
+    margin-top: 1rem; 
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .article-item:hover .article-arrow {
+    transform: translateX(4px);
+  }
+
+  /* DIVIDER */
+  hr { 
+    border: none; 
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin: 0;
+  }
+
+  /* FOOTER */
+  footer {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 3rem 2rem;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .footer-inner { 
+    max-width: 900px; 
+    margin: 0 auto; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    flex-wrap: wrap; 
+    gap: 1.5rem;
+  }
+
+  footer p { 
+    font-size: 13px; 
+    color: #6b6b66;
+  }
+
+  footer a {
+    color: #1a3a6c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 32px;
+    }
+
+    .nav-pill {
+      display: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    nav {
+      padding: 0 1rem;
+    }
+
+    .nav-logo {
+      font-size: 14px;
+    }
+
+    .nav-links {
+      gap: 1rem;
+      font-size: 12px;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    .article-item {
+      padding: 1.5rem;
+    }
+
+    .section {
+      padding: 2rem 1rem;
+    }
+
+    .footer-inner {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="../index.html">Gabriel Fortin</a>
+  <div class="nav-links">
+    <a href="../cartes/index.html">Cartes</a>
+    <a href="../articles/index.html">Articles</a>
+    <a href="../applications/index.html">Applications</a>
+    <a href="../plans/index.html">Plans</a>
+    <a href="../donnees/index.html">Données</a>
+    <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="../index.html">Accueil</a>
+      <span>/</span>
+      <span>Articles</span>
+    </div>
+    <h1>Articles</h1>
+    <p class="hero-desc">Analyses et articles sur l'urbanisme, le transport en commun et l'impact des grands projets à Montréal et au Plateau-Mont-Royal.</p>
+  </div>
+</section>
+
+<hr>
+
+<!-- ARTICLES -->
+<section class="section">
+  <h2 class="section-label">Tous les Articles</h2>
+  
+  <div class="articles-list">
+    <a href="./refonte-stm-2026/index.html" class="article-item">
+      <div class="article-meta">
+        <span class="article-date">15 FEV 2026</span>
+        <span class="article-category">Transport</span>
+      </div>
+      <h3>L'impact de la refonte STM 2026 au Plateau-Mont-Royal</h3>
+      <p>Analyses détaillées de l'impact des changements des lignes de la STM dans le secteur nord-ouest en vue de l'arrivée de la branche A3 du REM. Découvrez comment cette refonte transformera la mobilité locale.</p>
+      <span class="article-arrow">Lire l'article →</span>
+    </a>
+
+    <a href="./le-rem-et-le-plateau/index.html" class="article-item">
+      <div class="article-meta">
+        <span class="article-date">15 NOV 2025</span>
+        <span class="article-category">Urbanisme</span>
+      </div>
+      <h3>L'arrivée du REM et son impact sur le Plateau</h3>
+      <p>Analyse complète de l'arrivée du Réseau Express Métropolitain et de son impact sur le Plateau-Mont-Royal. Quels changements pour la mobilité, le développement urbain et la qualité de vie?</p>
+      <span class="article-arrow">Lire l'article →</span>
+    </a>
+
+  </div>
+</section>
+
+<hr>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <p>© 2026 Gabriel Fortin. Tous droits réservés.</p>
+    </div>
+    <div>
+      <p>
+        <a href="../index.html">Accueil</a> • 
+        <a href="../articles/index.html">Articles</a> • 
+        <a href="../applications/index.html">Applications</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

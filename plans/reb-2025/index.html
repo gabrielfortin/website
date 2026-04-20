@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="../../favico.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réseau Express Bus — Projet Montréal — Gabriel Fortin</title>
+<style>
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideInDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+    color: #1a1a18;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    animation: slideInDown 0.6s ease-out;
+  }
+
+  .nav-logo {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    text-decoration: none;
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    color: #6b6b66;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #1a3a6c, #2d6aad);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover { color: #1a3a6c; }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-pill {
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    color: #fff !important;
+    padding: 8px 18px;
+    border-radius: 24px;
+    font-size: 13px !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(26, 58, 108, 0.3);
+    text-decoration: none;
+  }
+
+  .nav-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 58, 108, 0.4);
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(26, 58, 108, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -100px;
+    right: -100px;
+  }
+
+  .hero-content {
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 2rem;
+    font-size: 13px;
+  }
+
+  .breadcrumb a {
+    color: #1a3a6c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb span { color: #6b6b66; }
+
+  h1 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #1a3a6c 0%, #2d6aad 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .hero-desc {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #6b6b66;
+    animation: fadeInUp 0.8s ease-out 0.1s backwards;
+  }
+
+  /* ARTICLE BODY */
+  .article {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .article h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a3a6c;
+    margin: 2.5rem 0 1rem;
+  }
+
+  .article p {
+    font-size: 16px;
+    color: #3a3a38;
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+  }
+
+  .article ul {
+    margin: 0.5rem 0 1.5rem 1.5rem;
+  }
+
+  .article ul li {
+    font-size: 16px;
+    color: #3a3a38;
+    line-height: 1.8;
+    margin-bottom: 0.35rem;
+  }
+
+  .article ul li strong {
+    color: #1a3a6c;
+  }
+
+  /* IMAGES */
+  .article-img {
+    max-width: 420px;
+    width: 100%;
+    float: left;
+    margin: 0.25rem 2rem 1rem 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .article-img:hover {
+    opacity: 0.88;
+    transform: scale(1.01);
+  }
+
+  .img-caption {
+    font-size: 13px;
+    color: #9b9b96;
+    font-style: italic;
+    margin-top: -0.75rem;
+    margin-bottom: 1.25rem;
+    float: left;
+    clear: left;
+    margin-right: 2rem;
+    max-width: 420px;
+  }
+
+  .clearfix { clear: both; }
+
+  .img-full {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    margin: 1.5rem 0 0.5rem;
+    display: block;
+  }
+
+  .img-full:hover { opacity: 0.88; }
+
+  .img-full-caption {
+    font-size: 13px;
+    color: #9b9b96;
+    font-style: italic;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+
+  /* TWO-UP GRID */
+  .img-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  .img-grid img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: block;
+  }
+
+  .img-grid img:hover {
+    opacity: 0.88;
+    transform: scale(1.01);
+  }
+
+  .img-grid-caption {
+    font-size: 13px;
+    color: #9b9b96;
+    font-style: italic;
+    margin-bottom: 1.25rem;
+    grid-column: 1 / -1;
+  }
+
+  .source-note {
+    font-size: 14px;
+    color: #6b6b66;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .source-note a {
+    color: #1a3a6c;
+    font-weight: 500;
+    text-decoration: underline;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.92);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.5rem;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #ffffff;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+
+  .modal-close:hover { background: rgba(255, 255, 255, 0.15); }
+
+  .modal-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow: auto;
+  }
+
+  .modal-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* DIVIDER */
+  hr {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin: 0;
+  }
+
+  /* FOOTER */
+  footer {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 3rem 2rem;
+  }
+
+  .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  footer p { font-size: 13px; color: #6b6b66; }
+
+  footer a {
+    color: #1a3a6c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  footer a:hover { text-decoration: underline; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    h1 { font-size: 30px; }
+
+    .article-img,
+    .img-caption {
+      float: none;
+      max-width: 100%;
+      margin-right: 0;
+    }
+
+    .img-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .nav-pill { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 0 1rem; }
+    .nav-logo { font-size: 14px; }
+    .nav-links { gap: 1rem; font-size: 12px; }
+    h1 { font-size: 24px; }
+    .article { padding: 2rem 1rem 3rem; }
+    .footer-inner { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="../../index.html">Gabriel Fortin</a>
+  <div class="nav-links">
+    <a href="../../cartes/index.html">Cartes</a>
+    <a href="../../articles/index.html">Articles</a>
+    <a href="../../applications/index.html">Applications</a>
+    <a href="../../plans/index.html">Plans</a>
+    <a href="../../donnees/index.html">Données</a>
+    <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="../../index.html">Accueil</a>
+      <span>/</span>
+      <a href="../index.html">Plans</a>
+      <span>/</span>
+      <span>Réseau Express Bus</span>
+    </div>
+    <h1>Réseau Express Bus — Projet Montréal</h1>
+    <p class="hero-desc">Dans la plateforme 2025 de Projet Montréal, 11 axes sont identifiés comme futurs tramway ou SRB légers faisant partie du Réseau Express Bus (REB). Voici un plan des services lourds, fréquents et rapides de la région métropolitaine, incluant les lignes en service ou en construction ainsi que les lignes proposées par Projet Montréal.</p>
+  </div>
+</section>
+
+<hr>
+
+<!-- ARTICLE -->
+<div class="article">
+
+  <h2>Plan simplifié du réseau</h2>
+
+  <img class="article-img" src="./reb-1.png" alt="Plan simplifié du réseau métro et bus" onclick="openModal('./reb-1.png', 'Plan simplifié des réseaux de métro et bus')">
+  <p class="img-caption">Plan simplifié des réseaux de métro et bus de la région métropolitaine.</p>
+  <div class="clearfix"></div>
+
+  <p>Pour les lignes REB, les numéros vont de 1 à 9 et la lettre R précède chaque numéro de ligne. Les numéros des lignes de bus actuelles empruntant un parcours similaire sont ajoutés entre parenthèses pour aider la compréhension. Le préfixe « T » est utilisé pour les SRB lourds et les tramways.</p>
+
+  <h2>Lignes du Réseau Express Bus</h2>
+
+  <ul>
+    <li><strong>R2 :</strong> Sherbrooke (24)</li>
+    <li><strong>R3 :</strong> Henri-Bourassa (69)</li>
+    <li><strong>R4 :</strong> Notre-Dame / René-Lévesque (22)</li>
+    <li><strong>R6 :</strong> Côte-Sainte-Catherine / Saint-Joseph O. (51)</li>
+    <li><strong>R6 :</strong> Saint-Joseph E. (27)</li>
+    <li><strong>R7 :</strong> Papineau / De Lorimier (45)</li>
+    <li><strong>R8 :</strong> Saint-Michel (67)</li>
+    <li><strong>R9 :</strong> Newman / Dollard (108, 113, 198)</li>
+  </ul>
+
+  <h2>SRB et tramways</h2>
+
+  <ul>
+    <li><strong>T2 :</strong> Projet structurant de l'Est</li>
+    <li><strong>T3 :</strong> Tramway de Lachine</li>
+  </ul>
+
+  <h2>REB transitoire (conversion en tramway prévue)</h2>
+
+  <ul>
+    <li><strong>R1 :</strong> Avenue du Parc (80)</li>
+    <li><strong>R5 :</strong> Chemin de la Côte-des-Neiges / Jean-Talon (165)</li>
+  </ul>
+
+  <p>Le Réseau Express Bus vient améliorer drastiquement le maillage du réseau, tout en ajoutant des routes qui ne sont actuellement pas desservies par un service fréquent.</p>
+
+  <h2>Comparatif sans et avec REB</h2>
+
+  <div class="img-grid">
+    <img src="./reb2-1.png" alt="Réseau sans REB" onclick="openModal('./reb2-1.png', 'Réseau sans REB')">
+    <img src="./reb2-2.png" alt="Réseau avec REB" onclick="openModal('./reb2-2.png', 'Réseau avec REB')">
+    <span class="img-grid-caption">Comparatif du réseau de transport avant et après l'implantation du REB.</span>
+  </div>
+
+  <h2>Plan incluant le SRB Taschereau</h2>
+
+  <div class="img-grid">
+    <img src="./reb3-1.png" alt="Plan avec SRB Taschereau — vue 1" onclick="openModal('./reb3-1.png', 'Plan incluant le SRB Taschereau')">
+    <img src="./reb3-2.png" alt="Plan avec SRB Taschereau — vue 2" onclick="openModal('./reb3-2.png', 'Plan incluant le SRB Taschereau')">
+    <span class="img-grid-caption">Plan incluant le SRB Taschereau sur la Rive-Sud de Montréal.</span>
+  </div>
+
+  <img class="img-full" src="./reb4.png" alt="Plan complet du REB" onclick="openModal('./reb4.png', 'Plan complet du Réseau Express Bus')">
+  <span class="img-full-caption">Plan complet du Réseau Express Bus proposé par Projet Montréal. Cliquer pour agrandir.</span>
+
+  <p class="source-note">Source : <a href="https://projetmontreal.org/plateforme-2025" target="_blank">Plateforme électorale 2025 — Projet Montréal</a></p>
+
+</div>
+
+<hr>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <p>© 2026 Gabriel Fortin. Tous droits réservés.</p>
+    <p>
+      <a href="../../index.html">Accueil</a> •
+      <a href="../index.html">Plans</a>
+    </p>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-header">
+    <h3 id="modal-title"></h3>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <img class="modal-img" id="modal-img" src="" alt="">
+  </div>
+</div>
+
+<script>
+  function openModal(src, title) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-img').src = src;
+    document.getElementById('modal-img').alt = title;
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+    document.getElementById('modal-img').src = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+</script>
+
+</body>
+</html>

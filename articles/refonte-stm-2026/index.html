@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="../../favico.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refonte STM 2026 — Gabriel Fortin</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #2c2c2c;
+    background: #f8f9fa;
+  }
+
+  /* NAVIGATION */
+  nav {
+    background: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .nav-logo {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1a3a6c;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .nav-logo:hover {
+    color: #2d6aad;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #2c2c2c;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .nav-links a:hover {
+    color: #1a3a6c;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #1a3a6c;
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  .nav-pill {
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    color: white !important;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .nav-pill::after {
+    display: none;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    padding: 3rem 2rem;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+
+  .breadcrumb a {
+    color: #1a3a6c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .breadcrumb a:hover {
+    color: #2d6aad;
+  }
+
+  .breadcrumb span {
+    color: #6b6b66;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    color: #1a3a6c;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .article-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b6b66;
+  }
+
+  /* ARTICLE CONTENT */
+  .article-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .article-content h2 {
+    font-size: 1.8rem;
+    color: #1a3a6c;
+    margin: 2rem 0 1rem 0;
+    padding-top: 1rem;
+  }
+
+  .article-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .article-content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: #2c2c2c;
+  }
+
+  .article-content img {
+    max-width: 420px;
+    width: 100%;
+    height: auto;
+    margin: 0.5rem 1.5rem 1rem 0;
+    border-radius: 8px;
+    float: left;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .clearfix {
+    clear: both;
+  }
+
+  .line-section {
+    background: linear-gradient(135deg, rgba(26, 58, 108, 0.05), rgba(45, 106, 173, 0.05));
+    padding: 1.5rem;
+    border-left: 4px solid #1a3a6c;
+    margin: 2rem 0;
+    border-radius: 8px;
+  }
+
+  .line-section h3 {
+    color: #1a3a6c;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .line-section p {
+    margin: 0.5rem 0;
+    color: #2c2c2c;
+  }
+
+  .cta-link {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .cta-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(26, 58, 108, 0.25);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin: 2rem 0;
+  }
+
+  /* FOOTER */
+  footer {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 3rem 2rem;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  footer p {
+    margin-bottom: 1rem;
+    color: #2c2c2c;
+  }
+
+  footer a {
+    color: #1a3a6c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  footer a:hover {
+    color: #2d6aad;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .article-content {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+
+    .article-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      padding: 2rem 1rem;
+    }
+
+    .hero h1 {
+      font-size: 1.5rem;
+    }
+
+    .article-content {
+      margin: 1rem;
+      padding: 1rem;
+    }
+
+    .breadcrumb {
+      flex-wrap: wrap;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a class="nav-logo" href="../../index.html">Gabriel Fortin</a>
+  <div class="nav-links">
+    <a href="../../cartes/index.html">Cartes</a>
+    <a href="../../articles/index.html">Articles</a>
+    <a href="../../applications/index.html">Applications</a>
+    <a href="../../plans/index.html">Plans</a>
+    <a href="../../donnees/index.html">Données</a>
+    <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="../../index.html">Accueil</a>
+      <span>/</span>
+      <a href="../index.html">Articles</a>
+      <span>/</span>
+      <span>Refonte STM 2026</span>
+    </div>
+    <h1>L'impact de la refonte STM 2026 au Plateau-Mont-Royal</h1>
+    <div class="article-meta">
+      <div class="meta-item">📅 15 février 2026</div>
+      <div class="meta-item">🏷️ Transport</div>
+      <div class="meta-item">⏱️ 5 min de lecture</div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE CONTENT -->
+<section class="article-content">
+  <p>Une refonte du réseau de bus arrive ce printemps avec la mise en service de l'antenne A3 du REM vers l'Ouest de l'île! Bien que les changements touchent davantage d'autres secteurs de l'île de Montréal, cinq lignes passant sur le Plateau sont touchées, et quelques nouveautés sont très intéressantes.</p>
+
+  <div class="line-section">
+    <h3>🚌 Ligne 11 : Parc-du-Mont-Royal</h3>
+    <p>La ligne 11 sera prolongée à l'ouest jusqu'à la station de métro Côte-des-Neiges. En plus d'offrir un nouvel accès au Mont-Royal pour les usagers de la ligne bleue du métro, ce prolongement offrira aussi un nouvel accès à la ligne bleue pour les résidents du Plateau.</p>
+    <img src="./1.jpg" alt="Carte de la ligne 11">
+    <div class="clearfix"></div>
+  </div>
+
+  <div class="line-section">
+    <h3>🚌 Ligne 46 : Casgrain</h3>
+    <p>La ligne sera supprimée mais intégrée à la ligne 119 - Rockland. Cette ligne offre donc un nouveau lien entre la station Laurier, la ligne bleue (5) du métro (station Outremont), et le REM (station Ville-de-Mont-Royal). Cette modification de la ligne 119 est très intéressante puisqu'elle crée un nouveau lien entre trois lignes de métro, dessert le secteur nord du Mile End (Bernard) et le secteur d'emplois Casgrain.</p>
+    <img src="./2.jpg" alt="Carte de la ligne 119 Rockland">
+    <img src="./3.jpg" alt="Réseau intégré">
+    <div class="clearfix"></div>
+  </div>
+
+  <div class="line-section">
+    <h3>🚌 Ligne 51 : Édouard-Montpetit</h3>
+    <p>La fréquence de service sera augmentée pour la portion ouest de la ligne, entre la Gare Montréal-Ouest et Snowdon. Bien que cela n'ait pas d'impact direct sur le Plateau, il s'agit de la portion la plus achalandée de la ligne, et l'augmentation de la fréquence sur ce segment pourra donc améliorer la ponctualité sur toute la ligne.</p>
+  </div>
+
+  <div class="line-section">
+    <h3>🚌 Ligne 55 : Saint-Laurent</h3>
+    <p>Dans l'arrondissement Ahuntsic-Cartierville, le parcours en direction nord élimine un passage par l'avenue de l'Esplanade, ce qui offre une desserte plus linéaire du Boulevard Saint-Laurent, et réduira ainsi le temps de parcours. Cela pourra potentiellement améliorer la ponctualité de la ligne, et réduira le temps de trajet pour certains usagers.</p>
+    <img src="./4.jpg" alt="Carte de la ligne 55">
+    <div class="clearfix"></div>
+  </div>
+
+  <div class="line-section">
+    <h3>🚌 Ligne 30 : Saint-Denis</h3>
+    <p>La ligne est supprimée, mais la ligne 31 est prolongée. En ce moment, la ligne 30 dessert l'axe de la rue Saint-Denis au complet, et la ligne 31 dessert Saint-Denis entre la station Rosemont et Henri-Bourassa. Dorénavant, la ligne 31 desservira l'axe au complet.</p>
+    <img src="./5.jpg" alt="Carte de la ligne 31">
+    <div class="clearfix"></div>
+  </div>
+
+  <p><strong>Conclusion</strong>: Cette refonte du réseau de bus présente plusieurs opportunités intéressantes pour les résidents du Plateau-Mont-Royal. Les améliorations apportées, notamment aux lignes 11, 119 (anciennement 46), et 31, renforceront la connectivité du quartier avec le reste de l'île et faciliteront l'accès aux nouvelles stations du REM.</p>
+
+  <a href="https://www.stm.info/fr/presse/communiques/2026/refonte-du-reseau-bus-dans-le-centre-nord-et-l-ouest-de-l-ile%20--un-reseau-repense-pour-s-ajuster-aux-besoins-de-mobilite-actuels-et-futurs?" class="cta-link">Lire le communiqué STM complet →</a>
+</section>
+
+<hr>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <p>© 2026 Gabriel Fortin. Tous droits réservés.</p>
+    </div>
+    <div>
+      <p>
+        <a href="../../index.html">Accueil</a> • 
+        <a href="../index.html">Articles</a> • 
+        <a href="./index.html">Refonte STM 2026</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="./favico.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gabriel Fortin — Conseiller d'arrondissement</title>
+<style>
+  /* ANIMATIONS */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(26, 58, 108, 0.2); }
+    50% { box-shadow: 0 0 30px rgba(26, 58, 108, 0.4); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* BASE */
+  *, *::before, *::after { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+  }
+
+  body { 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+    color: #1a1a18;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 2rem; 
+    height: 64px; 
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: sticky; 
+    top: 0; 
+    z-index: 100;
+    animation: slideInDown 0.6s ease-out;
+  }
+
+  @keyframes slideInDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .nav-logo { 
+    font-size: 16px; 
+    font-weight: 700; 
+    letter-spacing: -0.3px; 
+    color: #1a3a6c;
+    text-decoration: none;
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-links { 
+    display: flex; 
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .nav-links a { 
+    font-size: 14px; 
+    color: #6b6b66; 
+    text-decoration: none; 
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #1a3a6c, #2d6aad);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: #1a3a6c;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  .nav-pill { 
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    color: #fff !important;
+    padding: 8px 18px; 
+    border-radius: 24px; 
+    font-size: 13px !important; 
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(26, 58, 108, 0.3);
+    text-decoration: none;
+  }
+
+  .nav-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 58, 108, 0.4);
+  }
+
+  /* HERO */
+  .hero { 
+    position: relative; 
+    overflow: hidden; 
+    padding: 6rem 2rem; 
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(26, 58, 108, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -100px;
+    right: -100px;
+    z-index: 0;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(45, 106, 173, 0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    bottom: -50px;
+    left: -50px;
+    z-index: 0;
+  }
+
+  .hero-grid { 
+    max-width: 900px; 
+    margin: 0 auto; 
+    display: grid; 
+    grid-template-columns: 1fr 200px; 
+    gap: 3rem; 
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow { 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 8px; 
+    font-size: 12px; 
+    font-weight: 600; 
+    letter-spacing: 0.08em; 
+    text-transform: uppercase; 
+    color: #1a3a6c;
+    background: linear-gradient(135deg, rgba(26, 58, 108, 0.1), rgba(45, 106, 173, 0.1));
+    padding: 6px 14px; 
+    border-radius: 24px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(26, 58, 108, 0.2);
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  h1 { 
+    font-size: 48px; 
+    font-weight: 700; 
+    line-height: 1.2; 
+    letter-spacing: -0.5px; 
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #1a3a6c 0%, #2d6aad 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 0.8s ease-out 0.1s backwards;
+  }
+
+  .hero-desc { 
+    font-size: 16px; 
+    line-height: 1.8; 
+    color: #6b6b66; 
+    margin-bottom: 2rem; 
+    max-width: 500px;
+    animation: fadeInUp 0.8s ease-out 0.2s backwards;
+  }
+
+  .hero-ctas { 
+    display: flex; 
+    gap: 15px; 
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease-out 0.3s backwards;
+  }
+
+  .btn-primary { 
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    color: #fff; 
+    padding: 12px 28px; 
+    border-radius: 8px; 
+    font-size: 14px; 
+    font-weight: 600; 
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(26, 58, 108, 0.3);
+    display: inline-block;
+  }
+
+  .btn-primary:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(26, 58, 108, 0.4);
+  }
+
+  .btn-secondary { 
+    background: transparent; 
+    color: #1a3a6c; 
+    padding: 12px 28px; 
+    border-radius: 8px; 
+    font-size: 14px; 
+    font-weight: 600; 
+    text-decoration: none;
+    border: 2px solid #1a3a6c;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+  }
+
+  .btn-secondary:hover { 
+    background: #1a3a6c;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  .hero-avatar {
+    width: 280px;
+    height: 280px;
+    border-radius: 16px; 
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 64px; 
+    font-weight: 700; 
+    color: #fff; 
+    justify-self: end;
+    animation: float 3s ease-in-out infinite, fadeInUp 0.8s ease-out 0.4s backwards;
+    box-shadow: 0 20px 40px rgba(26, 58, 108, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* SECTIONS */
+  .section { 
+    max-width: 900px; 
+    margin: 0 auto; 
+    padding: 4rem 2rem;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .section.hidden {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .section.visible {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .section-label { 
+    font-size: 12px; 
+    font-weight: 700; 
+    letter-spacing: 0.12em; 
+    text-transform: uppercase; 
+    color: #1a3a6c;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    border-radius: 50%;
+  }
+
+  /* CARDS */
+  .cards-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 20px;
+    margin-bottom: 2rem;
+  }
+
+  .card { 
+    background: #ffffff; 
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px; 
+    padding: 1.75rem; 
+    text-decoration: none; 
+    color: #1a1a18;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #1a3a6c, #2d6aad);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .card:hover { 
+    border-color: rgba(26, 58, 108, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(26, 58, 108, 0.15);
+  }
+
+  .card-icon { 
+    width: 48px; 
+    height: 48px; 
+    border-radius: 10px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    margin-bottom: 1rem; 
+    font-size: 24px;
+    transition: all 0.3s ease;
+  }
+
+  .card:hover .card-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .card-icon.blue  { background: linear-gradient(135deg, #e8eef7, #d4e3f0); }
+  .card-icon.green { background: linear-gradient(135deg, #e4f5ee, #d0ede4); }
+  .card-icon.amber { background: linear-gradient(135deg, #fef3e2, #fce7c8); }
+  .card-icon.red   { background: linear-gradient(135deg, #fdeaea, #fbd5d5); }
+
+  .card h3 { 
+    font-size: 16px; 
+    font-weight: 600; 
+    margin-bottom: 0.5rem;
+  }
+
+  .card p  { 
+    font-size: 14px; 
+    color: #6b6b66; 
+    line-height: 1.6;
+  }
+
+  .card-arrow { 
+    font-size: 14px; 
+    color: #1a3a6c;
+    margin-top: 1rem; 
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover .card-arrow {
+    transform: translateX(4px);
+  }
+
+  /* FEATURED */
+  .featured { 
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px; 
+    padding: 2rem; 
+    display: flex; 
+    align-items: center; 
+    gap: 1.75rem; 
+    margin-bottom: 2rem; 
+    text-decoration: none; 
+    color: #1a1a18;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #1a3a6c, #2d6aad);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+  }
+
+  .featured:hover::before {
+    transform: scaleY(1);
+  }
+
+  .featured:hover { 
+    border-color: rgba(26, 58, 108, 0.2);
+    transform: translateX(6px);
+    box-shadow: 0 12px 32px rgba(26, 58, 108, 0.15);
+  }
+
+  .featured-badge { 
+    background: linear-gradient(135deg, #1a3a6c, #2d6aad);
+    color: #fff; 
+    font-size: 11px; 
+    font-weight: 700; 
+    padding: 4px 12px; 
+    border-radius: 20px; 
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .featured-icon { 
+    width: 56px; 
+    height: 56px; 
+    background: linear-gradient(135deg, #e8eef7, #d4e3f0);
+    border-radius: 12px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    flex-shrink: 0; 
+    font-size: 28px;
+    transition: all 0.3s ease;
+  }
+
+  .featured:hover .featured-icon {
+    transform: scale(1.1) rotate(-5deg);
+  }
+
+  .featured h3 { 
+    font-size: 16px; 
+    font-weight: 600; 
+    margin-bottom: 0.5rem;
+  }
+
+  .featured p  { 
+    font-size: 14px; 
+    color: #6b6b66; 
+    line-height: 1.6;
+  }
+
+  /* SOCIAL */
+  .social-row { 
+    display: flex; 
+    gap: 12px; 
+    flex-wrap: wrap;
+  }
+
+  .social-chip { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    background: #ffffff; 
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 24px; 
+    padding: 8px 16px; 
+    font-size: 13px; 
+    text-decoration: none; 
+    color: #6b6b66;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+  }
+
+  .social-chip:hover { 
+    border-color: #1a3a6c;
+    color: #1a3a6c;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(26, 58, 108, 0.15);
+  }
+
+  .social-dot { 
+    width: 8px; 
+    height: 8px; 
+    border-radius: 50%; 
+    flex-shrink: 0;
+  }
+
+  /* SECTIONS */
+  .two-col { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
+  }
+
+  /* DIVIDER */
+  hr { 
+    border: none; 
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin: 0;
+  }
+
+  /* FOOTER */
+  footer {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 3rem 2rem;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .footer-inner { 
+    max-width: 900px; 
+    margin: 0 auto; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    flex-wrap: wrap; 
+    gap: 1.5rem;
+  }
+
+  footer p { 
+    font-size: 13px; 
+    color: #6b6b66;
+  }
+
+  footer a {
+    color: #1a3a6c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-grid { 
+      grid-template-columns: 1fr; 
+    }
+    
+    .hero-avatar { 
+      width: 150px;
+      height: 150px;
+      font-size: 48px;
+      justify-self: start;
+    }
+    
+    .two-col { 
+      grid-template-columns: 1fr;
+    }
+    
+    .nav-links { 
+      gap: 1rem;
+      font-size: 13px;
+    }
+    
+    .nav-pill { 
+      padding: 6px 14px;
+      font-size: 12px;
+    }
+
+    h1 {
+      font-size: 36px;
+    }
+
+    .featured {
+      flex-direction: column;
+      text-align: center;
+      align-items: flex-start;
+    }
+
+    .featured-icon {
+      align-self: flex-start;
+    }
+  }
+
+  @media (max-width: 600px) {
+    nav {
+      padding: 0 1rem;
+    }
+
+    .nav-logo {
+      font-size: 14px;
+    }
+
+    .nav-links {
+      gap: 0.5rem;
+      font-size: 12px;
+    }
+
+    .nav-pill { 
+      display: none;
+    }
+
+    h1 {
+      font-size: 28px;
+    }
+
+    .hero-desc {
+      font-size: 14px;
+    }
+
+    .btn-primary, .btn-secondary {
+      padding: 10px 20px;
+      font-size: 13px;
+    }
+
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .section {
+      padding: 2rem 1rem;
+    }
+
+    .footer-inner {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">Gabriel Fortin</a>
+  <div class="nav-links">
+    <a href="./cartes/index.html">Cartes</a>
+    <a href="./articles/index.html">Articles</a>
+    <a href="./applications/index.html">Applications</a>
+    <a href="./plans/index.html">Plans</a>
+    <a href="./donnees/index.html">Données</a>
+    <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow">👋 Bienvenue</div>
+      <h1>Gabriel Fortin</h1>
+      <p class="hero-desc">Conseiller d'arrondissement au Plateau-Mont-Royal et passionné de technologie, données et urbanisme. Je crée des outils pour rendre les données plus accessibles et compréhensibles.</p>
+      <div class="hero-ctas">
+        <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="btn-primary">Mon Profil Officiel</a>
+        <a href="#projets" class="btn-secondary">Voir mes projets</a>
+      </div>
+    </div>
+    <div class="hero-avatar"><img src="./img/Gabriel Fortin.png" alt="Gabriel Fortin" style="width:100%;height:100%;object-fit:cover;border-radius:14px;"></div>
+  </div>
+</section>
+
+<hr>
+
+<!-- PROJETS PHARES -->
+<section class="section" id="projets">
+  <h2 class="section-label">Explorer</h2>
+  
+  <a href="https://velo.gabfortin.com/" class="featured">
+    <div class="featured-icon">🚴</div>
+    <div>
+      <span class="featured-badge">Nouvel Outil</span>
+      <h3>Visualisation des Compteurs de Vélo</h3>
+      <p>Un outil interactif pour explorer les données des compteurs de vélo à Montréal. Découvrez les tendances, comparez les trajets et visualisez le flux cyclable en temps réel.</p>
+    </div>
+  </a>
+
+  <div class="cards-grid">
+    <a href="./cartes/index.html" class="card">
+      <div class="card-icon blue">🗺️</div>
+      <h3>Cartes Interactives</h3>
+      <p>Élections 2025, réseau artériel de Montréal, et modes rapides et fréquents.</p>
+      <span class="card-arrow">Voir les cartes →</span>
+    </a>
+
+    <a href="./articles/index.html" class="card">
+      <div class="card-icon green">📝</div>
+      <h3>Articles & Analyses</h3>
+      <p>Refonte STM 2026, l'arrivée du REM et son impact sur le Plateau.</p>
+      <span class="card-arrow">Lire les articles →</span>
+    </a>
+
+    <a href="./plans/index.html" class="card">
+      <div class="card-icon amber">📐</div>
+      <h3>Plans</h3>
+      <p>PUM 2050, prolongement du métro et réseau express de bus Projet Montréal.</p>
+      <span class="card-arrow">Voir les plans →</span>
+    </a>
+
+    <a href="./applications/index.html" class="card">
+      <div class="card-icon green">💻</div>
+      <h3>Applications</h3>
+      <p>Outils web développés pour rendre les données plus accessibles et faciliter l'engagement civique.</p>
+      <span class="card-arrow">Voir les applications →</span>
+    </a>
+
+    <a href="./donnees/index.html" class="card">
+      <div class="card-icon red">📊</div>
+      <h3>Données Ouvertes</h3>
+      <p>Ensembles de données publiques analysés et visualisés pour la communauté.</p>
+      <span class="card-arrow">Explorer →</span>
+    </a>
+  </div>
+</section>
+
+<hr>
+
+
+<!-- ENGAGEMENTS -->
+<section class="section">
+  <h2 class="section-label">Engagements</h2>
+  
+  <div class="two-col">
+    <a href="https://projetmontreal.org/" class="card">
+      <div class="card-icon blue">🏛️</div>
+      <h3>Projet Montréal</h3>
+      <p>Membre actif du parti politique Projet Montréal, travaillant pour une ville plus verte et plus accessible.</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a href="https://montreal.ca/conseils-decisionnels/conseil-darrondissement-du-plateau-mont-royal" class="card">
+      <div class="card-icon green">🗳️</div>
+      <h3>Conseil d'Arrondissement</h3>
+      <p>Conseiller d'arrondissement au Plateau-Mont-Royal depuis 2025, représentant le district de Jeanne-Mance.</p>
+      <span class="card-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<hr>
+
+<!-- LIENS SOCIAUX -->
+<section class="section">
+  <h2 class="section-label">Me Suivre</h2>
+  
+  <div class="social-row">
+    <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-chip">
+      📸 <span>Instagram</span>
+    </a>
+    <a href="https://www.facebook.com/gabfortin1/" class="social-chip">
+      👍 <span>Facebook</span>
+    </a>
+    <a href="https://bsky.app/profile/gabfortin.com" class="social-chip">
+      🦋 <span>Bluesky</span>
+    </a>
+    <a href="mailto:info@gabfortin.com" class="social-chip">
+      ✉️ <span>Email</span>
+    </a>
+  </div>
+</section>
+
+<hr>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <p>© 2026 Gabriel Fortin. Tous droits réservés.</p>
+    </div>
+    <div>
+      <p>
+        <a href="mailto:info@gabfortin.com">Contact</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL ANIMATION SCRIPT -->
+<script>
+  // Observe sections for fade-in animation
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, observerOptions);
+
+  // Observe all sections
+  document.querySelectorAll('.section').forEach(section => {
+    section.classList.add('hidden');
+    observer.observe(section);
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
