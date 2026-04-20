@@ -114,7 +114,7 @@ Page principale avec présentation et navigation vers:
    - 🚴 Icon: 🚴
    - 🔗 Lien: `#` → Placeholder
    - URL à fournir: https://velo.gabfortin.com
-   - Description: Données détaillées des compteurs de vélo avec tendances et analyses en temps réel
+   - Description: Données détaillées des compteurs de vélo avec tendances et analyses temporelles.
 
 2. **Résultats élections municipales Montréal 2025**
    - 👥 Icon: 👥
@@ -130,7 +130,7 @@ Page principale avec présentation et navigation vers:
 0. **Compteurs de Vélo Montréal** ⭐ ✅
    - 🚴 Icon: 🚴
    - 🔗 Lien: https://velo.gabfortin.com/ (✅ LIVE)
-   - Description: Visualisation en temps réel des compteurs de vélo à Montréal avec tendances et comparaisons
+   - Description: Visualisation des compteurs de vélo à Montréal avec tendances et comparaisons
    - Statut: Production
 
 **Autres applications:**
