@@ -886,7 +886,7 @@
     0%   { transform: translateX(0);                      opacity: 0; }
     4%   { opacity: 1; }
     97%  { opacity: 1; }
-    100% { transform: translateX(calc(-100vw - 660px));   opacity: 0; }
+    100% { transform: translateX(calc(-100vw - 442px));   opacity: 0; }
   }
 
   @keyframes remViaductFade {
@@ -930,9 +930,17 @@
         <rect x="332" y="10" width="4" height="48" fill="#5a9fd4"/>
         <rect x="442" y="10" width="4" height="48" fill="#5a9fd4"/>
         <rect x="552" y="10" width="4" height="48" fill="#5a9fd4"/>
-        <!-- fenêtres wagon 1 -->
-        <rect x="14"  y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
-        <rect x="58"  y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <!-- cabine conducteur (avant gauche) -->
+        <rect x="1"  y="10" width="42" height="48" rx="9" fill="#50a0c1"/>
+        <!-- fenêtre conducteur -->
+        <rect x="5"  y="13" width="30" height="25" rx="4" fill="#4C4C61"/>
+        <!-- phares orange -->
+        <circle cx="13" cy="50" r="5" fill="#FF7A00"/>
+        <circle cx="13" cy="50" r="3" fill="#FFAA33" opacity="0.9"/>
+        <circle cx="30" cy="50" r="5" fill="#FF7A00"/>
+        <circle cx="30" cy="50" r="3" fill="#FFAA33" opacity="0.9"/>
+        <!-- wagon 1 (passagers, moitié droite) -->
+        <rect x="62"  y="15" width="40" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
         <!-- fenêtres wagon 2 -->
         <rect x="122" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
         <rect x="166" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
@@ -948,13 +956,9 @@
         <!-- fenêtres wagon 6 -->
         <rect x="562" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
         <rect x="606" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
-        <!-- phares avant (gauche = sens de déplacement) -->
-        <circle cx="10" cy="22" r="5" fill="#ffffff" opacity="0.95"/>
-        <circle cx="10" cy="40" r="5" fill="#ffffff" opacity="0.95"/>
-        <rect x="2" y="19" width="6" height="6"  rx="1" fill="#dceeff" opacity="0.7"/>
-        <rect x="2" y="37" width="6" height="6"  rx="1" fill="#dceeff" opacity="0.7"/>
+        
         <!-- roues -->
-        <circle cx="34"  cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="47"  cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
         <circle cx="82"  cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
         <circle cx="142" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
         <circle cx="192" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
@@ -1036,25 +1040,23 @@
         filter: 'drop-shadow(0 4px 12px rgba(0,122,61,0.5))',
       });
 
-      trainEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 95" width="660" height="95">
-        <!-- pantographe (touche le fil de caténaire du viaduc) -->
-        <line x1="278" y1="18" x2="290" y2="3"  stroke="#555" stroke-width="1.5"/>
-        <line x1="302" y1="18" x2="290" y2="3"  stroke="#555" stroke-width="1.5"/>
-        <rect x="284" y="2" width="12" height="2" rx="1" fill="#333"/>
-        <!-- corps blanc -->
-        <rect x="2" y="18" width="656" height="54" rx="8" fill="#ffffff"/>
+      trainEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 442 95" width="442" height="95">
+        <!-- pantographe (wagon 3, touche le fil de caténaire du viaduc) -->
+        <line x1="258" y1="18" x2="270" y2="3"  stroke="#555" stroke-width="1.5"/>
+        <line x1="282" y1="18" x2="270" y2="3"  stroke="#555" stroke-width="1.5"/>
+        <rect x="264" y="2" width="12" height="2" rx="1" fill="#333"/>
+        <!-- corps noir -->
+        <rect x="2" y="18" width="438" height="54" rx="8" fill="#000000"/>
         <!-- bande verte haute -->
-        <rect x="2" y="18" width="656" height="13" rx="5" fill="#007A3D"/>
-        <!-- bande verte basse -->
-        <rect x="2" y="58" width="656" height="6" fill="#007A3D"/>
-        <!-- soubassement noir -->
-        <rect x="2" y="64" width="656" height="8" rx="4" fill="#1a1a1a"/>
-        <!-- séparateurs wagons -->
+        <rect x="2" y="18" width="438" height="13" rx="5" fill="#007A3D"/>
+        <!-- bande blanche basse -->
+        <rect x="2" y="58" width="438" height="6" fill="#ffffff"/>
+        <!-- soubassement blanc -->
+        <rect x="2" y="64" width="438" height="8" rx="4" fill="#ffffff"/>
+        <!-- séparateurs wagons (3 séparateurs pour 4 wagons) -->
         <rect x="112" y="18" width="3" height="54" fill="#005C2E"/>
         <rect x="222" y="18" width="3" height="54" fill="#005C2E"/>
         <rect x="332" y="18" width="3" height="54" fill="#005C2E"/>
-        <rect x="442" y="18" width="3" height="54" fill="#005C2E"/>
-        <rect x="552" y="18" width="3" height="54" fill="#005C2E"/>
         <!-- fenêtres wagon 1 -->
         <rect x="36"  y="33" width="36" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
         <rect x="76"  y="33" width="28" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
@@ -1067,17 +1069,11 @@
         <!-- fenêtres wagon 4 -->
         <rect x="342" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
         <rect x="388" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
-        <!-- fenêtres wagon 5 -->
-        <rect x="452" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
-        <rect x="498" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
-        <!-- fenêtres wagon 6 -->
-        <rect x="562" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
-        <rect x="608" y="33" width="34" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
-        <!-- nez avant noir -->
-        <rect x="2" y="18" width="30" height="54" rx="8" fill="#1a1a1a"/>
-        <!-- phares -->
-        <rect x="5" y="25" width="8" height="5" rx="2" fill="#ffffcc" opacity="0.95"/>
-        <rect x="5" y="56" width="8" height="5" rx="2" fill="#ffffcc" opacity="0.95"/>
+        <!-- nez avant vert pale -->
+        <rect x="2" y="18" width="30" height="54" rx="8" fill="#8ce900"/>
+        <!-- fenetre avant -->
+        <rect x="3" y="20" width="25" height="40" rx="8" fill="#000000"/>
+      
       </svg>`;
 
       document.body.appendChild(trainEl);
