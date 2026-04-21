@@ -878,8 +878,21 @@
   @keyframes metroRide {
     0%   { transform: translateX(0);                      opacity: 0; }
     4%   { opacity: 1; }
-    92%  { opacity: 1; }
-    100% { transform: translateX(calc(-100vw - 360px));   opacity: 0; }
+    97%  { opacity: 1; }
+    100% { transform: translateX(calc(-100vw - 660px));   opacity: 0; }
+  }
+
+  @keyframes remRide {
+    0%   { transform: translateX(0);                      opacity: 0; }
+    4%   { opacity: 1; }
+    97%  { opacity: 1; }
+    100% { transform: translateX(calc(-100vw - 660px));   opacity: 0; }
+  }
+
+  @keyframes remViaductFade {
+    0%   { opacity: 1; }
+    97%  { opacity: 1; }
+    100% { opacity: 0; }
   }
 </style>
 
@@ -899,7 +912,7 @@
         left: '100vw',
         zIndex: '9999',
         pointerEvents: 'none',
-        animation: 'metroRide 6s cubic-bezier(0.15,0,0.85,2) forwards',
+        animation: 'metroRide 6s cubic-bezier(0.15,0,0.85,1) forwards',
         filter: 'drop-shadow(0 -3px 10px rgba(100,160,220,0.5))',
       });
 
@@ -965,7 +978,123 @@
       if (e.key === 'm' || e.key === 'M') spawnMetro();
     });
 
-    document.querySelector('.hero-avatar').addEventListener('click', spawnMetro);
+    document.querySelector('.hero-avatar').addEventListener('dblclick', spawnMetro);
+  })();
+</script>
+
+<script>
+  // --- Easter egg: REM (touche R) ---
+  (function () {
+    let active = false;
+
+    function spawnREM() {
+      if (active) return;
+      active = true;
+
+      const vw = window.innerWidth;
+      const duration = '11s';
+
+      // --- Viaduc (plein écran, statique) ---
+      const viaductEl = document.createElement('div');
+      Object.assign(viaductEl.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        zIndex: '9998',
+        pointerEvents: 'none',
+        animation: `remViaductFade ${duration} linear forwards`,
+      });
+
+      let hangers = '';
+      let pillars = '';
+      for (let x = 55; x < vw; x += 110) {
+        hangers += `<line x1="${x}" y1="3" x2="${x}" y2="15" stroke="#aaa" stroke-width="1"/>`;
+        pillars += `<rect x="${x - 7}" y="79" width="14" height="16" rx="2" fill="#888"/>`;
+      }
+
+      viaductEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="${vw}" height="95">
+        <line x1="0" y1="3" x2="${vw}" y2="3" stroke="#ccc" stroke-width="1.5"/>
+        ${hangers}
+        <rect x="0" y="14" width="${vw}" height="4" fill="#888" opacity="0.8"/>
+        <rect x="0" y="15" width="${vw}" height="2" fill="#bbb" opacity="0.4"/>
+        <rect x="0" y="72" width="${vw}" height="7" fill="#777"/>
+        <rect x="0" y="72" width="${vw}" height="2" fill="#999" opacity="0.6"/>
+        ${pillars}
+      </svg>`;
+
+      document.body.appendChild(viaductEl);
+
+      // --- Train (glisse de droite à gauche sur le viaduc) ---
+      const trainEl = document.createElement('div');
+      Object.assign(trainEl.style, {
+        position: 'fixed',
+        top: '0',
+        left: '100vw',
+        zIndex: '9999',
+        pointerEvents: 'none',
+        animation: `remRide ${duration} cubic-bezier(0.15,0,0.85,1) forwards`,
+        filter: 'drop-shadow(0 4px 12px rgba(0,122,61,0.5))',
+      });
+
+      trainEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 95" width="660" height="95">
+        <!-- pantographe (touche le fil de caténaire du viaduc) -->
+        <line x1="278" y1="18" x2="290" y2="3"  stroke="#555" stroke-width="1.5"/>
+        <line x1="302" y1="18" x2="290" y2="3"  stroke="#555" stroke-width="1.5"/>
+        <rect x="284" y="2" width="12" height="2" rx="1" fill="#333"/>
+        <!-- corps blanc -->
+        <rect x="2" y="18" width="656" height="54" rx="8" fill="#ffffff"/>
+        <!-- bande verte haute -->
+        <rect x="2" y="18" width="656" height="13" rx="5" fill="#007A3D"/>
+        <!-- bande verte basse -->
+        <rect x="2" y="58" width="656" height="6" fill="#007A3D"/>
+        <!-- soubassement noir -->
+        <rect x="2" y="64" width="656" height="8" rx="4" fill="#1a1a1a"/>
+        <!-- séparateurs wagons -->
+        <rect x="112" y="18" width="3" height="54" fill="#005C2E"/>
+        <rect x="222" y="18" width="3" height="54" fill="#005C2E"/>
+        <rect x="332" y="18" width="3" height="54" fill="#005C2E"/>
+        <rect x="442" y="18" width="3" height="54" fill="#005C2E"/>
+        <rect x="552" y="18" width="3" height="54" fill="#005C2E"/>
+        <!-- fenêtres wagon 1 -->
+        <rect x="36"  y="33" width="36" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <rect x="76"  y="33" width="28" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <!-- fenêtres wagon 2 -->
+        <rect x="122" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <rect x="168" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <!-- fenêtres wagon 3 -->
+        <rect x="232" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <rect x="278" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <!-- fenêtres wagon 4 -->
+        <rect x="342" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <rect x="388" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <!-- fenêtres wagon 5 -->
+        <rect x="452" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <rect x="498" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <!-- fenêtres wagon 6 -->
+        <rect x="562" y="33" width="38" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <rect x="608" y="33" width="34" height="21" rx="3" fill="rgba(180,225,200,0.8)"/>
+        <!-- nez avant noir -->
+        <rect x="2" y="18" width="30" height="54" rx="8" fill="#1a1a1a"/>
+        <!-- phares -->
+        <rect x="5" y="25" width="8" height="5" rx="2" fill="#ffffcc" opacity="0.95"/>
+        <rect x="5" y="56" width="8" height="5" rx="2" fill="#ffffcc" opacity="0.95"/>
+      </svg>`;
+
+      document.body.appendChild(trainEl);
+      trainEl.addEventListener('animationend', () => {
+        trainEl.remove();
+        viaductEl.remove();
+        active = false;
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.key === 'r' || e.key === 'R') spawnREM();
+    });
+
+    document.querySelector('.hero-banner').addEventListener('dblclick', spawnREM);
   })();
 </script>
 
