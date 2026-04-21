@@ -471,6 +471,11 @@
     height: 100%;
     border: none;
   }
+  .nav-short { display: none; }
+  @media (max-width: 600px) {
+    .nav-short { display: inline; }
+    .nav-full  { display: none; }
+  }
 </style>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5230S7MNSQ"></script>
@@ -489,7 +494,7 @@
   <div class="nav-links">
     <a href="../cartes/index.html">Cartes</a>
     <a href="../articles/index.html">Articles</a>
-    <a href="../applications/index.html">Applications</a>
+    <a href="../applications/index.html"><span class="nav-full">Applications</span><span class="nav-short">Apps</span></a>
     <a href="../plans/index.html">Plans</a>
     <a href="../donnees/index.html">Données</a>
     <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
@@ -559,7 +564,7 @@
       <p>
         <a href="../index.html">Accueil</a> • 
         <a href="../cartes/index.html">Cartes</a> • 
-        <a href="../applications/index.html">Applications</a>
+        <a href="../applications/index.html"><span class="nav-full">Applications</span><span class="nav-short">Apps</span></a>
       </p>
     </div>
   </div>
