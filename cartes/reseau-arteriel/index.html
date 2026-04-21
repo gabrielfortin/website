@@ -246,6 +246,14 @@
     font-weight: 500;
   }
 
+
+  .map-note {
+    font-size: 13px;
+    color: #6b6b66;
+    padding: 0 1.5rem 1rem;
+    line-height: 1.6;
+  }
+
   /* MODAL */
   @keyframes spin {
     to { transform: rotate(360deg); }
@@ -466,6 +474,7 @@
         <h2>Carte du réseau artériel</h2>
         <span>Ouvrir →</span>
       </div>
+      <p class="map-note">Carte représentant uniquement les rues faisant partie du réseau artériel administratif de la Ville de Montréal.</p>
     </div>
 
     <div class="map-card" onclick="openModal('./reseau-arteriel.html', 'Carte de toutes les rues')" style="cursor:pointer;">
@@ -474,6 +483,8 @@
         <h2>Carte de toutes les rues</h2>
         <span>Ouvrir →</span>
       </div>
+      <p class="map-note">Carte représentant toutes les rues de la Ville de Montréal.</p>
+      <p class="map-note">⚠️ Cette carte est très volumineuse et peut prendre plusieurs secondes à charger, selon votre appareil et votre connexion Internet.</p>
     </div>
   </div>
 
