@@ -873,6 +873,179 @@
   </div>
 </footer>
 
+<!-- EASTER EGGS -->
+<style>
+  @keyframes ghostBikeRide {
+    0%   { transform: translateX(0);                      opacity: 0; }
+    4%   { opacity: 1; }
+    96%  { opacity: 1; }
+    100% { transform: translateX(calc(100vw + 180px));    opacity: 0; }
+  }
+  @keyframes ghostBikeWheel {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes metroRide {
+    0%   { transform: translateX(0);                      opacity: 0; }
+    4%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { transform: translateX(calc(-100vw - 360px));   opacity: 0; }
+  }
+</style>
+
+<script>
+  // --- Easter egg: Vélo fantôme (inactivité 20s) ---
+  (function () {
+    let timer;
+    let active = false;
+
+    function spawnBike() {
+      if (active) return;
+      active = true;
+
+      const el = document.createElement('div');
+      Object.assign(el.style, {
+        position: 'fixed',
+        bottom: '18px',
+        left: '-170px',
+        zIndex: '9999',
+        pointerEvents: 'none',
+        animation: 'ghostBikeRide 9s linear forwards',
+        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))',
+      });
+
+      el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 75" width="130" height="75">
+        <!-- roue arrière -->
+        <circle cx="28" cy="52" r="18" fill="none" stroke="#1c3c6e" stroke-width="3"/>
+        <circle cx="28" cy="52" r="3"  fill="#1c3c6e"/>
+        <line x1="28" y1="34" x2="28" y2="70" stroke="#1c3c6e" stroke-width="1.5" opacity="0.5"/>
+        <line x1="10" y1="52" x2="46" y2="52" stroke="#1c3c6e" stroke-width="1.5" opacity="0.5"/>
+        <line x1="15" y1="39" x2="41" y2="65" stroke="#1c3c6e" stroke-width="1.5" opacity="0.4"/>
+        <line x1="41" y1="39" x2="15" y2="65" stroke="#1c3c6e" stroke-width="1.5" opacity="0.4"/>
+        <!-- roue avant -->
+        <circle cx="102" cy="52" r="18" fill="none" stroke="#1c3c6e" stroke-width="3"/>
+        <circle cx="102" cy="52" r="3"  fill="#1c3c6e"/>
+        <line x1="102" y1="34" x2="102" y2="70" stroke="#1c3c6e" stroke-width="1.5" opacity="0.5"/>
+        <line x1="84"  y1="52" x2="120" y2="52" stroke="#1c3c6e" stroke-width="1.5" opacity="0.5"/>
+        <line x1="89"  y1="39" x2="115" y2="65" stroke="#1c3c6e" stroke-width="1.5" opacity="0.4"/>
+        <line x1="115" y1="39" x2="89"  y2="65" stroke="#1c3c6e" stroke-width="1.5" opacity="0.4"/>
+        <!-- cadre -->
+        <polyline points="28,52 55,30 80,52" fill="none" stroke="#2a6dd9" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        <line x1="55" y1="30" x2="55" y2="52" stroke="#2a6dd9" stroke-width="2"   stroke-linecap="round"/>
+        <line x1="55" y1="30" x2="80" y2="30" stroke="#2a6dd9" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="80" y1="30" x2="102" y2="52" stroke="#2a6dd9" stroke-width="3"   stroke-linecap="round"/>
+        <!-- guidon -->
+        <line x1="80" y1="30" x2="78" y2="22" stroke="#1c3c6e" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="74" y1="22" x2="84" y2="22" stroke="#1c3c6e" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- selle -->
+        <line x1="55" y1="30" x2="48" y2="26" stroke="#1c3c6e" stroke-width="2"   stroke-linecap="round"/>
+        <line x1="44" y1="26" x2="54" y2="26" stroke="#1c3c6e" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- cycliste -->
+        <circle cx="72" cy="12" r="7" fill="#f5c842" stroke="#d4a820" stroke-width="1.5"/>
+        <path d="M72,19 Q65,33 55,30 Q65,26 74,22 Q78,26 72,19Z" fill="#e63c2f" stroke="#c0301f" stroke-width="1"/>
+        <line x1="64" y1="27" x2="55" y2="33" stroke="#e63c2f" stroke-width="2" stroke-linecap="round"/>
+        <line x1="68" y1="29" x2="78" y2="22" stroke="#e63c2f" stroke-width="2" stroke-linecap="round"/>
+      </svg>`;
+
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => { el.remove(); active = false; });
+    }
+
+    function reset() {
+      clearTimeout(timer);
+      timer = setTimeout(spawnBike, 20000);
+    }
+    ['mousemove','keydown','scroll','click','touchstart'].forEach(e =>
+      document.addEventListener(e, reset, { passive: true })
+    );
+    reset();
+  })();
+
+  // --- Easter egg: Métro STM (touche M) ---
+  (function () {
+    let active = false;
+
+    function spawnMetro() {
+      if (active) return;
+      active = true;
+
+      const el = document.createElement('div');
+      Object.assign(el.style, {
+        position: 'fixed',
+        bottom: '0',
+        left: '100vw',
+        zIndex: '9999',
+        pointerEvents: 'none',
+        animation: 'metroRide 5.5s cubic-bezier(0.15,0,0.85,1) forwards',
+        filter: 'drop-shadow(0 -3px 10px rgba(100,160,220,0.5))',
+      });
+
+      el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 65" width="660" height="65">
+        <!-- rail -->
+        <rect x="0" y="59" width="660" height="4" rx="2" fill="#999" opacity="0.6"/>
+        <rect x="0" y="60" width="660" height="2" rx="1" fill="#bbb" opacity="0.4"/>
+        <!-- corps -->
+        <rect x="2" y="10" width="656" height="48" rx="9" fill="#7ab8e8"/>
+        <rect x="2" y="10" width="656" height="5"  rx="4" fill="#5a9fd4"/>
+        <rect x="2" y="32" width="656" height="7"  fill="#ffffff" opacity="0.85"/>
+        <!-- séparateurs wagons -->
+        <rect x="112" y="10" width="4" height="48" fill="#5a9fd4"/>
+        <rect x="222" y="10" width="4" height="48" fill="#5a9fd4"/>
+        <rect x="332" y="10" width="4" height="48" fill="#5a9fd4"/>
+        <rect x="442" y="10" width="4" height="48" fill="#5a9fd4"/>
+        <rect x="552" y="10" width="4" height="48" fill="#5a9fd4"/>
+        <!-- fenêtres wagon 1 -->
+        <rect x="14"  y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <rect x="58"  y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <!-- fenêtres wagon 2 -->
+        <rect x="122" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <rect x="166" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <!-- fenêtres wagon 3 -->
+        <rect x="232" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <rect x="276" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <!-- fenêtres wagon 4 -->
+        <rect x="342" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <rect x="386" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <!-- fenêtres wagon 5 -->
+        <rect x="452" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <rect x="496" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <!-- fenêtres wagon 6 -->
+        <rect x="562" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <rect x="606" y="15" width="38" height="15" rx="3" fill="rgba(220,240,255,0.88)"/>
+        <!-- phares avant (gauche = sens de déplacement) -->
+        <circle cx="10" cy="22" r="5" fill="#ffffff" opacity="0.95"/>
+        <circle cx="10" cy="40" r="5" fill="#ffffff" opacity="0.95"/>
+        <rect x="2" y="19" width="6" height="6"  rx="1" fill="#dceeff" opacity="0.7"/>
+        <rect x="2" y="37" width="6" height="6"  rx="1" fill="#dceeff" opacity="0.7"/>
+        <!-- roues -->
+        <circle cx="34"  cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="82"  cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="142" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="192" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="252" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="302" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="362" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="412" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="472" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="522" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="582" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+        <circle cx="632" cy="59" r="5" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+      </svg>`;
+
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => { el.remove(); active = false; });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.key === 'm' || e.key === 'M') spawnMetro();
+    });
+
+    document.querySelector('.hero-avatar').addEventListener('click', spawnMetro);
+  })();
+</script>
+
 <!-- SCROLL ANIMATION SCRIPT -->
 <script>
   // Observe sections for fade-in animation
