@@ -57,6 +57,12 @@
     animation: slideInDown 0.6s ease-out;
   }
 
+  .nav-short { display: none; }
+  @media (max-width: 600px) {
+    .nav-short { display: inline; }
+    .nav-full  { display: none; }
+  }
+
   .nav-logo { 
     font-size: 16px; 
     font-weight: 700; 
@@ -435,7 +441,7 @@
 <nav>
   <a class="nav-logo" href="../index.html"><img src="../favico.png" alt="Gabriel Fortin" style="height:28px;display:block;"></a>
   <div class="nav-links">
-    <a href="./index.html">Applications</a>
+    <a href="../applications/index.html"><span class="nav-full">Applications</span><span class="nav-short">Apps</span></a>
     <a href="../cartes/index.html">Cartes</a>
     <a href="../donnees/index.html">Données</a>
     <a href="../plans/index.html">Plans</a>
@@ -452,7 +458,7 @@
       <span>/</span>
       <span>Applications</span>
     </div>
-    <h1><img src="../img/icon-apps.png" alt="" style="height:1.3em;width:1.3em;object-fit:cover;border-radius:8px;margin-right:0.4em;vertical-align:middle;">Mes Applications</h1>
+    <h1><img src="../img/icon-apps.png" alt="" style="height:1.3em;width:1.3em;object-fit:cover;border-radius:8px;margin-right:0.4em;vertical-align:middle;">Applications</h1>
     <p class="hero-desc">Découvrez les applications web et outils que j'ai développés pour rendre les données plus accessibles.</p>
   </div>
 </section>
