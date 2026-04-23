@@ -438,6 +438,37 @@
     transform: translateX(4px);
   }
 
+  .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .card-btn {
+    font-size: 13px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid #1c3c6e;
+    color: #1c3c6e;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .card-btn:hover {
+    background: #1c3c6e;
+    color: #fff;
+  }
+
+  .card-btn-primary {
+    background: #1c3c6e;
+    color: #fff;
+  }
+
+  .card-btn-primary:hover {
+    background: #152d52;
+  }
+
   /* FEATURED */
   .featured { 
     background: linear-gradient(135deg, #ffffff, #f8f9fa);
@@ -840,12 +871,15 @@
   <h2 class="section-label">Engagements</h2>
   
   <div class="two-col">
-    <a href="https://projetmontreal.org/" class="card">
+    <div class="card">
       <div class="card-icon blue">💚</div>
       <h3>Projet Montréal</h3>
       <p>Membre actif du parti politique Projet Montréal, travaillant pour une ville plus verte et plus accessible.</p>
-      <span class="card-arrow">→</span>
-    </a>
+      <div class="card-actions">
+        <a href="https://projetmontreal.org/" target="_blank" rel="noopener" class="card-btn">Plus d'infos →</a>
+        <a href="https://monelection.org/form/donation/ph3NOVdJvWkoW5Jdckfa2uIXecmKGo?solliciteur_id=70497" target="_blank" rel="noopener" class="card-btn card-btn-primary">Faire un don 💚</a>
+      </div>
+    </div>
 
     <a href="https://montreal.ca/conseils-decisionnels/conseil-darrondissement-du-plateau-mont-royal" class="card">
       <div class="card-icon green">🎤</div>
@@ -1003,7 +1037,7 @@
       if (e.key === 'm' || e.key === 'M') spawnMetro();
     });
 
-    document.querySelector('.hero-avatar').addEventListener('dblclick', spawnMetro);
+    document.querySelector('.hero-avatar').addEventListener('click', spawnMetro);
   })();
 </script>
 
@@ -1124,7 +1158,7 @@
       if (e.key === 'r' || e.key === 'R') spawnREM();
     });
 
-    document.querySelector('.hero-banner').addEventListener('dblclick', spawnREM);
+    document.querySelector('.hero-banner').addEventListener('click', spawnREM);
   })();
 </script>
 
