@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Gabriel Fortin",
+  "jobTitle": "Ingénieur Logiciel et Conseiller d'arrondissement",
+  "url": "https://gabfortin.com",
+  "sameAs": [
+    "https://gabrielfortin.online",
+    "https://gabrielfortin.space",
+    "https://gabrielfortin.site",
+    "https://github.com/gabrielfortin",
+    "https://github.com/gabfortin",
+    "https://www.linkedin.com/in/gabriel-fortin-ing/",
+    "https://bsky.app/profile/gabfortin.com",
+    "https://www.facebook.com/gabfortin1/",
+    "https://www.instagram.com/gabrielfortin.mtl/"
+  ],
+  "alumniOf": {
+    "@type": "CollegeOrUniversity",
+    "name": "Polytechnique Montréal"
+  },
+  "knowsAbout": ["Mobilité durable", "Génie logiciel", "Urbanisme"]
+}
