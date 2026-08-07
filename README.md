@@ -11,137 +11,90 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 │   └── index.html                      # Hub des applications
 ├── cartes/
 │   └── index.html                      # Cartes interactives
+├── donnees/
+│   └── index.html                      # Données ouvertes
+├── plans/
+│   └── index.html                      # Plans urbains
 ├── articles/
 │   ├── index.html                      # Liste des articles
 │   ├── refonte-stm-2026/
 │   │   └── index.html                  # Article: Refonte STM 2026
 │   └── le-rem-et-le-plateau/
 │       └── index.html                  # Article: REM et Plateau
-├── plans/
-│   └── index.html                      # Plans urbains
-└── donnees/
-    └── index.html                      # Données ouvertes
+└── parcours/
+    └── index.html                      # Parcours professionnel et engagements
+└── projets/
+    └── index.html                      # Projets intéressants créés par des amis
 ```
 
 ## Pages et Navigation
 
 ### Accueil (`/index.html`)
-Page principale avec présentation et navigation vers:
+Page principale avec présentation et navigation (section "Explorer") vers:
+- **Compteurs Vélo** (featured) → https://velo.gabfortin.com
+- **Avant / Après** (featured, badge "Nouveau") → https://avantapres.gabfortin.com — comparaison avant/après des améliorations de l'espace public réalisées par Projet Montréal
 - **Cartes Interactives** → Élections 2025, réseau artériel, modes rapides et fréquents
-- **Articles & Analyses** → Refonte STM 2026, REM et impact sur le Plateau
-- **Plans Urbains** → PUM 2050, prolongement métro, REB Projet Montréal
 - **Données Ouvertes** → Ensembles de données publiques et visualisations
-- **Applications** → Projets et outils développés
-- Domaines d'intérêt: Mobilité, Données, Urbanisme, Technologie
-- Engagement civique: Projet Montréal, Conseil d'Arrondissement
+- **Plans** → PUM 2050, prolongement métro, REB Projet Montréal
+- **Articles & Analyses** → Refonte STM 2026, REM et impact sur le Plateau
+- **Parcours** → Formation, carrière chez Bell et dossiers portés comme conseiller
+- **Projets intéressants** → Projets créés par des amis
+
+Navigation principale: Cartes, Données, Plans, Articles, Parcours.
 
 ### Contenu Principal
 
-#### Articles (`/articles/`)
-
-**Articles publiés:**
-
-1. **L'impact de la refonte STM 2026 au Plateau-Mont-Royal**
-   - 📅 Date: 15 FEV 2026
-   - 📂 Catégorie: Transport
-   - 📍 Chemin: `/articles/refonte-stm-2026/index.html`
-   - ✅ Statut: À créer (lien setup, contenu pending)
-   - Description: Analyses détaillées de l'impact des changements des lignes de la STM en prévision de la branche A3 du REM
-
-2. **L'arrivée du REM et son impact sur le Plateau**
-   - 📅 Date: 15 NOV 2025
-   - 📂 Catégorie: Urbanisme
-   - 📍 Chemin: `/articles/le-rem-et-le-plateau/index.html`
-   - ✅ Statut: À créer (lien setup, contenu pending)
-   - Description: Analyse complète de l'arrivée du REM et impacts sur le Plateau-Mont-Royal
-
-
 #### Cartes (`/cartes/`)
 
-**Cartes interactives disponibles:**
-
-1. **Réseau Artériel de Montréal** ✅
-   - 📍 Chemin: `/cartes/reseau-arteriel/index.html`
-   - 🖼️ Images: `Arteriel.png`, `Tout.png`
-   - Carte 1 — Réseau artériel seulement: `arteriel-seulement.html` (local)
-   - Carte 2 — Toutes les rues: `reseau-arteriel.html` (local)
-   - Données: https://donnees.montreal.ca/dataset/reseau-arteriel-administratif
-
-2. **Résultats Élections 2025** ✅
-   - 📍 Chemin: `/cartes/elections-2025/index.html`
-   - Carte 1 — Sections de vote: `ParSectionDeVote.html` (local)
-   - Carte 2 — Sections de vote avec métro: `mairie2025-metro.html` (local)
-   - Carte 3 — Mairie par district: `ParDistrict.html` (local)
-
-3. **Modes Rapides et Fréquents**
-   - 🚌 Icon: 🚌
-   - 🔗 Lien: `#` → Placeholder
-   - URL à fournir: https://www.gabfortin.com/blogue/cartes/rapide-et-fréquent
-   - Description: Données des modes fréquents et rapides (STM et Pulsar)
-
-4. **Données Ouvertes ARTM** ✅
-   - 🚆 Icon: 🚆
-   - 🔗 Lien: https://gabrielfortin.github.io/artm-map (✅ LIVE)
-   - Description: Données ouvertes des opérateurs ARTM (STM, STL, RTL, Pulsar, exo)
-
-#### Plans (`/plans/`)
-
-**Plans:**
-
-1. **PUM 2050**
-   - 🚆 Icon: 🚆
-   - 🔗 Lien: `#` → Placeholder
-   - URL à fournir: https://www.gabfortin.com/blogue/plans/pum-2050
-   - Description: Le Plan d'Urbanisme et de Mobilité (PUM) 2050 présente entre autres une vision 2040 et une vision 2050 avec une carte incluant des lignes de tram, SRB et prolongements de Métro qui devraient être priorisés. Voici un plan métropolitain incluant quelques propositions tirées du PUM.
-
-2. **Prolongement métro**
-   - 🚆 Icon: 🚆
-   - 🔗 Lien: `#` → Placeholder
-   - URL à fournir: https://www.gabfortin.com/plans/métro-projet-montréal
-   - Description: Dans la plateforme 2025 de Projet Montréal, 2 prolongements de métro sont proposés
-
-3. **Réseau Express Bus**
-    - 🚆 Icon: 🚆
-    - 🔗 Lien: `#` → Placeholder
-    - URL à fournir: https://www.gabfortin.com/plans/reb-projet-montréal
-    - Description: Dans la plateforme 2025 de Projet Montréal, 11 axes sont identifiés comme futurs tramway ou SRB légers faisant partie du Réseau Express Bus (REB). Voici un plan des services lourds, fréquents et/ou rapides de la région métropolitaine de Montréal, incluant les lignes présentement en service ou en construction ainsi que les lignes proposées par Projet Montréal.
+1. **Avant / Après** → https://avantapres.gabfortin.com
+2. **Réseau Artériel de Montréal** → `./reseau-arteriel/index.html`
+3. **Pistes cyclables Plateau** → https://pistes.gabfortin.com
+4. **Résultats Élections 2025** → `./elections-2025/index.html`
+5. **Modes Rapides et Fréquents**
+6. **Stationnement Plateau** → https://parking.gabfortin.com
 
 #### Données (`/donnees/`)
 
-**Ensembles de données et statistiques:**
+1. **Compteurs Vélo** → https://velo.gabfortin.com
+2. **Déchets Montréal** → https://dechets.gabfortin.com
+3. **Résultats élections municipales Montréal 2025** → `./elections-2025/resultats.html`
+4. **Requêtes 311** → https://311.gabfortin.com
 
-1. **Compteurs de Vélo**
-   - 🚴 Icon: 🚴
-   - 🔗 Lien: `#` → Placeholder
-   - URL à fournir: https://velo.gabfortin.com
-   - Description: Données détaillées des compteurs de vélo avec tendances et analyses temporelles.
+#### Plans (`/plans/`)
 
-2. **Résultats élections municipales Montréal 2025**
-   - 👥 Icon: 👥
-   - 🔗 Lien: `#` → Placeholder
-   - URL à fournir: https://gabrielfortin.github.io/resultats
-   - Description: Résultats des élections 2025.
+1. **PUM 2050** → `./pum-2050/index.html`
+2. **Prolongement métro** → `./metro-2025/index.html`
+3. **Réseau Express Bus** → `./reb-2025/index.html`
 
+#### Articles (`/articles/`)
+
+1. **L'impact de la refonte STM 2026 au Plateau-Mont-Royal** — `/articles/refonte-stm-2026/index.html`
+2. **L'arrivée du REM et son impact sur le Plateau** — `/articles/le-rem-et-le-plateau/index.html`
+
+#### Parcours (`/parcours/`)
+
+Formation, carrière (incl. passage chez Bell) et dossiers portés comme conseiller d'arrondissement (plan propreté 2026, mobilité durable & Vision Zéro, itinérance et sécurité des écoles — district de Jeanne-Mance).
+
+#### Projets intéressants (`/projets/`)
+
+Projets créés par des amis:
+1. **Simulateur TC — ARTM** → https://live-transit.regardemon.site
+2. **Carte des trajets Bixi** → https://etienneld.com/bixi-trajets-2025/
+3. **CartoMTL : le GeoGuessr de Montréal** → https://cartomtl.com
 
 ### Applications (`/applications/`)
 
-**Application phare:**
-
-0. **Compteurs de Vélo Montréal** ⭐ ✅
-   - 🚴 Icon: 🚴
-   - 🔗 Lien: https://velo.gabfortin.com/ (✅ LIVE)
-   - Description: Visualisation des compteurs de vélo à Montréal avec tendances et comparaisons
-   - Statut: Production
-
-**Autres applications:**
-
+- **Compteurs Vélo** → https://velo.gabfortin.com
+- **Pistes cyclables Plateau** → https://pistes.gabfortin.com
+- **Stationnement Plateau** → https://parking.gabfortin.com
+- **Déchets Montréal** → https://dechets.gabfortin.com
 
 ## Développement Local
 
 ### Accès au site
 ```bash
 # Ouvrir index.html dans le navigateur
-# file:///Users/gabfortin/Developer/website/index.html
+# file:///[...]/website/index.html
 ```
 
 ### Navigation
@@ -151,32 +104,19 @@ Page principale avec présentation et navigation vers:
 
 ## Déploiement
 
-Pour déployer en production sur `www.gabfortin.com`:
-1. S'assurer que tous les placeholders sont remplacés par les URLs réelles
-2. Mettre à jour les domaines d'accès (actuellement file://)
-3. Uploader les fichiers vers l'hébergement web
-4. Configurer les redirections DNS
-
-## À Faire
-
-- [ ] Implémenter contenu pour tous les articles placeholders
-- [ ] Créer/lier les cartes interactives placeholders
-- [ ] Créer/lier les plans placeholders
-- [ ] Créer/lier les données/visualisations placeholders
-- [ ] Implémenter les applications placeholders
-- [ ] Déployer en production
+Site en production sur `www.gabfortin.com`.
 
 ## Notes Techniques
 
 - **Framework**: HTML5 + CSS3 + Vanilla JavaScript
 - **Responsive**: Optimisé pour desktop, tablet, mobile
-- **Animations**: Keyframes CSS (fadeIn, slideIn, glow, float)
+- **Animations**: Keyframes CSS (fadeIn, slideIn, glow, float, badgePulse)
 - **Glassmorphism**: Effets visuels modernes (blur, backdrop-filter)
 - **Accessibilité**: Breadcrumbs, navigation logique, sémantique HTML5
+- **Analytics**: Google Analytics (gtag)
 - **Performance**: Pas de dépendances externes (sauf polices Google)
 
 ## Contact & Liens
 
-- 📧 Email: info@gabfortin.com (à mettre à jour)
-- 🌐 Site: www.gabfortin.com (en développement)
-- 📍 Engagement: Plateau-Mont-Royal, Montréal
+- 🌐 Site: www.gabfortin.com
+- 📍 Engagement: Conseiller d'arrondissement, Plateau-Mont-Royal, Montréal
