@@ -504,6 +504,46 @@
     transform: translateX(4px);
   }
 
+  /* DECLARATIONS & RESOLUTIONS */
+  .decl-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .decl-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-left: 3px solid #1a9455;
+    border-radius: 8px;
+    padding: 1.1rem 1.4rem;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .decl-item:hover {
+    border-color: rgba(28, 60, 110, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(28, 60, 110, 0.1);
+  }
+
+  .decl-item p {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+  }
+
+  .decl-item-arrow {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c3c6e;
+  }
+
   /* CHIPS */
   .chip-list {
     display: flex;
@@ -793,6 +833,25 @@
         <p>Travail sur la mise en place de mesures d'apaisement pour sécuriser les abords des écoles.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- DECLARATIONS & RESOLUTIONS -->
+<section class="section">
+  <h2 class="section-label">Déclarations et résolutions</h2>
+  <p class="section-intro">Déclarations et résolutions présentées au conseil d'arrondissement.</p>
+
+  <div class="decl-list">
+    <a class="decl-item" href="../fichiers/CA20251201-%20D%C3%A9claration%20r%C3%A9seau%20cyclable.pdf" target="_blank" rel="noopener">
+      <p>Déclaration sur l'importance d'un réseau cyclable sécuritaire et continu</p>
+      <span class="decl-item-arrow">→</span>
+    </a>
+    <a class="decl-item" href="../fichiers/CA260908-%20R%C3%A9solution%20demandant%20aux%20partis%20politiques%20provinciaux%20et%20%C3%A0%20leurs%20candidat%C2%B7es%20de%20pr%C3%A9senter%20un%20plan%20de%20r%C3%A9duction%20de%20la%20consommation%20de%20p%C3%A9trole%20au%20Qu%C3%A9bec%2C%20notamment%20celui%20issu%20des%20sables%20bitumineux.pdf" target="_blank" rel="noopener">
+      <p>Résolution demandant aux partis politiques provinciaux et à leurs candidat·es de présenter un plan de réduction de la consommation de pétrole au Québec, notamment celui issu des sables bitumineux</p>
+      <span class="decl-item-arrow">→</span>
+    </a>
   </div>
 </section>
 
