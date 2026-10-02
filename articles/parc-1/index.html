@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="../../favico.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sécuriser l'avenue du Parc — Gabriel Fortin</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #2c2c2c;
+    background: #f8f9fa;
+  }
+
+  /* NAVIGATION */
+  nav {
+    background: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .nav-logo {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1c3c6e;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .nav-logo:hover {
+    color: #1a9455;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #2c2c2c;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .nav-links a:hover {
+    color: #1c3c6e;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #1c3c6e;
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  .nav-pill {
+    background: linear-gradient(135deg, #1c3c6e, #1a9455);
+    color: white !important;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .nav-pill::after {
+    display: none;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    padding: 3rem 2rem;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+
+  .breadcrumb a {
+    color: #1c3c6e;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .breadcrumb a:hover {
+    color: #1a9455;
+  }
+
+  .breadcrumb span {
+    color: #6b6b66;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    color: #1c3c6e;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #1c3c6e, #1a9455);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #b45309;
+    margin-bottom: 1rem;
+  }
+
+  .article-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b6b66;
+  }
+
+  /* ARTICLE CONTENT */
+  .article-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .article-content h2 {
+    font-size: 1.8rem;
+    color: #1c3c6e;
+    margin: 2rem 0 1rem 0;
+    padding-top: 1rem;
+  }
+
+  .article-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .article-content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: #2c2c2c;
+  }
+
+  .article-content img {
+    max-width: 420px;
+    width: 100%;
+    height: auto;
+    margin: 0.5rem 1.5rem 1rem 0;
+    border-radius: 8px;
+    float: left;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .clearfix {
+    clear: both;
+  }
+
+  .cta-link {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #1c3c6e, #1a9455);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .cta-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(28, 60, 110, 0.25);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin: 2rem 0;
+  }
+
+  /* FOOTER */
+  footer {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 3rem 2rem;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  footer p {
+    margin-bottom: 1rem;
+    color: #2c2c2c;
+  }
+
+  footer a {
+    color: #1c3c6e;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  footer a:hover {
+    color: #1a9455;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .nav-links {
+      gap: 1rem;
+      font-size: 13px;
+    }
+
+    .nav-pill {
+      padding: 6px 14px;
+      font-size: 12px;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .article-content {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+
+    .article-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    nav {
+      padding: 0 1rem;
+    }
+
+    .nav-logo {
+      font-size: 14px;
+    }
+
+    .nav-links {
+      gap: 0.5rem;
+      font-size: 12px;
+    }
+
+    .nav-pill {
+      display: none;
+    }
+
+    .hero {
+      padding: 2rem 1rem;
+    }
+
+    .hero h1 {
+      font-size: 1.5rem;
+    }
+
+    .article-content {
+      margin: 1rem;
+      padding: 1rem;
+    }
+
+    .breadcrumb {
+      flex-wrap: wrap;
+    }
+  }
+  .nav-short { display: none; }
+  @media (max-width: 600px) {
+    .nav-short { display: inline; }
+    .nav-full  { display: none; }
+  }
+</style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5230S7MNSQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-5230S7MNSQ");
+  </script>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a class="nav-logo" href="../../index.html"><img src="../../favico.png" alt="Gabriel Fortin" style="height:28px;display:block;"></a>
+  <div class="nav-links">
+    <a href="../../cartes/index.html">Cartes</a>
+    <a href="../../donnees/index.html">Données</a>
+    <a href="../../plans/index.html">Plans</a>
+    <a href="../../articles/index.html">Blogue</a>
+    <a href="../../parcours/index.html">Parcours</a>
+    <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="../../index.html">Accueil</a>
+      <span>/</span>
+      <a href="../index.html">Blogue</a>
+      <span>/</span>
+      <span>Sécuriser l'avenue du Parc</span>
+    </div>
+    <h1>Proposition pour sécuriser un tronçon dangereux de l'avenue du Parc</h1>
+    <p class="hero-subtitle">4 morts en 10 ans entre Mont-Royal et des Pins</p>
+    <div class="article-meta">
+      <div class="meta-item">📅 2 octobre 2026</div>
+      <div class="meta-item">🏷️ Mobilité</div>
+      <div class="meta-item">⏱️ 4 min de lecture</div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE CONTENT -->
+<section class="article-content">
+  <p>Pendant dix jours, les Championnats du monde de cyclisme sur route UCI ont fait vibrer nos rues. Des milliers de personnes ont redécouvert Montréal autrement : à pied, à vélo, dans des rues apaisées et vibrantes.</p>
+
+  <p>Alors qu'on prédisait un enfer pendant une semaine, on a plutôt eu droit à un événement festif et positif. Mes collègues et moi croyons que la fermeture complète de l'avenue du Parc pendant un mois aurait été l'occasion idéale pour enfin amorcer la sécurisation de cet axe dangereux.</p>
+
+  <p>Après un mois de fermeture complète, l'avenue du Parc rouvrira à la circulation lundi. Pour nous, il s'agit d'une opportunité manquée d'amorcer, enfin, la sécurisation de cet axe dangereux. On aurait pu réouvrir l'avenue avec des aménagements transitoires qui auraient fait une grande différence pour la sécurité et la fluidité des déplacements.</p>
+
+  <img src="./parc-concept.jpg" alt="Concept d'aménagement proposé pour l'avenue du Parc">
+
+  <p>Le tronçon de l'avenue du Parc entre l'avenue du Mont-Royal et l'avenue des Pins figure parmi les plus dangereux du réseau en matière de mortalité, avec quatre décès dans les dix dernières années. C'est aussi, paradoxalement, l'un des plus simples à réaménager : avec ses huit voies de circulation, il offre l'espace nécessaire pour un aménagement transitoire rapide, sans attendre la réalisation du projet de réaménagement complet, qui s'étalera vraisemblablement sur plusieurs années. En effet, ses huit voies incitent les automobilistes à rouler à toute vitesse. Comme le rapport de la coroner le rapportait en avril dernier, nous devons repartager l'espace sur l'avenue du Parc pour améliorer sa sécurité. Au lieu de remettre quatre voies pour les voitures, on aurait pu, par exemple, allouer deux voies aux bus 24/7, deux voies aux vélos, tout en maintenant quatre voies pour les voitures.</p>
+
+  <div class="clearfix"></div>
+
+  <p>Les lignes de bus 80 et 129 sont très utilisées, et des voies réservées amélioreraient nettement la fluidité de leurs déplacements. Par ailleurs, faute d'aménagement adéquat, de nombreux travailleur-euses et étudiant-es qui se rendent au centre-ville à vélo circulent sur le trottoir du côté ouest de l'avenue, ou se mettent en danger en roulant à côté des véhicules. Un lien cyclable reliant le chemin de la Côte-Sainte-Catherine, l'avenue du Mont-Royal, la rue Rachel, l'avenue des Pins et la rue Hutchison, dans Milton-Parc, viendrait combler une discontinuité majeure du réseau cyclable. Sur ce tronçon, les usager-ères ne devraient pas avoir à attendre : des gains importants en sécurité et en mobilité peuvent y être réalisés rapidement, et ce sans sacrifier la fluidité de la circulation véhiculaire.</p>
+
+  <p>La mairesse Martinez Ferrada s'est engagée à sécuriser l'avenue du Parc, mais un réaménagement prendra nécessairement plusieurs années. D'ici-là, des actions doivent être prises rapidement pour sécuriser l'avenue. Du marquage au sol, des bollards, tout cela peut être installé plus rapidement et à coûts moins élevés qu'un réaménagement permanent, en attendant les travaux qui débuteront dans plusieurs années, et qui seront terminés encore bien des années plus tard.</p>
+
+  <p>Un événement aussi exceptionnel que les Championnats du monde de cyclisme et la fermeture complète de l'avenue du Parc pendant un mois auraient été une occasion en or de tester, d'apprendre et de revoir notre façon de penser la fluidité, qui n'est pas seulement un concept propre à l'automobile. On ne devrait jamais se contenter de tout remettre à l'identique.</p>
+
+  <p><strong>Le Plateau est prêt</strong> à trouver des solutions plus rapidement et voici une idée d'aménagement transitoire que nous serions prêts à essayer : un aménagement léger, mais qui viendrait fluidifier le transport collectif, sécuriser les transports actifs, tout cela sans réduire l'efficacité des autres modes de transport, y compris les voitures. Et vous, qu'aimeriez-vous voir sur l'avenue du Parc?</p>
+</section>
+
+<hr>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <p>© 2026 Gabriel Fortin.</p>
+    </div>
+    <div>
+      <p>
+        <a href="../../index.html">Accueil</a> •
+        <a href="../index.html">Blogue</a> •
+        <a href="./index.html">Sécuriser l'avenue du Parc</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
