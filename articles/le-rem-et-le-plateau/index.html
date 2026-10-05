@@ -37,33 +37,35 @@
 
   /* NAVIGATION */
   nav {
-    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 1rem 2rem;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    animation: slideInDown 0.6s ease-out;
   }
 
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 900px;
-    margin: 0 auto;
+  @keyframes slideInDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
 
   .nav-logo {
+    font-size: 16px;
     font-weight: 700;
-    font-size: 1.1rem;
+    letter-spacing: -0.3px;
     color: #1c3c6e;
     text-decoration: none;
-    transition: color 0.3s ease;
-  }
-
-  .nav-logo:hover {
-    color: #1a9455;
+    background: linear-gradient(135deg, #1c3c6e, #1a9455);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .nav-links {
@@ -73,16 +75,12 @@
   }
 
   .nav-links a {
+    font-size: 14px;
+    color: #6b6b66;
     text-decoration: none;
-    color: #2c2c2c;
     font-weight: 500;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-  }
-
-  .nav-links a:hover {
-    color: #1c3c6e;
   }
 
   .nav-links a::after {
@@ -92,8 +90,12 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: #1c3c6e;
+    background: linear-gradient(90deg, #1c3c6e, #1a9455);
     transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: #1c3c6e;
   }
 
   .nav-links a:hover::after {
@@ -102,14 +104,19 @@
 
   .nav-pill {
     background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    color: white !important;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
+    color: #fff !important;
+    padding: 8px 18px;
+    border-radius: 24px;
+    font-size: 13px !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(28, 60, 110, 0.3);
+    text-decoration: none;
   }
 
-  .nav-pill::after {
-    display: none;
+  .nav-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(28, 60, 110, 0.4);
   }
 
   /* HERO */
