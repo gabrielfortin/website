@@ -1,0 +1,23 @@
+# Gabriel Fortin
+
+> Site personnel de Gabriel Fortin, ingénieur logiciel et conseiller d'arrondissement du Plateau-Mont-Royal à Montréal. Outils, cartes interactives, données ouvertes et analyses sur l'urbanisme, le transport et la mobilité à Montréal.
+
+## Pages principales
+
+- [Accueil](https://gabfortin.com/): Présentation, outils mis en vedette et navigation vers l'ensemble du site.
+- [Parcours](https://gabfortin.com/parcours/): Formation, parcours professionnel chez Bell, dossiers portés comme conseiller d'arrondissement, et déclarations/résolutions adoptées au conseil d'arrondissement.
+- [Blogue](https://gabfortin.com/articles/): Analyses et articles sur l'urbanisme, le transport en commun et l'impact des grands projets à Montréal et au Plateau-Mont-Royal.
+- [Cartes](https://gabfortin.com/cartes/): Cartes interactives utilisant les données ouvertes de la Ville de Montréal (élections, réseau artériel, modes rapides et fréquents).
+- [Données](https://gabfortin.com/donnees/): Tableaux, statistiques et visualisations de données ouvertes de la Ville de Montréal et d'autres organismes.
+- [Plans](https://gabfortin.com/plans/): Plans détaillés de projets de transport collectif pour la région de Montréal (PUM 2050, prolongement du métro, réseau express bus).
+- [Applications](https://gabfortin.com/applications/): Applications web développées par Gabriel Fortin pour rendre les données municipales plus accessibles.
+
+## Articles
+
+- [Sécuriser l'avenue du Parc](https://gabfortin.com/articles/parc-1/): Proposition d'aménagement transitoire pour sécuriser un tronçon dangereux de l'avenue du Parc, où quatre personnes sont mortes en dix ans.
+- [Refonte STM 2026](https://gabfortin.com/articles/refonte-stm-2026/): Impact de la refonte du réseau de bus de la STM sur le Plateau-Mont-Royal, en vue de l'arrivée de la branche A3 du REM.
+- [Le REM et le Plateau](https://gabfortin.com/articles/le-rem-et-le-plateau/): Impact de l'arrivée du Réseau Express Métropolitain (REM) sur le Plateau-Mont-Royal.
+
+## Optional
+
+- [Sitemap](https://gabfortin.com/sitemap.xml): Liste complète des pages du site.

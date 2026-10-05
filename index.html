@@ -5,6 +5,19 @@
 <link rel="icon" type="image/png" href="./favico.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gabriel Fortin — Conseiller</title>
+<meta name="description" content="Conseiller d'arrondissement au Plateau-Mont-Royal, ingénieur logiciel et passionné d'urbanisme. Outils, cartes et analyses pour rendre les données municipales plus accessibles.">
+<link rel="canonical" href="https://gabfortin.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gabriel Fortin">
+<meta property="og:title" content="Gabriel Fortin — Conseiller d'arrondissement, Plateau-Mont-Royal">
+<meta property="og:description" content="Conseiller d'arrondissement au Plateau-Mont-Royal, ingénieur logiciel et passionné d'urbanisme. Outils, cartes et analyses pour rendre les données municipales plus accessibles.">
+<meta property="og:url" content="https://gabfortin.com/">
+<meta property="og:image" content="https://gabfortin.com/img/Gabriel%20Fortin.png">
+<meta property="og:locale" content="fr_CA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Gabriel Fortin — Conseiller d'arrondissement, Plateau-Mont-Royal">
+<meta name="twitter:description" content="Conseiller d'arrondissement au Plateau-Mont-Royal, ingénieur logiciel et passionné d'urbanisme. Outils, cartes et analyses pour rendre les données municipales plus accessibles.">
+<meta name="twitter:image" content="https://gabfortin.com/img/Gabriel%20Fortin.png">
 <style>
   /* ANIMATIONS */
   @keyframes fadeInUp {
@@ -622,14 +635,29 @@
   }
 
   /* REELS */
+  .reels-carousel {
+    position: relative;
+  }
+
   .reels-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex;
     gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .reels-grid::-webkit-scrollbar {
+    display: none;
   }
 
   .reel-card {
     display: block;
+    flex: 0 0 calc((100% - 40px) / 3);
+    scroll-snap-align: start;
     text-decoration: none;
     color: #1a1a18;
     border-radius: 14px;
@@ -637,6 +665,39 @@
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.08);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .reels-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(28, 60, 110, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1c3c6e;
+    font-size: 16px;
+    z-index: 2;
+    transition: all 0.2s ease;
+  }
+
+  .reels-nav:hover {
+    background: #1c3c6e;
+    color: #fff;
+  }
+
+  .reels-nav-prev {
+    left: -20px;
+  }
+
+  .reels-nav-next {
+    right: -20px;
   }
 
   .reel-card:hover {
@@ -762,6 +823,14 @@
       grid-template-columns: 1fr;
     }
 
+    .reel-card {
+      flex: 0 0 calc((100% - 20px) / 2);
+    }
+
+    .reels-nav {
+      display: none;
+    }
+
     .nav-links {
       gap: 1rem;
       font-size: 13px;
@@ -821,6 +890,10 @@
     .nav-links {
       gap: 0.5rem;
       font-size: 12px;
+    }
+
+    .reel-card {
+      flex: 0 0 78%;
     }
 
     .nav-pill { 
@@ -1065,10 +1138,21 @@
 <section class="section">
   <h2 class="section-label">Reels Populaires</h2>
 
-  <div class="reels-grid">
+  <div class="reels-carousel">
+  <button type="button" class="reels-nav reels-nav-prev" aria-label="Reels précédents" onclick="document.getElementById('reelsGrid').scrollBy({left:-320,behavior:'smooth'})">‹</button>
+  <button type="button" class="reels-nav reels-nav-next" aria-label="Reels suivants" onclick="document.getElementById('reelsGrid').scrollBy({left:320,behavior:'smooth'})">›</button>
+  <div class="reels-grid" id="reelsGrid">
+    <a href="https://www.instagram.com/p/DeAMAMeyZFD/" target="_blank" rel="noopener" class="reel-card">
+      <div class="reel-thumb">
+        <img src="./img/reels/avenue-parc-oct26.jpg" alt="Proposition de réaménagement de l'avenue du Parc">
+        <div class="reel-play"></div>
+      </div>
+      <h3>Proposition de réaménagement de l'avenue du Parc</h3>
+    </a>
+
     <a href="https://www.instagram.com/gabrielfortin.mtl/reel/DbWgc5qhXnO/" target="_blank" rel="noopener" class="reel-card">
       <div class="reel-thumb">
-        <img src="./img/reels/miltonparc.png" alt="Plan d'action pour Milton-Parc">
+        <img src="./img/reels/miltonparc.jpg" alt="Plan d'action pour Milton-Parc">
         <div class="reel-play"></div>
       </div>
       <h3>Plan d'action pour Milton-Parc</h3>
@@ -1076,7 +1160,7 @@
 
     <a href="https://www.instagram.com/gabrielfortin.mtl/reel/DZNjrpOSi-A/" target="_blank" rel="noopener" class="reel-card">
       <div class="reel-thumb">
-        <img src="./img/reels/fullum.png" alt="Sécurisation de la rue Fullum">
+        <img src="./img/reels/fullum.jpg" alt="Sécurisation de la rue Fullum">
         <div class="reel-play"></div>
       </div>
       <h3>Sécurisation de la rue Fullum</h3>
@@ -1084,11 +1168,12 @@
 
     <a href="https://www.instagram.com/gabrielfortin.mtl/reel/DYZvbaQO6eX/" target="_blank" rel="noopener" class="reel-card">
       <div class="reel-thumb">
-        <img src="./img/reels/avenue-parc.png" alt="Avenue du Parc">
+        <img src="./img/reels/avenue-parc.jpg" alt="Avenue du Parc">
         <div class="reel-play"></div>
       </div>
       <h3>Avenue du Parc</h3>
     </a>
+  </div>
   </div>
 </section>
 

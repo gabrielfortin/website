@@ -4,7 +4,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://gabfortin.com/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,42 +12,48 @@
   <!-- Sections principales -->
   <url>
     <loc>https://gabfortin.com/applications/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gabfortin.com/cartes/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gabfortin.com/donnees/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gabfortin.com/plans/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gabfortin.com/articles/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gabfortin.com/parcours/</loc>
-    <lastmod>2026-08-04</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Articles -->
+  <url>
+    <loc>https://gabfortin.com/articles/parc-1/</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://gabfortin.com/articles/le-rem-et-le-plateau/</loc>
     <lastmod>2026-05-08</lastmod>

@@ -121,6 +121,52 @@ Chaque déclaration/résolution doit aussi être ajoutée de façon permanente d
 </a>
 ```
 
+## SEO : à faire pour chaque nouvelle page/article
+
+Pour qu'une page soit bien indexée par les moteurs de recherche et comprise par les IA, chaque nouvelle page (et surtout chaque nouvel article de blogue) doit inclure, dans le `<head>`, juste après le `<title>` :
+
+```html
+<meta name="description" content="RÉSUMÉ DE 1-2 PHRASES, 150-160 CARACTÈRES">
+<link rel="canonical" href="https://gabfortin.com/CHEMIN/">
+<meta property="og:type" content="article"> <!-- "website" pour une page de section -->
+<meta property="og:site_name" content="Gabriel Fortin">
+<meta property="og:title" content="TITRE DE LA PAGE">
+<meta property="og:description" content="RÉSUMÉ DE 1-2 PHRASES">
+<meta property="og:url" content="https://gabfortin.com/CHEMIN/">
+<meta property="og:image" content="https://gabfortin.com/CHEMIN/IMAGE.jpg">
+<meta property="og:locale" content="fr_CA">
+<meta property="article:published_time" content="AAAA-MM-JJ"> <!-- articles seulement -->
+<meta property="article:author" content="Gabriel Fortin">     <!-- articles seulement -->
+<meta property="article:section" content="CATÉGORIE">         <!-- articles seulement -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TITRE DE LA PAGE">
+<meta name="twitter:description" content="RÉSUMÉ DE 1-2 PHRASES">
+<meta name="twitter:image" content="https://gabfortin.com/CHEMIN/IMAGE.jpg">
+```
+
+Pour un article de blogue, ajouter aussi ce bloc JSON-LD juste avant le script Google Analytics (voir `articles/parc-1/index.html` comme exemple) :
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "TITRE DE LA PAGE",
+  "description": "RÉSUMÉ DE 1-2 PHRASES",
+  "image": "https://gabfortin.com/CHEMIN/IMAGE.jpg",
+  "datePublished": "AAAA-MM-JJ",
+  "dateModified": "AAAA-MM-JJ",
+  "author": { "@type": "Person", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
+  "publisher": { "@type": "Person", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://gabfortin.com/CHEMIN/" },
+  "articleSection": "CATÉGORIE",
+  "inLanguage": "fr-CA"
+}
+</script>
+```
+
+Enfin, ajouter l'URL de la nouvelle page dans `sitemap.xml` (avec `lastmod` à la date du jour) — c'est ce fichier que Google et les robots IA utilisent pour découvrir le contenu. `robots.txt` à la racine pointe déjà vers `sitemap.xml`. Pour un nouvel article, ajouter aussi une ligne dans `llms.txt` (sous la section "Articles") — c'est un résumé destiné aux IA/agents qui lisent le site, pas aux moteurs de recherche classiques.
+
 ## Développement Local
 
 ### Accès au site
