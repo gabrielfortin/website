@@ -516,6 +516,12 @@
     transform: translateX(4px);
   }
 
+  .case-achievement + .case-achievement {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed rgba(0, 0, 0, 0.12);
+  }
+
   /* DECLARATIONS & RESOLUTIONS */
   .decl-list {
     display: flex;
@@ -678,6 +684,74 @@
     .nav-full  { display: none; }
   }
 </style>
+  <!-- Structured Data JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Gabriel Fortin",
+    "url": "https://gabfortin.com",
+    "mainEntityOfPage": "https://gabfortin.com/parcours/",
+    "jobTitle": "Conseiller d'arrondissement, district de Jeanne-Mance",
+    "description": "Ingénieur logiciel formé à Polytechnique Montréal, huit ans chez Bell en conception de plateformes technologiques, puis conseiller d'arrondissement au Plateau-Mont-Royal depuis novembre 2025.",
+    "worksFor": {
+      "@type": "GovernmentOrganization",
+      "name": "Arrondissement du Plateau-Mont-Royal, Ville de Montréal"
+    },
+    "alumniOf": [
+      {
+        "@type": "EducationalOrganization",
+        "name": "Polytechnique Montréal",
+        "sameAs": "https://www.polymtl.ca"
+      },
+      {
+        "@type": "EducationalOrganization",
+        "name": "Université de Montréal",
+        "sameAs": "https://umontreal.ca"
+      }
+    ],
+    "memberOf": {
+      "@type": "Organization",
+      "name": "Ordre des ingénieurs du Québec",
+      "sameAs": "https://www.oiq.qc.ca"
+    },
+    "hasOccupation": [
+      {
+        "@type": "Occupation",
+        "name": "Conseiller d'arrondissement, district de Jeanne-Mance",
+        "description": "Arrondissement du Plateau-Mont-Royal, Ville de Montréal",
+        "occupationLocation": { "@type": "City", "name": "Montréal" },
+        "startDate": "2025-11"
+      },
+      {
+        "@type": "Occupation",
+        "name": "Architecte logiciel principal",
+        "description": "Bell — direction de la conception d'une plateforme interne desservant plusieurs centaines de clients",
+        "occupationLocation": { "@type": "City", "name": "Montréal" },
+        "startDate": "2024",
+        "endDate": "2025"
+      },
+      {
+        "@type": "Occupation",
+        "name": "Développeur logiciel",
+        "description": "Bell — conception et mise en place d'une plateforme interne",
+        "occupationLocation": { "@type": "City", "name": "Montréal" },
+        "startDate": "2020",
+        "endDate": "2024"
+      },
+      {
+        "@type": "Occupation",
+        "name": "Conseiller technique",
+        "description": "Bell — poste à temps partiel maintenu pendant les études d'ingénieur",
+        "occupationLocation": { "@type": "City", "name": "Montréal" },
+        "startDate": "2017",
+        "endDate": "2020"
+      }
+    ],
+    "knowsAbout": ["Mobilité durable", "Génie logiciel", "Urbanisme", "Politique municipale"],
+    "inLanguage": "fr-CA"
+  }
+  </script>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5230S7MNSQ"></script>
   <script>
@@ -826,11 +900,21 @@
         <div class="case-field-label">Contexte</div>
         <p>Co-responsable des dossiers de mobilité durable et de Vision Zéro pour l'arrondissement.</p>
       </div>
-      <div class="case-field">
-        <div class="case-field-label">Action</div>
-        <p>Pilotage du projet de réaménagement de la rue Fullum.</p>
+      <div class="case-achievement">
+        <div class="case-field">
+          <div class="case-field-label">Action</div>
+          <p>Pilotage du projet de réaménagement de la rue Fullum.</p>
+        </div>
+        <a href="https://www.monplateau.info/rue-fullum-mise-a-sens-unique-et-securisation-des-voies-cyclables/" target="_blank" rel="noopener" class="case-link">Lire l'article de Mon Plateau →</a>
       </div>
-      <a href="https://www.monplateau.info/rue-fullum-mise-a-sens-unique-et-securisation-des-voies-cyclables/" target="_blank" rel="noopener" class="case-link">Lire l'article de Mon Plateau →</a>
+
+      <div class="case-achievement">
+        <div class="case-field">
+          <div class="case-field-label">Action</div>
+          <p>Proposition d'un aménagement transitoire pour sécuriser l'avenue du Parc.</p>
+        </div>
+        <a href="../articles/parc-1/index.html" class="case-link">Lire l'article de blogue →</a>
+      </div>
     </div>
 
     <div class="case-item">
