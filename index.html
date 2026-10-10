@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gabriel Fortin — Conseiller</title>
 <meta name="description" content="Conseiller d'arrondissement au Plateau-Mont-Royal, ingénieur logiciel et passionné d'urbanisme. Outils, cartes et analyses pour rendre les données municipales plus accessibles.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1113" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://gabfortin.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Gabriel Fortin">
@@ -18,636 +23,277 @@
 <meta name="twitter:title" content="Gabriel Fortin — Conseiller d'arrondissement, Plateau-Mont-Royal">
 <meta name="twitter:description" content="Conseiller d'arrondissement au Plateau-Mont-Royal, ingénieur logiciel et passionné d'urbanisme. Outils, cartes et analyses pour rendre les données municipales plus accessibles.">
 <meta name="twitter:image" content="https://gabfortin.com/img/Gabriel%20Fortin.png">
+<link rel="stylesheet" href="./css/site.css">
 <style>
-  /* ANIMATIONS */
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  @keyframes slideInLeft {
-    from { opacity: 0; transform: translateX(-30px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-  
-  @keyframes slideInRight {
-    from { opacity: 0; transform: translateX(30px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(28, 60, 110, 0.2); }
-    50% { box-shadow: 0 0 30px rgba(28, 60, 110, 0.4); }
-  }
-
-  @keyframes badgePulse {
-    0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(22, 210, 100, 0.7); }
-    50%       { transform: scale(1.07); box-shadow: 0 0 0 7px rgba(22, 210, 100, 0); }
-  }
-
-  @keyframes badgeFlash {
-    0%, 49%  { background: #16d264; }
-    50%, 100%{ background: #0ea84f; }
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-  }
-
-  /* BASE */
-  *, *::before, *::after { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-  }
-
-  body { 
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    background: linear-gradient(135deg, #eceef2 0%, #e2e6ec 100%);
-    color: #1a1a18;
-    line-height: 1.6;
-  }
-
-  /* NAV */
-  nav { 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    padding: 0 2rem; 
-    height: 64px; 
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    position: sticky; 
-    top: 0; 
-    z-index: 100;
-    animation: slideInDown 0.6s ease-out;
-  }
-
-  @keyframes slideInDown {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-
-  .nav-logo { 
-    font-size: 16px; 
-    font-weight: 700; 
-    letter-spacing: -0.3px; 
-    color: #1c3c6e;
-    text-decoration: none;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .nav-links { 
-    display: flex; 
-    gap: 2rem;
-    align-items: center;
-  }
-
-  .nav-links a { 
-    font-size: 14px; 
-    color: #6b6b66; 
-    text-decoration: none; 
-    font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #1c3c6e, #1a9455);
-    transition: width 0.3s ease;
-  }
-
-  .nav-links a:hover {
-    color: #1c3c6e;
-  }
-
-  .nav-links a:hover::after {
-    width: 100%;
-  }
-
-  .nav-pill { 
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    color: #fff !important;
-    padding: 8px 18px; 
-    border-radius: 24px; 
-    font-size: 13px !important; 
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(28, 60, 110, 0.3);
-    text-decoration: none;
-  }
-
-  .nav-pill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(28, 60, 110, 0.4);
-  }
-
-  @keyframes bannerReveal {
-    from { opacity: 0; transform: translateX(-24px) scale(0.97); }
-    to   { opacity: 1; transform: translateX(0)     scale(1); }
-  }
-
-  @keyframes shimmer {
-    0%   { background-position: -200% center; }
-    100% { background-position:  200% center; }
-  }
-
-  .hero-banner {
-    animation: bannerReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), filter 0.4s ease;
-  }
-
-  .hero-banner:hover {
-    transform: scale(1.02) translateY(-3px);
-    filter: drop-shadow(0 12px 24px rgba(28, 60, 110, 0.18));
-  }
 
   /* HERO */
   .hero {
-    position: relative;
-    overflow: hidden;
-    padding: 6rem 2rem 3rem;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 6rem 2rem 4rem;
   }
 
-  .hero::before {
-    content: '';
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(28, 60, 110, 0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    top: -100px;
-    right: -100px;
-    z-index: 0;
-  }
-
-  .hero::after {
-    content: '';
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(26, 148, 85, 0.06) 0%, transparent 70%);
-    border-radius: 50%;
-    bottom: -50px;
-    left: -50px;
-    z-index: 0;
-  }
-
-  .hero-grid { 
-    max-width: 900px; 
-    margin: 0 auto; 
-    display: grid; 
-    grid-template-columns: 1fr 200px; 
-    gap: 3rem; 
+  .hero-grid {
+    max-width: 896px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 4rem;
     align-items: center;
-    position: relative;
-    z-index: 1;
   }
 
-  .hero-eyebrow { 
-    display: inline-flex; 
-    align-items: center; 
-    gap: 8px; 
-    font-size: 12px; 
-    font-weight: 600; 
-    letter-spacing: 0.08em; 
-    text-transform: uppercase; 
-    color: #1c3c6e;
-    background: linear-gradient(135deg, rgba(28, 60, 110, 0.1), rgba(26, 148, 85, 0.1));
-    padding: 6px 14px; 
-    border-radius: 24px;
+  .hero-banner {
+    max-width: 420px;
+    width: 100%;
+    display: block;
     margin-bottom: 1.5rem;
-    border: 1px solid rgba(28, 60, 110, 0.2);
-    animation: fadeInUp 0.8s ease-out;
+    cursor: pointer;
+    animation: fadeInUp 0.7s var(--ease) backwards;
   }
 
-  h1 { 
-    font-size: 48px; 
-    font-weight: 700; 
-    line-height: 1.2; 
-    letter-spacing: -0.5px; 
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, #1c3c6e 0%, #1a9455 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: fadeInUp 0.8s ease-out 0.1s backwards;
+  .hero-desc {
+    font-size: 18px;
+    line-height: 1.65;
+    letter-spacing: -0.01em;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    max-width: 520px;
+    animation: fadeInUp 0.7s var(--ease) 0.08s backwards;
   }
 
-  .hero-desc { 
-    font-size: 16px; 
-    line-height: 1.8; 
-    color: #6b6b66; 
-    margin-bottom: 2rem; 
-    max-width: 500px;
-    animation: fadeInUp 0.8s ease-out 0.2s backwards;
-  }
-
-  .hero-ctas { 
-    display: flex; 
-    gap: 15px; 
+  .hero-ctas {
+    display: flex;
+    gap: 12px;
     flex-wrap: wrap;
-    animation: fadeInUp 0.8s ease-out 0.3s backwards;
-  }
-
-  .btn-primary { 
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    color: #fff; 
-    padding: 12px 28px; 
-    border-radius: 8px; 
-    font-size: 14px; 
-    font-weight: 600; 
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 15px rgba(28, 60, 110, 0.3);
-    display: inline-block;
-  }
-
-  .btn-primary:hover { 
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(28, 60, 110, 0.4);
-  }
-
-  .btn-secondary { 
-    background: transparent; 
-    color: #1c3c6e; 
-    padding: 12px 28px; 
-    border-radius: 8px; 
-    font-size: 14px; 
-    font-weight: 600; 
-    text-decoration: none;
-    border: 2px solid #1c3c6e;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-block;
-  }
-
-  .btn-secondary:hover { 
-    background: #1c3c6e;
-    color: #fff;
-    transform: translateY(-2px);
+    animation: fadeInUp 0.7s var(--ease) 0.16s backwards;
   }
 
   .hero-avatar {
-    width: 280px;
+    width: 240px;
     height: 280px;
-    border-radius: 16px; 
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-size: 64px; 
-    font-weight: 700; 
-    color: #fff; 
     justify-self: end;
-    animation: float 3s ease-in-out infinite, fadeInUp 0.8s ease-out 0.4s backwards;
-    box-shadow: 0 20px 40px rgba(28, 60, 110, 0.25);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-  }
-
-  /* SECTIONS */
-  .section {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 3rem 2rem;
-    animation: fadeInUp 0.8s ease-out;
-  }
-
-  .section.hidden {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  .section.visible {
-    animation: fadeInUp 0.8s ease-out forwards;
-  }
-
-  .section-label { 
-    font-size: 12px; 
-    font-weight: 700; 
-    letter-spacing: 0.12em; 
-    text-transform: uppercase; 
-    color: #1c3c6e;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .section-label::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    border-radius: 50%;
-  }
-
-  /* CARDS */
-  .cards-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-    gap: 20px;
-    margin-bottom: 2rem;
-  }
-
-  .card { 
-    background: #ffffff; 
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px; 
-    padding: 1.75rem; 
-    text-decoration: none; 
-    color: #1a1a18;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: block;
-    position: relative;
+    border-radius: 20px;
     overflow: hidden;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    animation: fadeInUp 0.7s var(--ease) 0.12s backwards;
   }
 
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
+  .hero-avatar img {
     width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, #1c3c6e, #1a9455);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
-  .card:hover::before {
-    transform: scaleX(1);
+  /* FEATURED */
+  .featured-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: 16px;
+    transition: border-color 0.2s ease, box-shadow 0.3s ease;
   }
 
-  .card:hover { 
-    border-color: rgba(28, 60, 110, 0.2);
-    transform: translateY(-8px);
-    box-shadow: 0 12px 32px rgba(28, 60, 110, 0.15);
+  .featured-main:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow);
   }
 
-  .card-icon { 
-    width: 48px; 
-    height: 48px; 
-    border-radius: 10px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    margin-bottom: 1rem; 
+  .featured-main-img {
+    overflow: hidden;
+    min-height: 260px;
+    background: var(--surface-2);
+  }
+
+  .featured-main-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s var(--ease);
+  }
+
+  .featured-main:hover .featured-main-img img {
+    transform: scale(1.03);
+  }
+
+  .featured-main-body {
+    padding: 2.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .featured-main h3 {
     font-size: 24px;
-    transition: all 0.3s ease;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
   }
 
-  .card:hover .card-icon {
-    transform: scale(1.1) rotate(5deg);
-  }
-
-  .card-icon.blue  { background: linear-gradient(135deg, #e8eef7, #d4e3f0); }
-  .card-icon.green { background: linear-gradient(135deg, #e4f5ee, #d0ede4); }
-  .card-icon.amber { background: linear-gradient(135deg, #fef3e2, #fce7c8); }
-  .card-icon.red   { background: linear-gradient(135deg, #fdeaea, #fbd5d5); }
-
-  .card h3 { 
-    font-size: 16px; 
-    font-weight: 600; 
-    margin-bottom: 0.5rem;
-  }
-
-  .card p  { 
-    font-size: 14px; 
-    color: #6b6b66; 
+  .featured-main p {
+    font-size: 15px;
+    color: var(--muted);
     line-height: 1.6;
   }
 
-  .card-arrow { 
-    font-size: 14px; 
-    color: #1c3c6e;
-    margin-top: 1rem; 
-    display: inline-block;
-    transition: transform 0.3s ease;
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
   }
 
-  .card:hover .card-arrow {
-    transform: translateX(4px);
+  .featured {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.3s ease;
   }
 
-  .card-new-badge {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    background: #16d264;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-    animation: badgePulse 1.6s ease-in-out infinite, badgeFlash 1.6s ease-in-out infinite;
+  .featured:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow);
   }
+
+  .featured-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--surface-2);
+  }
+
+  .featured-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .featured h3 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.25rem;
+  }
+
+  .featured p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* CARDS */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .cards-grid > .card { grid-column: span 2; }
+  .cards-grid > .card:nth-child(n+4) { grid-column: span 3; }
 
   .card-actions {
     display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    gap: 8px;
+    margin-top: 1.25rem;
     flex-wrap: wrap;
   }
 
   .card-btn {
     font-size: 13px;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    border: 1px solid #1c3c6e;
-    color: #1c3c6e;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    color: var(--text);
     text-decoration: none;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
   }
 
   .card-btn:hover {
-    background: #1c3c6e;
-    color: #fff;
+    border-color: var(--text);
   }
 
   .card-btn-primary {
-    background: #1c3c6e;
-    color: #fff;
+    background: var(--brand);
+    border-color: var(--brand);
+    color: var(--accent-contrast);
   }
 
   .card-btn-primary:hover {
-    background: #152d52;
+    border-color: var(--brand);
+    opacity: 0.88;
   }
 
-  /* FEATURED */
-  .featured-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin-bottom: 2rem;
-  }
-
-  .featured-grid .featured {
-    margin-bottom: 0;
-  }
-
-  .featured {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 14px;
-    padding: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1.75rem;
-    margin-bottom: 2rem;
-    text-decoration: none;
-    color: #1a1a18;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .featured::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(180deg, #1c3c6e, #1a9455);
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform 0.3s ease;
-  }
-
-  .featured:hover::before {
-    transform: scaleY(1);
-  }
-
-  .featured:hover { 
-    border-color: rgba(28, 60, 110, 0.2);
-    transform: translateX(6px);
-    box-shadow: 0 12px 32px rgba(28, 60, 110, 0.15);
-  }
-
-  .featured-badge {
-    background: #16d264;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 6px 18px;
-    border-radius: 20px;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-    animation: badgePulse 1.6s ease-in-out infinite, badgeFlash 1.6s ease-in-out infinite;
-    display: inline-block;
-    margin-bottom: 0.75rem;
-  }
-
-  .featured-icon { 
-    width: 56px; 
-    height: 56px; 
-    background: linear-gradient(135deg, #e8eef7, #d4e3f0);
-    border-radius: 12px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    flex-shrink: 0; 
-    font-size: 28px;
-    transition: all 0.3s ease;
-  }
-
-  .featured:hover .featured-icon {
-    transform: scale(1.1) rotate(-5deg);
-  }
-
-  .featured h3 { 
-    font-size: 16px; 
-    font-weight: 600; 
-    margin-bottom: 0.5rem;
-  }
-
-  .featured p  { 
-    font-size: 14px; 
-    color: #6b6b66; 
-    line-height: 1.6;
-  }
-
-  /* SOCIAL */
-  .social-row { 
-    display: flex; 
-    gap: 12px; 
-    flex-wrap: wrap;
-  }
-
-  .social-chip { 
-    display: flex; 
-    align-items: center; 
-    gap: 8px; 
-    background: #ffffff; 
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 24px; 
-    padding: 8px 16px; 
-    font-size: 13px; 
-    text-decoration: none; 
-    color: #6b6b66;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-weight: 500;
-  }
-
-  .social-chip:hover { 
-    border-color: #1c3c6e;
-    color: #1c3c6e;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(28, 60, 110, 0.15);
-  }
-
-  .social-dot { 
-    width: 8px; 
-    height: 8px; 
-    border-radius: 50%; 
-    flex-shrink: 0;
-  }
-
-  /* SECTIONS */
   .two-col {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 
   /* REELS */
-  .reels-carousel {
-    position: relative;
+  .reels-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .reels-head .section-label {
+    margin-bottom: 0;
+  }
+
+  .reels-controls {
+    display: flex;
+    gap: 8px;
+  }
+
+  .reels-nav {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .reels-nav:hover {
+    border-color: var(--text);
+  }
+
+  .reels-nav .i {
+    width: 18px;
+    height: 18px;
   }
 
   .reels-grid {
     display: flex;
-    gap: 20px;
+    gap: 16px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    padding-bottom: 2px;
   }
 
   .reels-grid::-webkit-scrollbar {
@@ -655,281 +301,176 @@
   }
 
   .reel-card {
+    position: relative;
     display: block;
-    flex: 0 0 calc((100% - 40px) / 3);
+    flex: 0 0 calc((100% - 48px) / 4);
     scroll-snap-align: start;
-    text-decoration: none;
-    color: #1a1a18;
-    border-radius: 14px;
+    aspect-ratio: 9 / 16;
+    border-radius: var(--radius);
     overflow: hidden;
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .reels-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 15px rgba(28, 60, 110, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #1c3c6e;
-    font-size: 16px;
-    z-index: 2;
-    transition: all 0.2s ease;
-  }
-
-  .reels-nav:hover {
-    background: #1c3c6e;
+    background: #111;
+    text-decoration: none;
     color: #fff;
   }
 
-  .reels-nav-prev {
-    left: -20px;
-  }
-
-  .reels-nav-next {
-    right: -20px;
-  }
-
-  .reel-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 32px rgba(28, 60, 110, 0.15);
-    border-color: rgba(28, 60, 110, 0.2);
-  }
-
-  .reel-thumb {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 9 / 16;
-    overflow: hidden;
-    background: #1a1a18;
-  }
-
+  .reel-thumb,
   .reel-thumb img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
     display: block;
-    transition: transform 0.4s ease;
+  }
+
+  .reel-thumb img {
+    object-fit: cover;
+    transition: transform 0.6s var(--ease);
   }
 
   .reel-card:hover .reel-thumb img {
-    transform: scale(1.05);
+    transform: scale(1.04);
+  }
+
+  .reel-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.2) 38%, transparent 60%);
+    pointer-events: none;
   }
 
   .reel-play {
     position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .reel-play::before {
-    content: '';
-    width: 56px;
-    height: 56px;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1;
   }
 
   .reel-play::after {
     content: '';
     position: absolute;
-    width: 0;
-    height: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-35%, -50%);
     border-style: solid;
-    border-width: 12px 0 12px 20px;
-    border-color: transparent transparent transparent #ffffff;
-    margin-left: 4px;
+    border-width: 6px 0 6px 10px;
+    border-color: transparent transparent transparent #fff;
   }
 
   .reel-card h3 {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 1rem;
     font-size: 14px;
     font-weight: 600;
-    padding: 0.9rem 1rem;
-    line-height: 1.4;
-  }
-
-  /* DIVIDER */
-  hr { 
-    border: none; 
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    margin: 0;
-  }
-
-  /* FOOTER */
-  footer {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 3rem 2rem;
-    animation: fadeIn 0.8s ease-out;
-  }
-
-  .footer-inner { 
-    max-width: 900px; 
-    margin: 0 auto; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    flex-wrap: wrap; 
-    gap: 1.5rem;
-  }
-
-  footer p { 
-    font-size: 13px; 
-    color: #6b6b66;
-  }
-
-  footer a {
-    color: #1c3c6e;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  footer a:hover {
-    text-decoration: underline;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
   }
 
   /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .hero-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    .hero-avatar {
-      width: 110px;
-      height: 110px;
-      border-radius: 16px;
-      order: -1;
-      justify-self: center;
-      animation: none;
-      box-shadow: 0 8px 24px rgba(28, 60, 110, 0.2);
-    }
-
-    .two-col {
-      grid-template-columns: 1fr;
-    }
-
+  @media (max-width: 860px) {
     .reel-card {
-      flex: 0 0 calc((100% - 20px) / 2);
+      flex: 0 0 calc((100% - 32px) / 3);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 3rem 1.5rem 2rem;
     }
 
-    .reels-nav {
-      display: none;
-    }
-
-    .nav-links {
-      gap: 1rem;
-      font-size: 13px;
-    }
-
-    .nav-pill {
-      padding: 6px 14px;
-      font-size: 12px;
-    }
-
-    h1 {
-      font-size: 36px;
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.75rem;
       text-align: center;
     }
 
-    .hero-eyebrow {
-      align-self: center;
+    .hero-avatar {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      order: -1;
+      justify-self: center;
     }
 
-    .hero-banner {
+    .hero-banner,
+    .hero-desc {
       margin-left: auto;
       margin-right: auto;
     }
 
     .hero-desc {
-      text-align: center;
+      font-size: 16px;
     }
 
     .hero-ctas {
       justify-content: center;
     }
 
-    .featured-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .featured {
-      flex-direction: column;
-      text-align: center;
-      align-items: flex-start;
-    }
-
-    .featured-icon {
-      align-self: flex-start;
-    }
-  }
-
-  @media (max-width: 600px) {
-    nav {
-      padding: 0 1rem;
-    }
-
-    .nav-logo {
-      font-size: 14px;
-    }
-
-    .nav-links {
-      gap: 0.5rem;
-      font-size: 12px;
-    }
-
-    .reel-card {
-      flex: 0 0 78%;
-    }
-
-    .nav-pill { 
-      display: none;
-    }
-
-    h1 {
-      font-size: 28px;
-    }
-
-    .hero-desc {
-      font-size: 14px;
-    }
-
-    .btn-primary, .btn-secondary {
-      padding: 10px 20px;
-      font-size: 13px;
+    .featured-main {
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .cards-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .section {
-      padding: 2rem 1rem;
+    .cards-grid > .card,
+    .cards-grid > .card:nth-child(n+4) { grid-column: auto; }
+    .cards-grid > .card:last-child { grid-column: 1 / -1; }
+
+    .featured-main-img {
+      min-height: 0;
+      aspect-ratio: 16 / 9;
     }
 
-    .footer-inner {
-      flex-direction: column;
-      text-align: center;
+    .featured-main-body {
+      padding: 1.5rem;
     }
+
+    .featured-main h3 {
+      font-size: 20px;
+    }
+
+    .featured-grid,
+    .two-col {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .reel-card {
+      flex: 0 0 calc((100% - 16px) / 2);
+    }
+  
   }
-  .nav-short { display: none; }
+
   @media (max-width: 600px) {
-    .nav-short { display: inline; }
-    .nav-full  { display: none; }
+
+    .cards-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cards-grid > .card:last-child { grid-column: auto; }
+
+    .reel-card {
+      flex: 0 0 72%;
+    }
+
+    .reels-controls {
+      display: none;
+    }
+
+    .featured-icon {
+      width: 56px;
+      height: 56px;
+    }
+  
   }
 
   .btn-cocktail {
@@ -938,27 +479,12 @@
     gap: 10px;
     margin-top: 1.25rem;
     padding: 11px 20px;
-    background: linear-gradient(135deg, #e8410a, #c73209);
+    background: #d83c0c;
     color: #fff;
     font-size: 13px;
     font-weight: 600;
     text-decoration: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 14px rgba(200, 50, 10, 0.35);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .btn-cocktail:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(200, 50, 10, 0.45);
-  }
-
-  @media (max-width: 768px) {
-    .btn-cocktail {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-    }
+    border-radius: 999px;
   }
 </style>
   <!-- Structured Data JSON-LD -->
@@ -1000,7 +526,7 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="/"><img src="./favico.png" alt="Gabriel Fortin" style="height:28px;display:block;"></a>
+  <a class="nav-logo" href="/"><img src="./favico.png" alt="Gabriel Fortin"></a>
   <div class="nav-links">
     <a href="./cartes/index.html">Cartes</a>
     <a href="./donnees/index.html">Données</a>
@@ -1015,7 +541,7 @@
 <section class="hero">
   <div class="hero-grid">
     <div>
-      <img src="./img/banner.png" alt="Gabriel Fortin" class="hero-banner" style="max-width:420px;width:100%;display:block;mix-blend-mode:multiply;margin-bottom:1rem;">
+      <img src="./img/banner.png" alt="Gabriel Fortin" class="hero-banner">
       <p class="hero-desc">Conseiller d'arrondissement au Plateau-Mont-Royal, ingénieur logiciel et passionné d'urbanisme. Je crée des outils pour rendre les données plus accessibles et compréhensibles.</p>
       <div class="hero-ctas">
         <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="btn-primary">Mon Profil Officiel</a>
@@ -1026,41 +552,40 @@
         Cocktail annuel — Projet Montréal 2026
       </a>
     </div>
-    <div class="hero-avatar"><img src="./img/Gabriel Fortin.png" alt="Gabriel Fortin" style="width:100%;height:100%;object-fit:cover;border-radius:14px;"></div>
+    <div class="hero-avatar"><img src="./img/Gabriel Fortin.png" alt="Gabriel Fortin"></div>
   </div>
 </section>
-
-<hr>
 
 <!-- PROJETS PHARES -->
 <section class="section" id="projets">
   <h2 class="section-label">Explorer</h2>
 
-  <a href="./articles/parc-1/index.html" class="featured" style="background:linear-gradient(135deg,#e8f7ee,#d0f0df);border-color:rgba(26,148,85,0.2);">
-    <div class="featured-icon" style="padding:0;overflow:hidden;"><img src="./articles/parc-1/parc-concept.jpg" alt="Concept d'aménagement proposé pour l'avenue du Parc" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
-    <div>
-      <span class="featured-badge">Nouveau</span>
+  <a href="./articles/parc-1/index.html" class="featured-main">
+    <div class="featured-main-img"><img src="./articles/parc-1/parc-concept.jpg" alt="Concept d'aménagement proposé pour l'avenue du Parc"></div>
+    <div class="featured-main-body">
+      <span class="badge">Nouveau</span>
       <h3>Sécuriser l'avenue du Parc</h3>
       <p>4 morts en 10 ans entre Mont-Royal et des Pins. Une proposition d'aménagement transitoire pour sécuriser rapidement ce tronçon dangereux.</p>
+      <span class="link-arrow">Lire la proposition <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </div>
   </a>
 
   <div class="featured-grid">
-    <a href="https://velo.gabfortin.com/" class="featured" style="background:linear-gradient(135deg,#e8f7ee,#d0f0df);border-color:rgba(26,148,85,0.2);">
-      <div class="featured-icon" style="padding:0;overflow:hidden;"><img src="./img/compteur-velo.png" alt="Compteur Vélo" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+    <a href="https://velo.gabfortin.com/" class="featured">
+      <div class="featured-icon"><img src="./img/compteur-velo.png" alt="Compteur Vélo"></div>
       <div>
-        <span class="featured-badge">Outil populaire</span>
+        <span class="eyebrow">Outil populaire</span>
         <h3>Compteurs Vélo</h3>
-        <p>Un outil interactif pour explorer les données des compteurs de vélo à Montréal. Découvrez les tendances, comparez les trajets et visualisez le flux cyclable.</p>
+        <p>Explorez les données des compteurs de vélo à Montréal : tendances, comparaisons et flux cyclable.</p>
       </div>
     </a>
 
-    <a href="https://avantapres.gabfortin.com" class="featured" style="background:linear-gradient(135deg,#e8f7ee,#d0f0df);border-color:rgba(26,148,85,0.2);">
-      <div class="featured-icon" style="padding:0;overflow:hidden;"><img src="./img/avantapres.svg" alt="Avant / Après" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+    <a href="https://avantapres.gabfortin.com" class="featured">
+      <div class="featured-icon"><img src="./img/avantapres.svg" alt="Avant / Après"></div>
       <div>
-        <span class="featured-badge">Nouveau</span>
+        <span class="eyebrow">Nouvel outil</span>
         <h3>Avant / Après</h3>
-        <p>Comparez les transformations avant/après des améliorations de l'espace public réalisées par Projet Montréal.</p>
+        <p>Comparez les transformations de l'espace public réalisées par Projet Montréal.</p>
       </div>
     </a>
   </div>
@@ -1068,79 +593,77 @@
   <div class="cards-grid">
 
     <a href="./cartes/index.html" class="card">
-      <div class="card-icon blue" style="padding:0;overflow:hidden;"><img src="./img/icon-pmr.png" alt="Cartes" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg></div>
       <h3>Cartes Interactives</h3>
       <p>Élections 2025, réseau artériel de Montréal, et modes rapides et fréquents.</p>
-      <span class="card-arrow">Voir les cartes →</span>
+      <span class="link-arrow">Voir les cartes <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
     <a href="./donnees/index.html" class="card">
-      <div class="card-icon red">📊</div>
+      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div>
       <h3>Données Ouvertes</h3>
       <p>Ensembles de données publiques analysés et visualisés pour la communauté.</p>
-      <span class="card-arrow">Explorer →</span>
+      <span class="link-arrow">Explorer <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
     <a href="./plans/index.html" class="card">
-      <div class="card-icon" style="padding:0;overflow:hidden;"><img src="./img/logo-metro.png" alt="Plans" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><path d="M8 3.1V7a4 4 0 0 0 8 0V3.1"/><path d="m9 15-1-1"/><path d="m15 15 1-1"/><path d="M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z"/><path d="m8 19-2 3"/><path d="m16 19 2 3"/></svg></div>
       <h3>Plans</h3>
       <p>PUM 2050, prolongement du métro et réseau express de bus Projet Montréal.</p>
-      <span class="card-arrow">Voir les plans →</span>
+      <span class="link-arrow">Voir les plans <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
     <a href="./articles/index.html" class="card">
-      <div class="card-icon green">📝</div>
+      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
       <h3>Blogue</h3>
       <p>Refonte STM 2026, l'arrivée du REM et son impact sur le Plateau.</p>
-      <span class="card-arrow">Lire les articles →</span>
+      <span class="link-arrow">Lire les articles <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
     <a href="./parcours/index.html" class="card">
-      <div class="card-icon blue">🧭</div>
+      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
       <h3>Parcours</h3>
       <p>Du génie logiciel à la politique municipale : formation, carrière chez Bell et dossiers portés comme conseiller.</p>
-      <span class="card-arrow">Découvrir mon parcours →</span>
+      <span class="link-arrow">Découvrir mon parcours <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
   </div>
 </section>
-
-<hr>
-
 
 <!-- ENGAGEMENTS -->
 <section class="section">
   <h2 class="section-label">Engagements</h2>
-  
+
   <div class="two-col">
     <div class="card">
-      <div class="card-icon blue">💚</div>
+      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div>
       <h3>Projet Montréal</h3>
       <p>Membre actif du parti politique Projet Montréal, travaillant pour une ville plus verte et plus accessible.</p>
       <div class="card-actions">
-        <a href="https://projetmontreal.org/" target="_blank" rel="noopener" class="card-btn">Plus d'infos →</a>
-        <a href="https://monelection.org/form/donation/ph3NOVdJvWkoW5Jdckfa2uIXecmKGo?solliciteur_id=70497" target="_blank" rel="noopener" class="card-btn card-btn-primary">Faire un don 💚</a>
+        <a href="https://projetmontreal.org/" target="_blank" rel="noopener" class="card-btn">Plus d'infos</a>
+        <a href="https://monelection.org/form/donation/ph3NOVdJvWkoW5Jdckfa2uIXecmKGo?solliciteur_id=70497" target="_blank" rel="noopener" class="card-btn card-btn-primary">Faire un don</a>
       </div>
     </div>
 
     <a href="https://montreal.ca/conseils-decisionnels/conseil-darrondissement-du-plateau-mont-royal" class="card">
-      <div class="card-icon green">🎤</div>
+      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg></div>
       <h3>Conseil d'Arrondissement</h3>
       <p>Conseiller d'arrondissement au Plateau-Mont-Royal depuis 2025, représentant le district de Jeanne-Mance.</p>
-      <span class="card-arrow">→</span>
+      <span class="link-arrow">Voir le conseil <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
   </div>
 </section>
 
-<hr>
-
 <!-- REELS -->
 <section class="section">
-  <h2 class="section-label">Reels Populaires</h2>
+  <div class="reels-head">
+    <h2 class="section-label">Reels Populaires</h2>
+    <div class="reels-controls">
+      <button type="button" class="reels-nav" aria-label="Reels précédents" onclick="document.getElementById('reelsGrid').scrollBy({left:-320,behavior:'smooth'})"><svg class="i" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+      <button type="button" class="reels-nav" aria-label="Reels suivants" onclick="document.getElementById('reelsGrid').scrollBy({left:320,behavior:'smooth'})"><svg class="i" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+    </div>
+  </div>
 
-  <div class="reels-carousel">
-  <button type="button" class="reels-nav reels-nav-prev" aria-label="Reels précédents" onclick="document.getElementById('reelsGrid').scrollBy({left:-320,behavior:'smooth'})">‹</button>
-  <button type="button" class="reels-nav reels-nav-next" aria-label="Reels suivants" onclick="document.getElementById('reelsGrid').scrollBy({left:320,behavior:'smooth'})">›</button>
   <div class="reels-grid" id="reelsGrid">
     <a href="https://www.instagram.com/p/DeSVUGCB0TC/" target="_blank" rel="noopener" class="reel-card">
       <div class="reel-thumb">
@@ -1182,43 +705,20 @@
       <h3>Avenue du Parc</h3>
     </a>
   </div>
-  </div>
 </section>
-
-<hr>
-
-<!-- LIENS SOCIAUX -->
-<section class="section">
-  <h2 class="section-label">Me Suivre</h2>
-  
-  <div class="social-row">
-    <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-chip">
-      📸 <span>Instagram</span>
-    </a>
-    <a href="https://www.facebook.com/gabfortin1/" class="social-chip">
-      👍 <span>Facebook</span>
-    </a>
-    <a href="https://bsky.app/profile/gabfortin.com" class="social-chip">
-      🦋 <span>Bluesky</span>
-    </a>
-    <a href="mailto:info@gabfortin.com" class="social-chip">
-      ✉️ <span>Email</span>
-    </a>
-  </div>
-</section>
-
-<hr>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div>
-      <p>© 2026 Gabriel Fortin.</p>
+    <div class="footer-brand">
+      <strong>Gabriel Fortin</strong>
+      <p>© 2026 · <a href="mailto:info@gabfortin.com" style="color:inherit;">info@gabfortin.com</a></p>
     </div>
-    <div>
-      <p>
-        <a href="mailto:info@gabfortin.com">Contact</a>
-      </p>
+    <div class="social-row">
+      <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-icon" aria-label="Instagram"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.facebook.com/gabfortin1/" class="social-icon" aria-label="Facebook"><svg class="i" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://bsky.app/profile/gabfortin.com" class="social-icon" aria-label="Bluesky"><svg class="i i-fill" viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg></a>
+      <a href="mailto:info@gabfortin.com" class="social-icon" aria-label="Email"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
     </div>
   </div>
 </footer>

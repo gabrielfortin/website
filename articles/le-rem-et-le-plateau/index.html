@@ -21,364 +21,74 @@
 <meta name="twitter:title" content="L'arrivée du REM et son impact sur le Plateau">
 <meta name="twitter:description" content="Analyse complète de l'arrivée du Réseau Express Métropolitain et de son impact sur le Plateau-Mont-Royal. Quels changements pour la mobilité, le développement urbain et la qualité de vie?">
 <meta name="twitter:image" content="https://gabfortin.com/articles/le-rem-et-le-plateau/unnamed.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/site.css">
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+  .hero-content { max-width: 696px; }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    line-height: 1.6;
-    color: #2c2c2c;
-    background: #f8f9fa;
-  }
-
-  /* NAVIGATION */
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    height: 64px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    animation: slideInDown 0.6s ease-out;
-  }
-
-  @keyframes slideInDown {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-
-  .nav-logo {
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    color: #1c3c6e;
-    text-decoration: none;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-  }
-
-  .nav-links a {
-    font-size: 14px;
-    color: #6b6b66;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #1c3c6e, #1a9455);
-    transition: width 0.3s ease;
-  }
-
-  .nav-links a:hover {
-    color: #1c3c6e;
-  }
-
-  .nav-links a:hover::after {
-    width: 100%;
-  }
-
-  .nav-pill {
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    color: #fff !important;
-    padding: 8px 18px;
-    border-radius: 24px;
-    font-size: 13px !important;
+  .hero-subtitle {
+    font-size: 17px;
     font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(28, 60, 110, 0.3);
-    text-decoration: none;
-  }
-
-  .nav-pill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(28, 60, 110, 0.4);
-  }
-
-  /* HERO */
-  .hero {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    padding: 3rem 2rem;
-    animation: fadeIn 0.8s ease-out;
-  }
-
-  .hero-content {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-    font-size: 0.95rem;
-  }
-
-  .breadcrumb a {
-    color: #1c3c6e;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-  }
-
-  .breadcrumb a:hover {
-    color: #1a9455;
-  }
-
-  .breadcrumb span {
-    color: #6b6b66;
-  }
-
-  .hero h1 {
-    font-size: 2.5rem;
-    color: #1c3c6e;
+    color: var(--warn);
     margin-bottom: 1rem;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   }
 
   .article-meta {
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    font-size: 14px;
+    color: var(--muted);
   }
 
   .meta-item {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: #6b6b66;
+    gap: 6px;
   }
 
-  /* ARTICLE CONTENT */
-  .article-content {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  .meta-item .i {
+    width: 16px;
+    height: 16px;
   }
 
-  .article-content h2 {
-    font-size: 1.8rem;
-    color: #1c3c6e;
-    margin: 2rem 0 1rem 0;
-    padding-top: 1rem;
-  }
-
-  .article-content h2:first-child {
-    margin-top: 0;
-  }
-
-  .article-content p {
-    margin-bottom: 1.5rem;
-    line-height: 1.8;
-    color: #2c2c2c;
-  }
-
-  .article-content img {
-    max-width: 420px;
+  .article-content img,
+  .article-figure {
+    max-width: 400px;
     width: 100%;
     height: auto;
-    margin: 0.5rem 1.5rem 1rem 0;
-    border-radius: 8px;
     float: left;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin: 0.4rem 1.75rem 1rem 0;
+    border-radius: 12px;
+  }
+
+  .article-figure img {
+    float: none;
+    margin: 0;
+    max-width: 100%;
+    display: block;
+  }
+
+  .article-figure figcaption {
+    font-size: 13px;
+    color: var(--faint);
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .article-content img,
+    .article-figure {
+      float: none;
+      max-width: 100%;
+      margin: 0.5rem 0 1.25rem;
+    }
   }
 
   .article-content p {
     overflow: hidden;
-  }
-
-  .article-content .clearfix {
-    clear: both;
-  }
-
-  .highlight-section {
-    background: linear-gradient(135deg, rgba(28, 60, 110, 0.05), rgba(26, 148, 85, 0.05));
-    padding: 1.5rem;
-    border-left: 4px solid #1c3c6e;
-    margin: 2rem 0;
-    border-radius: 8px;
-  }
-
-  .highlight-section h3 {
-    color: #1c3c6e;
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .highlight-section p {
-    margin: 0.5rem 0;
-    color: #2c2c2c;
-  }
-
-  .cta-link {
-    display: inline-block;
-    margin-top: 2rem;
-    padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-
-  .cta-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(28, 60, 110, 0.25);
-  }
-
-  hr {
-    border: none;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    margin: 2rem 0;
-  }
-
-  /* FOOTER */
-  footer {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 3rem 2rem;
-    animation: fadeIn 0.8s ease-out;
-  }
-
-  .footer-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-
-  footer p {
-    margin-bottom: 1rem;
-    color: #2c2c2c;
-  }
-
-  footer a {
-    color: #1c3c6e;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-  }
-
-  footer a:hover {
-    color: #1a9455;
-  }
-
-  /* ANIMATIONS */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .nav-links {
-      gap: 1rem;
-      font-size: 13px;
-    }
-
-    .nav-pill {
-      padding: 6px 14px;
-      font-size: 12px;
-    }
-
-    .hero h1 {
-      font-size: 2rem;
-    }
-
-    .article-content {
-      margin: 1rem;
-      padding: 1.5rem;
-    }
-
-    .article-meta {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .footer-inner {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 600px) {
-    nav {
-      padding: 0 1rem;
-    }
-
-    .nav-logo {
-      font-size: 14px;
-    }
-
-    .nav-links {
-      gap: 0.5rem;
-      font-size: 12px;
-    }
-
-    .nav-pill {
-      display: none;
-    }
-
-    .hero {
-      padding: 2rem 1rem;
-    }
-
-    .hero h1 {
-      font-size: 1.5rem;
-    }
-
-    .article-content {
-      margin: 1rem;
-      padding: 1rem;
-    }
-
-    .breadcrumb {
-      flex-wrap: wrap;
-    }
-  }
-  .nav-short { display: none; }
-  @media (max-width: 600px) {
-    .nav-short { display: inline; }
-    .nav-full  { display: none; }
   }
 </style>
   <!-- Structured Data JSON-LD -->
@@ -411,12 +121,12 @@
 
 <!-- NAVIGATION -->
 <nav>
-  <a class="nav-logo" href="../../index.html"><img src="../../favico.png" alt="Gabriel Fortin" style="height:28px;display:block;"></a>
+  <a class="nav-logo" href="../../index.html"><img src="../../favico.png" alt="Gabriel Fortin"></a>
   <div class="nav-links">
     <a href="../../cartes/index.html">Cartes</a>
     <a href="../../donnees/index.html">Données</a>
     <a href="../../plans/index.html">Plans</a>
-    <a href="../../articles/index.html">Blogue</a>
+    <a href="../../articles/index.html" aria-current="page">Blogue</a>
     <a href="../../parcours/index.html">Parcours</a>
     <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
   </div>
@@ -434,9 +144,9 @@
     </div>
     <h1>L'arrivée du REM et son impact sur le Plateau</h1>
     <div class="article-meta">
-      <div class="meta-item">📅 15 novembre 2025</div>
-      <div class="meta-item">🏷️ Urbanisme</div>
-      <div class="meta-item">⏱️ 4 min de lecture</div>
+      <div class="meta-item"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> 15 novembre 2025</div>
+      <div class="meta-item"><svg class="i" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5"/></svg> Urbanisme</div>
+      <div class="meta-item"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 4 min de lecture</div>
     </div>
   </div>
 </section>
@@ -451,7 +161,7 @@
 
   <div class="clearfix"></div>
   <div class="highlight-section">
-    <h3>🚇 Accès en bus depuis le Plateau</h3>
+    <h3>Accès en bus depuis le Plateau</h3>
     <p>Pour les résidents du Plateau-Mont-Royal, cette arrivée est une excellente nouvelle : la station McGill se trouve à deux pas de Milton-Parc, et la station Édouard-Montpetit sera facilement accessible grâce à la ligne de bus 51.</p>
     <p>C'est pourquoi il est essentiel d'améliorer notre réseau d'autobus, par exemple avec notre proposition de réseau express bus, afin d'assurer une bonne connexion entre le REM et nos quartiers.</p>
   </div>
@@ -460,7 +170,7 @@
 
   <div class="clearfix"></div>
   <div class="highlight-section">
-    <h3>🚴 Mobilité active et connectivité</h3>
+    <h3>Mobilité active et connectivité</h3>
     <p>Avec la nouvelle voie cyclable sur Saint-Urbain et le prolongement de celle sur Côte-Sainte-Catherine, accéder à ces deux stations à vélo sera désormais plus rapide, confortable et sécuritaire.</p>
     <p>La réussite d'une ligne de transport collectif structurante dépend de sa connectivité avec les autres modes. Continuons d'investir dans un réseau intégré, efficace et réellement adapté à nos déplacements quotidiens 💚🚇🚲</p>
   </div>
@@ -468,7 +178,7 @@
   <h2>Enjeux et opportunités pour le Plateau</h2>
 
   <p><strong>Opportunités:</strong></p>
-  <ul style="margin-left: 2rem; margin-bottom: 1.5rem; line-height: 2;">
+  <ul>
     <li>Accès rapide aux deux stations principales (McGill et Édouard-Montpetit)</li>
     <li>Connexion améliorée vers la rive-nord et Laval</li>
     <li>Potentiel d'augmentation de la densité résidentielle et commerciale</li>
@@ -476,7 +186,7 @@
   </ul>
 
   <p><strong>Défis à relever:</strong></p>
-  <ul style="margin-left: 2rem; margin-bottom: 1.5rem; line-height: 2;">
+  <ul>
     <li>Amélioration du réseau d'autobus pour assurer une bonne connexion</li>
     <li>Expansion des voies cyclables pour favoriser l'accessibilité multimodale</li>
     <li>Gestion de la congestion et des changements d'utilisation des terres</li>
@@ -486,20 +196,19 @@
   <p><strong>Conclusion:</strong> L'arrivée du REM représente une opportunité majeure pour le Plateau-Mont-Royal de renforcer sa position comme quartier urbain dynamique et bien desservi. Avec des investissements appropriés dans le transport actif et les services de bus de qualité, le Plateau peut devenir un modèle d'intégration réussie d'une nouvelle infrastructure majeure.</p>
 </section>
 
-<hr>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div>
-      <p>© 2026 Gabriel Fortin.</p>
+    <div class="footer-brand">
+      <strong>Gabriel Fortin</strong>
+      <p>© 2026 · <a href="mailto:info@gabfortin.com">info@gabfortin.com</a></p>
     </div>
-    <div>
-      <p>
-        <a href="../../index.html">Accueil</a> • 
-        <a href="../index.html">Blogue</a> • 
-        <a href="./index.html">Le REM et le Plateau</a>
-      </p>
+    <div class="social-row">
+      <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-icon" aria-label="Instagram"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.facebook.com/gabfortin1/" class="social-icon" aria-label="Facebook"><svg class="i" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://bsky.app/profile/gabfortin.com" class="social-icon" aria-label="Bluesky"><svg class="i i-fill" viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg></a>
+      <a href="mailto:info@gabfortin.com" class="social-icon" aria-label="Email"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
     </div>
   </div>
 </footer>

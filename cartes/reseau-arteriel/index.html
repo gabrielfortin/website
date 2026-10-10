@@ -16,426 +16,105 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Réseau Artériel — Ville de Montréal">
 <meta name="twitter:description" content="Carte présentant le réseau artériel de la Ville de Montréal, basée sur les données ouvertes de la ville et les caractéristiques administratives de chaque rue.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/site.css">
 <style>
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes slideInDown {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    background: linear-gradient(135deg, #eceef2 0%, #e2e6ec 100%);
-    color: #1a1a18;
-    line-height: 1.6;
-  }
-
-  /* NAV */
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    height: 64px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    animation: slideInDown 0.6s ease-out;
-  }
-
-  .nav-logo {
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    text-decoration: none;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-  }
-
-  .nav-links a {
-    font-size: 14px;
-    color: #6b6b66;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #1c3c6e, #1a9455);
-    transition: width 0.3s ease;
-  }
-
-  .nav-links a:hover { color: #1c3c6e; }
-  .nav-links a:hover::after { width: 100%; }
-
-  .nav-pill {
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    color: #fff !important;
-    padding: 8px 18px;
-    border-radius: 24px;
-    font-size: 13px !important;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(28, 60, 110, 0.3);
-    text-decoration: none;
-  }
-
-  .nav-pill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(28, 60, 110, 0.4);
-  }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    overflow: hidden;
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(28, 60, 110, 0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    top: -100px;
-    right: -100px;
-  }
-
-  .hero-content {
-    max-width: 900px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  .breadcrumb {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 2rem;
-    font-size: 13px;
-  }
-
-  .breadcrumb a {
-    color: #1c3c6e;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .breadcrumb a:hover { text-decoration: underline; }
-
-  .breadcrumb span { color: #6b6b66; }
-
-  h1 {
-    font-size: 42px;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, #1c3c6e 0%, #1a9455 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: fadeInUp 0.8s ease-out;
-  }
-
-  .hero-desc {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #6b6b66;
-    max-width: 680px;
-    animation: fadeInUp 0.8s ease-out 0.1s backwards;
-  }
-
-  /* SECTION */
-  .section {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 3rem 2rem;
-  }
-
-  .section-label {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #1c3c6e;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .section-label::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    border-radius: 50%;
-  }
-
-  /* MAPS GRID */
+  .maps-row,
   .maps-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .maps-center {
+    display: flex;
+    justify-content: center;
     margin-bottom: 2.5rem;
   }
 
-  .map-card {
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 16px rgba(28, 60, 110, 0.08);
+  .maps-center .map-card {
+    max-width: 480px;
+    width: 100%;
   }
 
-  .map-card h2 {
-    font-size: 18px;
+  .map-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.3s ease;
+  }
+
+  .map-card[onclick] {
+    cursor: pointer;
+  }
+
+  .map-card[onclick]:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow);
+  }
+
+  .map-card > h2 {
+    font-size: 16px;
     font-weight: 600;
-    padding: 1.25rem 1.5rem;
-    color: #1a1a18;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    letter-spacing: -0.01em;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
   }
 
   .map-thumb {
     width: 100%;
     display: block;
     cursor: pointer;
-    transition: opacity 0.2s ease;
   }
-
-  .map-thumb:hover { opacity: 0.85; }
 
   .map-card-label {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.5rem;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .map-card-label h2 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   .map-card-label span {
-    font-size: 13px;
-    color: #1c3c6e;
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
   }
 
-
   .map-note {
+    display: flex;
+    gap: 8px;
     font-size: 13px;
-    color: #6b6b66;
-    padding: 0 1.5rem 1rem;
+    color: var(--muted);
+    padding: 0 1.25rem 1rem;
     line-height: 1.6;
   }
 
-  /* MODAL */
-  @keyframes spin {
-    to { transform: rotate(360deg); }
+  .map-note .i {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    color: var(--warn);
   }
 
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    flex-direction: column;
-  }
-
-  .modal-overlay.open { display: flex; }
-
-  .modal-box {
-    background: #fff;
-    border-radius: 0;
-    overflow: hidden;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.875rem 1.5rem;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    flex-shrink: 0;
-    background: #fff;
-  }
-
-  .modal-header h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1a1a18;
-  }
-
-  .modal-close {
-    background: none;
-    border: none;
-    font-size: 22px;
-    cursor: pointer;
-    color: #6b6b66;
-    line-height: 1;
-    padding: 4px 8px;
-    border-radius: 6px;
-    transition: background 0.2s;
-  }
-
-  .modal-close:hover { background: rgba(0,0,0,0.06); }
-
-  .modal-body {
-    flex: 1;
-    position: relative;
-  }
-
-  .modal-loader {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: #f8f9fa;
-    gap: 1rem;
-    z-index: 1;
-    transition: opacity 0.3s ease;
-  }
-
-  .modal-loader.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(28, 60, 110, 0.15);
-    border-top-color: #1c3c6e;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  .modal-loader p {
-    font-size: 14px;
-    color: #6b6b66;
-  }
-
-  .modal-iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-
-  /* SOURCE */
-  .source-note {
-    font-size: 14px;
-    color: #6b6b66;
-    margin-top: 1.5rem;
-  }
-
-  .source-note a {
-    color: #1c3c6e;
-    font-weight: 500;
-    text-decoration: underline;
-  }
-
-  /* DIVIDER */
-  hr {
-    border: none;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    margin: 0;
-  }
-
-  /* FOOTER */
-  footer {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 3rem 2rem;
-  }
-
-  .footer-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-
-  footer p { font-size: 13px; color: #6b6b66; }
-
-  footer a {
-    color: #1c3c6e;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  footer a:hover { text-decoration: underline; }
-
-  /* RESPONSIVE */
   @media (max-width: 768px) {
-    h1 { font-size: 30px; }
-
+    .maps-row,
     .maps-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
-
-    .nav-pill { display: none; }
-  }
-
-  @media (max-width: 600px) {
-    nav { padding: 0 1rem; }
-    .nav-logo { font-size: 14px; }
-    .nav-links { gap: 1rem; font-size: 12px; }
-    h1 { font-size: 24px; }
-    .section { padding: 2rem 1rem; }
-    .footer-inner { flex-direction: column; text-align: center; }
-  }
-  .nav-short { display: none; }
-  @media (max-width: 600px) {
-    .nav-short { display: inline; }
-    .nav-full  { display: none; }
   }
 </style>
   <!-- Google Analytics -->
@@ -451,9 +130,9 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="../../index.html"><img src="../../favico.png" alt="Gabriel Fortin" style="height:28px;display:block;"></a>
+  <a class="nav-logo" href="../../index.html"><img src="../../favico.png" alt="Gabriel Fortin"></a>
   <div class="nav-links">
-    <a href="../../cartes/index.html">Cartes</a>
+    <a href="../../cartes/index.html" aria-current="page">Cartes</a>
     <a href="../../donnees/index.html">Données</a>
     <a href="../../plans/index.html">Plans</a>
     <a href="../../articles/index.html">Blogue</a>
@@ -477,7 +156,6 @@
   </div>
 </section>
 
-<hr>
 
 <!-- CARTES -->
 <section class="section">
@@ -488,7 +166,7 @@
       <img class="map-thumb" src="./Arteriel.png" alt="Carte du réseau artériel">
       <div class="map-card-label">
         <h2>Carte du réseau artériel</h2>
-        <span>Ouvrir →</span>
+        <span>Ouvrir <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
       </div>
       <p class="map-note">Carte représentant uniquement les rues faisant partie du réseau artériel administratif de la Ville de Montréal.</p>
     </div>
@@ -497,26 +175,30 @@
       <img class="map-thumb" src="./Tout.png" alt="Carte de toutes les rues">
       <div class="map-card-label">
         <h2>Carte de toutes les rues</h2>
-        <span>Ouvrir →</span>
+        <span>Ouvrir <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
       </div>
       <p class="map-note">Carte représentant toutes les rues de la Ville de Montréal.</p>
-      <p class="map-note">⚠️ Cette carte est très volumineuse et peut prendre plusieurs secondes à charger, selon votre appareil et votre connexion Internet.</p>
+      <p class="map-note"><svg class="i" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg> Cette carte est très volumineuse et peut prendre plusieurs secondes à charger, selon votre appareil et votre connexion Internet.</p>
     </div>
   </div>
 
   <p class="source-note">Les <a href="https://donnees.montreal.ca/dataset/reseau-arteriel-administratif" target="_blank">données utilisées</a> datent de 2023.</p>
 </section>
 
-<hr>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <p>© 2026 Gabriel Fortin.</p>
-    <p>
-      <a href="../../index.html">Accueil</a> •
-      <a href="../index.html">Cartes</a>
-    </p>
+    <div class="footer-brand">
+      <strong>Gabriel Fortin</strong>
+      <p>© 2026 · <a href="mailto:info@gabfortin.com">info@gabfortin.com</a></p>
+    </div>
+    <div class="social-row">
+      <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-icon" aria-label="Instagram"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.facebook.com/gabfortin1/" class="social-icon" aria-label="Facebook"><svg class="i" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://bsky.app/profile/gabfortin.com" class="social-icon" aria-label="Bluesky"><svg class="i i-fill" viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg></a>
+      <a href="mailto:info@gabfortin.com" class="social-icon" aria-label="Email"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
+    </div>
   </div>
 </footer>
 
@@ -525,13 +207,13 @@
   <div class="modal-box">
     <div class="modal-header">
       <h3 id="modal-title"></h3>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Fermer"><svg class="i" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
     <div class="modal-body">
       <div class="modal-loader" id="modal-loader">
         <div class="spinner"></div>
         <p>Chargement de la carte…</p>
-        <p style="max-width:320px;text-align:center;font-size:13px;color:#92400e;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px 14px;margin-top:0.75rem;line-height:1.5;">⚠️ Ces cartes sont volumineuses et peuvent prendre quelques secondes à charger.</p>
+        <p class="modal-warning"><svg class="i" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg> <span>Ces cartes sont volumineuses et peuvent prendre quelques secondes à charger.</span></p>
       </div>
       <iframe class="modal-iframe" id="modal-iframe" src="" title="Carte interactive"></iframe>
     </div>

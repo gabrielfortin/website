@@ -18,329 +18,112 @@
 <meta name="twitter:title" content="Parcours — Gabriel Fortin">
 <meta name="twitter:description" content="Du génie logiciel à la politique municipale : formation, parcours professionnel chez Bell et dossiers portés comme conseiller d'arrondissement au Plateau-Mont-Royal.">
 <meta name="twitter:image" content="https://gabfortin.com/img/Gabriel%20Fortin.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
 <style>
-  /* ANIMATIONS */
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes slideInDown {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-
-  /* BASE */
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    background: linear-gradient(135deg, #eceef2 0%, #e2e6ec 100%);
-    color: #1a1a18;
-    line-height: 1.6;
-  }
-
-  /* NAV */
-  nav {
-    display: flex;
+  .press-link {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    height: 64px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    animation: slideInDown 0.6s ease-out;
-  }
-
-  .nav-logo {
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    color: #1c3c6e;
-    text-decoration: none;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-  }
-
-  .nav-links a {
-    font-size: 14px;
-    color: #6b6b66;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #1c3c6e, #1a9455);
-    transition: width 0.3s ease;
-  }
-
-  .nav-links a:hover {
-    color: #1c3c6e;
-  }
-
-  .nav-links a:hover::after {
-    width: 100%;
-  }
-
-  .nav-links a.active {
-    color: #1c3c6e;
-  }
-
-  .nav-links a.active::after {
-    width: 100%;
-  }
-
-  .nav-pill {
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    color: #fff !important;
-    padding: 8px 18px;
-    border-radius: 24px;
-    font-size: 13px !important;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(28, 60, 110, 0.3);
-    text-decoration: none;
-  }
-
-  .nav-pill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(28, 60, 110, 0.4);
-  }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    overflow: hidden;
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(28, 60, 110, 0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    top: -100px;
-    right: -100px;
-  }
-
-  .hero-content {
-    max-width: 900px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  .breadcrumb {
-    display: flex;
     gap: 8px;
-    align-items: center;
-    margin-bottom: 2rem;
-    font-size: 13px;
-  }
-
-  .breadcrumb a {
-    color: #1c3c6e;
+    margin-top: 1.5rem;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
     text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
   }
 
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .breadcrumb span {
-    color: #6b6b66;
-  }
-
-  h1 {
-    font-size: 42px;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, #1c3c6e 0%, #1a9455 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: fadeInUp 0.8s ease-out;
-  }
-
-  .hero-desc {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #6b6b66;
-    max-width: 640px;
-    animation: fadeInUp 0.8s ease-out 0.1s backwards;
-  }
-
-  /* SECTIONS */
-  .section {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 3rem 2rem;
-    animation: fadeInUp 0.8s ease-out;
-  }
-
-  .section-label {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #1c3c6e;
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .section-label::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    border-radius: 50%;
-  }
-
-  .section-intro {
-    font-size: 15px;
-    color: #6b6b66;
-    max-width: 680px;
-    margin-bottom: 2rem;
-    line-height: 1.8;
-  }
-
-  /* FORMATION */
   .edu-grid {
     display: grid;
     gap: 16px;
   }
 
-  .edu-item {
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
+  .edu-item,
+  .case-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     padding: 1.5rem 1.75rem;
-    position: relative;
-    overflow: hidden;
   }
 
-  .edu-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(180deg, #1c3c6e, #1a9455);
-  }
-
-  .edu-item-head {
+  .edu-item-head,
+  .timeline-head {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 0.4rem;
+  }
+
+  .edu-item-head {
+    margin-bottom: 0.25rem;
   }
 
   .edu-item h3 {
     font-size: 16px;
     font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
-  .edu-period {
-    font-size: 12px;
-    color: #6b6b66;
+  .edu-period,
+  .timeline-period {
+    font-size: 13px;
+    color: var(--faint);
     font-weight: 500;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
 
   .edu-org {
-    font-size: 13px;
-    color: #1c3c6e;
-    font-weight: 600;
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 500;
     margin-bottom: 0.5rem;
   }
 
   .edu-item p {
     font-size: 14px;
-    color: #6b6b66;
+    color: var(--muted);
     line-height: 1.6;
   }
 
   .edu-courses {
-    margin-top: 0.6rem;
+    margin-top: 0.75rem;
     display: flex;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
   }
 
   .edu-course-tag {
     font-size: 12px;
-    background: #eceef2;
-    color: #444;
+    background: var(--surface-2);
+    color: var(--text-2);
     padding: 4px 10px;
-    border-radius: 6px;
+    border-radius: 999px;
     font-weight: 500;
   }
 
   .why-box {
-    background: linear-gradient(135deg, #e8f7ee, #d0f0df);
-    border: 1px solid rgba(26, 148, 85, 0.2);
-    border-radius: 12px;
+    background: var(--brand-soft);
+    border-radius: var(--radius);
     padding: 1.5rem 1.75rem;
     margin-top: 16px;
   }
 
   .why-box h3 {
-    font-size: 14px;
-    font-weight: 700;
-    color: #0f7a37;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--brand);
+    margin-bottom: 0.4rem;
   }
 
   .why-box p {
     font-size: 14px;
-    color: #3a4a40;
+    color: var(--text-2);
     line-height: 1.7;
   }
 
-  /* TIMELINE (BELL) */
   .timeline {
     position: relative;
     padding-left: 28px;
@@ -349,12 +132,11 @@
   .timeline::before {
     content: '';
     position: absolute;
-    left: 6px;
-    top: 6px;
-    bottom: 6px;
-    width: 2px;
-    background: linear-gradient(180deg, #1c3c6e, #1a9455);
-    opacity: 0.25;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--border-strong);
   }
 
   .timeline-item {
@@ -370,25 +152,18 @@
     content: '';
     position: absolute;
     left: -28px;
-    top: 4px;
-    width: 12px;
-    height: 12px;
+    top: 6px;
+    width: 11px;
+    height: 11px;
     border-radius: 50%;
-    background: #fff;
-    border: 2px solid #1c3c6e;
+    background: var(--bg);
+    border: 1.5px solid var(--muted);
   }
 
   .timeline-item.current::before {
-    background: #1a9455;
-    border-color: #1a9455;
-  }
-
-  .timeline-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 8px;
+    background: var(--brand);
+    border-color: var(--brand);
+    box-shadow: 0 0 0 4px var(--brand-soft);
   }
 
   .timeline-item h3 {
@@ -396,84 +171,41 @@
     font-weight: 600;
   }
 
-  .timeline-period {
-    font-size: 12px;
-    color: #6b6b66;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-
   .timeline-item p {
     font-size: 14px;
-    color: #6b6b66;
+    color: var(--muted);
     line-height: 1.6;
-    margin-top: 0.35rem;
+    margin-top: 0.3rem;
     max-width: 640px;
   }
 
   .bell-total {
     margin-top: 1.5rem;
     font-size: 13px;
-    color: #6b6b66;
-    font-style: italic;
+    color: var(--faint);
   }
 
-  /* CASE STUDIES */
   .case-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
-  }
-
-  .case-item {
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-    padding: 1.75rem;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .case-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, #1c3c6e, #1a9455);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-  }
-
-  .case-item:hover::before {
-    transform: scaleX(1);
-  }
-
-  .case-item:hover {
-    border-color: rgba(28, 60, 110, 0.2);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(28, 60, 110, 0.12);
+    gap: 16px;
   }
 
   .case-status {
     display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    border-radius: 20px;
-    background: #fef3e2;
-    color: #b45309;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--warn-soft);
+    color: var(--warn);
     margin-bottom: 0.9rem;
   }
 
   .case-item h3 {
     font-size: 17px;
     font-weight: 600;
+    letter-spacing: -0.01em;
     margin-bottom: 0.9rem;
   }
 
@@ -486,47 +218,39 @@
   }
 
   .case-field-label {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #1c3c6e;
-    margin-bottom: 0.2rem;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.15rem;
   }
 
   .case-field p {
     font-size: 14px;
-    color: #6b6b66;
+    color: var(--muted);
     line-height: 1.6;
   }
 
   .case-link {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     margin-top: 0.6rem;
     font-size: 13px;
     font-weight: 600;
-    color: #1c3c6e;
+    color: var(--text);
     text-decoration: none;
-    transition: transform 0.3s ease;
-  }
-
-  .case-link:hover {
-    transform: translateX(4px);
   }
 
   .case-achievement + .case-achievement {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px dashed rgba(0, 0, 0, 0.12);
+    border-top: 1px dashed var(--border-strong);
   }
 
-  /* DECLARATIONS & RESOLUTIONS */
   .decl-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
   .decl-item {
@@ -534,154 +258,61 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-left: 3px solid #1a9455;
-    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     padding: 1.1rem 1.4rem;
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.3s ease;
   }
 
   .decl-item:hover {
-    border-color: rgba(28, 60, 110, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(28, 60, 110, 0.1);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow);
   }
 
   .decl-item p {
-    font-size: 14px;
-    color: #1a1a18;
-    line-height: 1.6;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.55;
     font-weight: 500;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
   }
 
   .decl-item-date {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #1a9455;
-    background: #e4f5ee;
-    padding: 3px 10px;
-    border-radius: 20px;
+    font-size: 13px;
+    color: var(--muted);
   }
 
   .decl-item-arrow {
     flex-shrink: 0;
-    font-size: 14px;
-    font-weight: 600;
-    color: #1c3c6e;
+    display: flex;
+    color: var(--muted);
   }
 
-  /* CHIPS */
   .chip-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
   }
 
   .chip {
     display: inline-flex;
     align-items: center;
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-    padding: 8px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 14px;
     font-size: 13px;
-    color: #444;
+    color: var(--text-2);
     font-weight: 500;
   }
 
-  /* DIVIDER */
-  hr {
-    border: none;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    margin: 0;
-  }
-
-  /* FOOTER */
-  footer {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 3rem 2rem;
-    animation: fadeIn 0.8s ease-out;
-  }
-
-  .footer-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-
-  footer p {
-    font-size: 13px;
-    color: #6b6b66;
-  }
-
-  footer a {
-    color: #1c3c6e;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  footer a:hover {
-    text-decoration: underline;
-  }
-
-  /* RESPONSIVE */
   @media (max-width: 768px) {
-    h1 {
-      font-size: 32px;
-    }
-
     .case-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
-
-    .nav-pill {
-      display: none;
-    }
-  }
-
-  @media (max-width: 600px) {
-    nav {
-      padding: 0 1rem;
-    }
-
-    .nav-logo {
-      font-size: 14px;
-    }
-
-    .nav-links {
-      gap: 1rem;
-      font-size: 12px;
-    }
-
-    h1 {
-      font-size: 24px;
-    }
-
-    .section {
-      padding: 2rem 1rem;
-    }
-
-    .footer-inner {
-      flex-direction: column;
-      text-align: center;
-    }
-  }
-  .nav-short { display: none; }
-  @media (max-width: 600px) {
-    .nav-short { display: inline; }
-    .nav-full  { display: none; }
   }
 </style>
   <!-- Structured Data JSON-LD -->
@@ -765,13 +396,13 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="../index.html"><img src="../favico.png" alt="Gabriel Fortin" style="height:28px;display:block;"></a>
+  <a class="nav-logo" href="../index.html"><img src="../favico.png" alt="Gabriel Fortin"></a>
   <div class="nav-links">
     <a href="../cartes/index.html">Cartes</a>
     <a href="../donnees/index.html">Données</a>
     <a href="../plans/index.html">Plans</a>
     <a href="../articles/index.html">Blogue</a>
-    <a href="../parcours/index.html" class="active">Parcours</a>
+    <a href="../parcours/index.html" aria-current="page">Parcours</a>
     <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
   </div>
 </nav>
@@ -786,13 +417,11 @@
     </div>
     <h1>Parcours</h1>
     <p class="hero-desc">Ingénieur logiciel formé à Polytechnique Montréal, j'ai passé plus de huit ans à concevoir des plateformes technologiques chez Bell. En parallèle, ma passion pour l'urbanisme et la mobilité durable m'a amené à l'Université de Montréal, puis vers l'engagement politique comme conseiller d'arrondissement au Plateau-Mont-Royal — où je mets aujourd'hui cette expertise au service des dossiers de mobilité, de propreté et d'aménagement urbain.</p>
-    <a href="https://www.monplateau.info/de-linformatique-a-la-politique-lapprentissage-en-accelere-du-conseiller-gabriel-fortin/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;margin-top:1.25rem;font-size:14px;font-weight:500;color:#1c3c6e;text-decoration:none;">
-      📰 Lire l'article de Mon Plateau sur mes débuts en politique →
+    <a href="https://www.monplateau.info/de-linformatique-a-la-politique-lapprentissage-en-accelere-du-conseiller-gabriel-fortin/" target="_blank" rel="noopener" class="press-link"><svg class="i" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg> Lire l'article de Mon Plateau sur mes débuts en politique <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </a>
   </div>
 </section>
 
-<hr>
 
 <!-- FORMATION -->
 <section class="section">
@@ -835,7 +464,6 @@
 
 </section>
 
-<hr>
 
 <!-- BELL -->
 <section class="section">
@@ -871,7 +499,6 @@
 
 </section>
 
-<hr>
 
 <!-- DOSSIERS -->
 <section class="section">
@@ -890,7 +517,7 @@
         <div class="case-field-label">Action</div>
         <p>Travail sur le plan propreté 2026 de l'arrondissement du Plateau-Mont-Royal.</p>
       </div>
-      <a href="https://www.monplateau.info/proprete-sur-le-plateau-une-facture-grandissante-pour-lutter-contre-les-dechets/" target="_blank" rel="noopener" class="case-link">Lire l'article de Mon Plateau →</a>
+      <a href="https://www.monplateau.info/proprete-sur-le-plateau-une-facture-grandissante-pour-lutter-contre-les-dechets/" target="_blank" rel="noopener" class="case-link">Lire l'article de Mon Plateau <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
     </div>
 
     <div class="case-item">
@@ -905,7 +532,7 @@
           <div class="case-field-label">Action</div>
           <p>Pilotage du projet de réaménagement de la rue Fullum.</p>
         </div>
-        <a href="https://www.monplateau.info/rue-fullum-mise-a-sens-unique-et-securisation-des-voies-cyclables/" target="_blank" rel="noopener" class="case-link">Lire l'article de Mon Plateau →</a>
+        <a href="https://www.monplateau.info/rue-fullum-mise-a-sens-unique-et-securisation-des-voies-cyclables/" target="_blank" rel="noopener" class="case-link">Lire l'article de Mon Plateau <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
       </div>
 
       <div class="case-achievement">
@@ -913,7 +540,7 @@
           <div class="case-field-label">Action</div>
           <p>Proposition d'un aménagement transitoire pour sécuriser l'avenue du Parc.</p>
         </div>
-        <a href="../articles/parc-1/index.html" class="case-link">Lire l'article de blogue →</a>
+        <a href="../articles/parc-1/index.html" class="case-link">Lire l'article de blogue <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
       </div>
     </div>
 
@@ -928,7 +555,7 @@
         <div class="case-field-label">Action</div>
         <p>Élaboration d'un plan d'action pour le secteur Milton-Parc.</p>
       </div>
-      <a href="https://www.monplateau.info/priorites-de-projet-montreal-dans-jeanne-mance-itinerance-proprete-et-reamenagements/" target="_blank" rel="noopener" class="case-link">Lire l'article de Mon Plateau →</a>
+      <a href="https://www.monplateau.info/priorites-de-projet-montreal-dans-jeanne-mance-itinerance-proprete-et-reamenagements/" target="_blank" rel="noopener" class="case-link">Lire l'article de Mon Plateau <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
     </div>
 
     <div class="case-item">
@@ -946,7 +573,6 @@
   </div>
 </section>
 
-<hr>
 
 <!-- DECLARATIONS & RESOLUTIONS -->
 <section class="section">
@@ -959,19 +585,18 @@
         <p>Déclaration sur l'importance d'un réseau cyclable sécuritaire et continu</p>
         <span class="decl-item-date">1er décembre 2025</span>
       </div>
-      <span class="decl-item-arrow">→</span>
+      <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
     <a class="decl-item" href="../fichiers/CA260908-%20R%C3%A9solution%20demandant%20aux%20partis%20politiques%20provinciaux%20et%20%C3%A0%20leurs%20candidat%C2%B7es%20de%20pr%C3%A9senter%20un%20plan%20de%20r%C3%A9duction%20de%20la%20consommation%20de%20p%C3%A9trole%20au%20Qu%C3%A9bec%2C%20notamment%20celui%20issu%20des%20sables%20bitumineux.pdf" target="_blank" rel="noopener">
       <div>
         <p>Résolution demandant aux partis politiques provinciaux et à leurs candidat·es de présenter un plan de réduction de la consommation de pétrole au Québec, notamment celui issu des sables bitumineux</p>
         <span class="decl-item-date">8 septembre 2026</span>
       </div>
-      <span class="decl-item-arrow">→</span>
+      <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
   </div>
 </section>
 
-<hr>
 
 <!-- ENGAGEMENTS -->
 <section class="section">
@@ -987,19 +612,19 @@
   </div>
 </section>
 
-<hr>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div>
-      <p>© 2026 Gabriel Fortin.</p>
+    <div class="footer-brand">
+      <strong>Gabriel Fortin</strong>
+      <p>© 2026 · <a href="mailto:info@gabfortin.com">info@gabfortin.com</a></p>
     </div>
-    <div>
-      <p>
-        <a href="../index.html">Accueil</a> •
-        <a href="../parcours/index.html">Parcours</a>
-      </p>
+    <div class="social-row">
+      <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-icon" aria-label="Instagram"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.facebook.com/gabfortin1/" class="social-icon" aria-label="Facebook"><svg class="i" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://bsky.app/profile/gabfortin.com" class="social-icon" aria-label="Bluesky"><svg class="i i-fill" viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg></a>
+      <a href="mailto:info@gabfortin.com" class="social-icon" aria-label="Email"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
     </div>
   </div>
 </footer>

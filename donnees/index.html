@@ -16,182 +16,10 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Données — Gabriel Fortin">
 <meta name="twitter:description" content="Explorez des tableaux, statistiques et visualisations de données provenant de sources ouvertes de la Ville de Montréal et autres organismes.">
-<link rel="stylesheet" href="../css/base.css">
-<style>
-
-  /* DONNEES GRID */
-  .donnees-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-    gap: 20px;
-  }
-
-  .donnee-item { 
-    background: #ffffff; 
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px; 
-    padding: 2rem; 
-    text-decoration: none; 
-    color: #1a1a18;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: block;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .donnee-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, #1c3c6e, #1a9455);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-  }
-
-  .donnee-item:hover::before {
-    transform: scaleX(1);
-  }
-
-  .donnee-item:hover { 
-    border-color: rgba(28, 60, 110, 0.2);
-    transform: translateY(-8px);
-    box-shadow: 0 12px 32px rgba(28, 60, 110, 0.15);
-  }
-
-  .donnee-icon { 
-    width: 48px; 
-    height: 48px; 
-    border-radius: 10px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    margin-bottom: 1rem; 
-    font-size: 24px;
-    background: linear-gradient(135deg, #fdeaea, #fbd5d5);
-    transition: all 0.3s ease;
-  }
-
-  .donnee-item:hover .donnee-icon {
-    transform: scale(1.1) rotate(5deg);
-  }
-
-  .donnee-item h3 { 
-    font-size: 18px; 
-    font-weight: 600; 
-    margin-bottom: 0.75rem;
-  }
-
-  .donnee-item p  { 
-    font-size: 14px; 
-    color: #6b6b66; 
-    line-height: 1.6;
-  }
-
-  .donnee-arrow { 
-    font-size: 14px; 
-    color: #1c3c6e;
-    margin-top: 1rem; 
-    display: inline-block;
-    transition: transform 0.3s ease;
-  }
-
-  .donnee-item:hover .donnee-arrow {
-    transform: translateX(4px);
-  }
-
-  /* DIVIDER */
-  hr { 
-    border: none; 
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    margin: 0;
-  }
-
-  /* FOOTER */
-  footer {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 3rem 2rem;
-    animation: fadeIn 0.8s ease-out;
-  }
-
-  .footer-inner { 
-    max-width: 900px; 
-    margin: 0 auto; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    flex-wrap: wrap; 
-    gap: 1.5rem;
-  }
-
-  footer p { 
-    font-size: 13px; 
-    color: #6b6b66;
-  }
-
-  footer a {
-    color: #1c3c6e;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  footer a:hover {
-    text-decoration: underline;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    h1 {
-      font-size: 32px;
-    }
-
-    .donnees-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .nav-pill {
-      display: none;
-    }
-  }
-
-  @media (max-width: 600px) {
-    nav {
-      padding: 0 1rem;
-    }
-
-    .nav-logo {
-      font-size: 14px;
-    }
-
-    .nav-links {
-      gap: 1rem;
-      font-size: 12px;
-    }
-
-    h1 {
-      font-size: 24px;
-    }
-
-    .section {
-      padding: 2rem 1rem;
-    }
-
-    .footer-inner {
-      flex-direction: column;
-      text-align: center;
-    }
-  }
-  .nav-short { display: none; }
-  @media (max-width: 600px) {
-    .nav-short { display: inline; }
-    .nav-full  { display: none; }
-  }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5230S7MNSQ"></script>
   <script>
@@ -205,10 +33,10 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="../index.html"><img src="../favico.png" alt="Gabriel Fortin" style="height:28px;display:block;"></a>
+  <a class="nav-logo" href="../index.html"><img src="../favico.png" alt="Gabriel Fortin"></a>
   <div class="nav-links">
     <a href="../cartes/index.html">Cartes</a>
-    <a href="../donnees/index.html">Données</a>
+    <a href="../donnees/index.html" aria-current="page">Données</a>
     <a href="../plans/index.html">Plans</a>
     <a href="../articles/index.html">Blogue</a>
     <a href="../parcours/index.html">Parcours</a>
@@ -224,12 +52,11 @@
       <span>/</span>
       <span>Données</span>
     </div>
-    <h1><span style="margin-right:0.4em;-webkit-text-fill-color:initial;background:none;">📊</span>Données</h1>
+    <h1>Données</h1>
     <p class="hero-desc">Explorez des tableaux, statistiques et visualisations de données provenant de sources ouvertes de la Ville de Montréal et autres organismes.</p>
   </div>
 </section>
 
-<hr>
 
 <!-- DONNEES -->
 <section class="section">
@@ -237,49 +64,49 @@
   
   <div class="donnees-grid">
     <a href="https://velo.gabfortin.com" class="donnee-item">
-      <div class="donnee-icon"><img src="../img/compteur-velo.png" alt="Compteur Vélo" style="width:100%;height:100%;object-fit:contain;border-radius:6px;"></div>
+      <div class="donnee-icon"><img src="../img/compteur-velo.png" alt="Compteur Vélo"></div>
       <h3>Compteurs Vélo</h3>
       <p>Données détaillées des compteurs de vélo à Montréal avec tendances, comparaisons et analyses temporelles.</p>
-      <span class="donnee-arrow">Explorer les données →</span>
+      <span class="donnee-arrow">Explorer les données <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
     <a href="https://dechets.gabfortin.com" class="donnee-item">
-      <div class="donnee-icon"><img src="../img/dechets.png" alt="Déchets Montréal" style="width:100%;height:100%;object-fit:contain;border-radius:6px;"></div>
+      <div class="donnee-icon"><img src="../img/dechets.png" alt="Déchets Montréal"></div>
       <h3>Déchets Montréal</h3>
       <p>Visualisation des données de bilan massique des matières résiduelles à Montréal par arrondissement et par année.</p>
-      <span class="donnee-arrow">Explorer les données →</span>
+      <span class="donnee-arrow">Explorer les données <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
     <a href="./elections-2025/resultats.html" class="donnee-item">
-      <div class="donnee-icon">🗳️</div>
+      <div class="donnee-icon"><svg class="i" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><path d="M5 7c0-1.1.9-2 2-2h10a2 2 0 0 1 2 2v12H5V7Z"/><path d="M22 19H2"/></svg></div>
       <h3>Résultats élections municipales Montréal 2025</h3>
       <p>Résultats des élections 2025 avec données complètes et analyses par secteur électoral.</p>
-      <span class="donnee-arrow">Explorer les données →</span>
+      <span class="donnee-arrow">Explorer les données <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
     <a href="https://311.gabfortin.com" class="donnee-item">
-      <div class="donnee-icon">📞</div>
+      <div class="donnee-icon"><svg class="i" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
       <h3>Requêtes 311</h3>
       <p>Visualisation de l'évolution des requêtes 311 au Plateau-Mont-Royal.</p>
-      <span class="donnee-arrow">Explorer les données →</span>
+      <span class="donnee-arrow">Explorer les données <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
   </div>
 </section>
 
-<hr>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div>
-      <p>© 2026 Gabriel Fortin.</p>
+    <div class="footer-brand">
+      <strong>Gabriel Fortin</strong>
+      <p>© 2026 · <a href="mailto:info@gabfortin.com">info@gabfortin.com</a></p>
     </div>
-    <div>
-      <p>
-        <a href="../index.html">Accueil</a> • 
-        <a href="../donnees/index.html">Données</a>
-      </p>
+    <div class="social-row">
+      <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-icon" aria-label="Instagram"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.facebook.com/gabfortin1/" class="social-icon" aria-label="Facebook"><svg class="i" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://bsky.app/profile/gabfortin.com" class="social-icon" aria-label="Bluesky"><svg class="i i-fill" viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg></a>
+      <a href="mailto:info@gabfortin.com" class="social-icon" aria-label="Email"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
     </div>
   </div>
 </footer>

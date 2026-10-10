@@ -16,424 +16,70 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Applications — Gabriel Fortin">
 <meta name="twitter:description" content="Découvrez les applications web et outils que j'ai développés pour rendre les données plus accessibles.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
 <style>
-  /* ANIMATIONS */
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  .section + .section {
+    padding-top: 0;
   }
 
-  @keyframes slideInDown {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-  }
-
-  /* BASE */
-  *, *::before, *::after { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-  }
-
-  body { 
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    background: linear-gradient(135deg, #eceef2 0%, #e2e6ec 100%);
-    color: #1a1a18;
-    line-height: 1.6;
-  }
-
-  /* NAV */
-  nav { 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    padding: 0 2rem; 
-    height: 64px; 
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    position: sticky; 
-    top: 0; 
-    z-index: 100;
-    animation: slideInDown 0.6s ease-out;
-  }
-
-  .nav-short { display: none; }
-  @media (max-width: 600px) {
-    .nav-short { display: inline; }
-    .nav-full  { display: none; }
-  }
-
-  .nav-logo { 
-    font-size: 16px; 
-    font-weight: 700; 
-    letter-spacing: -0.3px; 
-    color: #1c3c6e;
-    text-decoration: none;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .nav-links { 
-    display: flex; 
+  .featured-app {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 160px;
     gap: 2rem;
     align-items: center;
-  }
-
-  .nav-links a { 
-    font-size: 14px; 
-    color: #6b6b66; 
-    text-decoration: none; 
-    font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #1c3c6e, #1a9455);
-    transition: width 0.3s ease;
-  }
-
-  .nav-links a:hover {
-    color: #1c3c6e;
-  }
-
-  .nav-links a:hover::after {
-    width: 100%;
-  }
-
-  .nav-pill { 
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    color: #fff !important;
-    padding: 8px 18px; 
-    border-radius: 24px; 
-    font-size: 13px !important; 
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(28, 60, 110, 0.3);
-    text-decoration: none;
-  }
-
-  .nav-pill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(28, 60, 110, 0.4);
-  }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    overflow: hidden;
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(28, 60, 110, 0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    top: -100px;
-    right: -100px;
-  }
-
-  .hero-content { 
-    max-width: 900px; 
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  .breadcrumb {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-size: 13px;
-  }
-
-  .breadcrumb a {
-    color: #1c3c6e;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .breadcrumb span {
-    color: #6b6b66;
-  }
-
-  h1 { 
-    font-size: 42px; 
-    font-weight: 700; 
-    line-height: 1.2; 
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, #1c3c6e 0%, #1a9455 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: fadeInUp 0.8s ease-out;
-  }
-
-  .hero-desc { 
-    font-size: 16px; 
-    line-height: 1.8; 
-    color: #6b6b66; 
-    max-width: 600px;
-    animation: fadeInUp 0.8s ease-out 0.1s backwards;
-  }
-
-  /* SECTIONS */
-  .section {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 3rem 2rem;
-    animation: fadeInUp 0.8s ease-out;
-  }
-
-  .section-label { 
-    font-size: 12px; 
-    font-weight: 700; 
-    letter-spacing: 0.12em; 
-    text-transform: uppercase; 
-    color: #1c3c6e;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .section-label::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    border-radius: 50%;
-  }
-
-  /* FEATURED APPS */
-  .featured-app {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     padding: 1.75rem;
-    display: grid;
-    grid-template-columns: 1fr 220px;
-    gap: 1.5rem;
-    align-items: center;
-    margin-bottom: 0; 
-    text-decoration: none; 
-    color: #1a1a18;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .featured-app::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(180deg, #1c3c6e, #1a9455);
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform 0.3s ease;
-  }
-
-  .featured-app:hover::before {
-    transform: scaleY(1);
-  }
-
-  .featured-app:hover { 
-    border-color: rgba(28, 60, 110, 0.2);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(28, 60, 110, 0.15);
   }
 
   .featured-content h3 {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
-    margin-bottom: 0.6rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
   }
 
   .featured-content p {
-    font-size: 14px;
-    color: #6b6b66;
-    line-height: 1.65;
-    margin-bottom: 1.2rem;
-  }
-
-  .badge {
-    display: inline-flex;
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    color: #fff;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 1rem;
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
   }
 
   .featured-ctas {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
-  .btn-primary { 
-    background: linear-gradient(135deg, #1c3c6e, #1a9455);
-    color: #fff; 
-    padding: 12px 28px; 
-    border-radius: 8px; 
-    font-size: 14px; 
-    font-weight: 600; 
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 15px rgba(28, 60, 110, 0.3);
-    display: inline-block;
-  }
-
-  .btn-primary:hover { 
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(28, 60, 110, 0.4);
-  }
-
   .featured-visual {
-    width: 220px;
-    height: 220px;
-    background: transparent;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 120px;
-    animation: float 3s ease-in-out infinite;
+    width: 160px;
+    height: 160px;
+    border-radius: 20px;
+    overflow: hidden;
   }
 
-  /* DIVIDER */
-  hr { 
-    border: none; 
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    margin: 0;
+  .featured-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
   }
 
-  /* FOOTER */
-  footer {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 3rem 2rem;
-    animation: fadeIn 0.8s ease-out;
-  }
-
-  .footer-inner { 
-    max-width: 900px; 
-    margin: 0 auto; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    flex-wrap: wrap; 
-    gap: 1.5rem;
-  }
-
-  footer p { 
-    font-size: 13px; 
-    color: #6b6b66;
-  }
-
-  footer a {
-    color: #1c3c6e;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  footer a:hover {
-    text-decoration: underline;
-  }
-
-  /* RESPONSIVE */
   @media (max-width: 768px) {
-    h1 {
-      font-size: 32px;
-    }
-
     .featured-app {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.25rem;
     }
 
     .featured-visual {
-      width: 100%;
-      height: 200px;
-    }
-
-    .apps-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .nav-pill {
-      display: none;
-    }
-  }
-
-  @media (max-width: 600px) {
-    nav {
-      padding: 0 1rem;
-    }
-
-    .nav-logo {
-      font-size: 14px;
-    }
-
-    .nav-links {
-      gap: 1rem;
-      font-size: 12px;
-    }
-
-    h1 {
-      font-size: 24px;
-    }
-
-    .featured-content h3 {
-      font-size: 20px;
-    }
-
-    .section {
-      padding: 2rem 1rem;
-    }
-
-    .footer-inner {
-      flex-direction: column;
-      text-align: center;
+      width: 88px;
+      height: 88px;
+      order: -1;
     }
   }
 </style>
@@ -450,7 +96,7 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="../index.html"><img src="../favico.png" alt="Gabriel Fortin" style="height:28px;display:block;"></a>
+  <a class="nav-logo" href="../index.html"><img src="../favico.png" alt="Gabriel Fortin"></a>
   <div class="nav-links">
     <a href="../cartes/index.html">Cartes</a>
     <a href="../donnees/index.html">Données</a>
@@ -469,12 +115,11 @@
       <span>/</span>
       <span>Applications</span>
     </div>
-    <h1><img src="../img/icon-apps.png" alt="" style="height:1.3em;width:1.3em;object-fit:cover;border-radius:8px;margin-right:0.4em;vertical-align:middle;">Applications</h1>
+    <h1>Applications</h1>
     <p class="hero-desc">Découvrez les applications web et outils que j'ai développés pour rendre les données plus accessibles.</p>
   </div>
 </section>
 
-<hr>
 
 <!-- APPLICATION PHARE -->
 <section class="section">
@@ -486,7 +131,7 @@
         <a href="https://velo.gabfortin.com/" class="btn-primary">Accéder à l'application</a>
       </div>
     </div>
-    <div class="featured-visual"><img src="../img/compteur-velo.png" alt="Compteur Vélo" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"></div>
+    <div class="featured-visual"><img src="../img/compteur-velo.png" alt="Compteur Vélo"></div>
   </div>
 </section>
 
@@ -500,7 +145,7 @@
         <a href="https://pistes.gabfortin.com" class="btn-primary">Accéder à l'application</a>
       </div>
     </div>
-    <div class="featured-visual"><img src="../img/Pistes.png" alt="Pistes cyclables Plateau" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"></div>
+    <div class="featured-visual"><img src="../img/Pistes.png" alt="Pistes cyclables Plateau"></div>
   </div>
 </section>
 -->
@@ -515,7 +160,7 @@
         <a href="https://parking.gabfortin.com/" class="btn-primary">Accéder à l'application</a>
       </div>
     </div>
-    <div class="featured-visual"><img src="../img/statio.png" alt="Stationnement Plateau" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"></div>
+    <div class="featured-visual"><img src="../img/statio.png" alt="Stationnement Plateau"></div>
   </div>
 </section>
 
@@ -529,26 +174,23 @@
         <a href="https://dechets.gabfortin.com" class="btn-primary">Accéder à l'application</a>
       </div>
     </div>
-    <div class="featured-visual"><img src="../img/dechets.png" alt="Déchets Montréal" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"></div>
+    <div class="featured-visual"><img src="../img/dechets.png" alt="Déchets Montréal"></div>
   </div>
 </section>
 
-<hr>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div>
-      <p>© 2026 Gabriel Fortin.</p>
+    <div class="footer-brand">
+      <strong>Gabriel Fortin</strong>
+      <p>© 2026 · <a href="mailto:info@gabfortin.com">info@gabfortin.com</a></p>
     </div>
-    <div>
-      <p>
-        <a href="../index.html">Accueil</a> •
-        <a href="../cartes/index.html">Cartes</a> •
-        <a href="../articles/index.html">Blogue</a> •
-        <a href="../plans/index.html">Plans</a> •
-        <a href="../donnees/index.html">Données</a>
-      </p>
+    <div class="social-row">
+      <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-icon" aria-label="Instagram"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.facebook.com/gabfortin1/" class="social-icon" aria-label="Facebook"><svg class="i" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://bsky.app/profile/gabfortin.com" class="social-icon" aria-label="Bluesky"><svg class="i i-fill" viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg></a>
+      <a href="mailto:info@gabfortin.com" class="social-icon" aria-label="Email"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
     </div>
   </div>
 </footer>

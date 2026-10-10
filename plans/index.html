@@ -16,182 +16,10 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Plans — Gabriel Fortin">
 <meta name="twitter:description" content="Découvrez des plans détaillés représentant divers projets de transport collectif pour la région de Montréal et son impact urbain.">
-<link rel="stylesheet" href="../css/base.css">
-<style>
-
-  /* PLANS GRID */
-  .plans-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-    gap: 20px;
-  }
-
-  .plan-item { 
-    background: #ffffff; 
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px; 
-    padding: 2rem; 
-    text-decoration: none; 
-    color: #1a1a18;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: block;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .plan-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, #1c3c6e, #1a9455);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-  }
-
-  .plan-item:hover::before {
-    transform: scaleX(1);
-  }
-
-  .plan-item:hover { 
-    border-color: rgba(28, 60, 110, 0.2);
-    transform: translateY(-8px);
-    box-shadow: 0 12px 32px rgba(28, 60, 110, 0.15);
-  }
-
-  .plan-icon { 
-    width: 48px; 
-    height: 48px; 
-    border-radius: 10px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    margin-bottom: 1rem; 
-    font-size: 24px;
-    background: linear-gradient(135deg, #fef3e2, #fce7c8);
-    transition: all 0.3s ease;
-  }
-
-  .plan-item:hover .plan-icon {
-    transform: scale(1.1) rotate(5deg);
-  }
-
-  .plan-item h3 { 
-    font-size: 18px; 
-    font-weight: 600; 
-    margin-bottom: 0.75rem;
-  }
-
-  .plan-item p  { 
-    font-size: 14px; 
-    color: #6b6b66; 
-    line-height: 1.6;
-  }
-
-  .plan-arrow { 
-    font-size: 14px; 
-    color: #1c3c6e;
-    margin-top: 1rem; 
-    display: inline-block;
-    transition: transform 0.3s ease;
-  }
-
-  .plan-item:hover .plan-arrow {
-    transform: translateX(4px);
-  }
-
-  /* DIVIDER */
-  hr { 
-    border: none; 
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    margin: 0;
-  }
-
-  /* FOOTER */
-  footer {
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 3rem 2rem;
-    animation: fadeIn 0.8s ease-out;
-  }
-
-  .footer-inner { 
-    max-width: 900px; 
-    margin: 0 auto; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    flex-wrap: wrap; 
-    gap: 1.5rem;
-  }
-
-  footer p { 
-    font-size: 13px; 
-    color: #6b6b66;
-  }
-
-  footer a {
-    color: #1c3c6e;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  footer a:hover {
-    text-decoration: underline;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    h1 {
-      font-size: 32px;
-    }
-
-    .plans-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .nav-pill {
-      display: none;
-    }
-  }
-
-  @media (max-width: 600px) {
-    nav {
-      padding: 0 1rem;
-    }
-
-    .nav-logo {
-      font-size: 14px;
-    }
-
-    .nav-links {
-      gap: 1rem;
-      font-size: 12px;
-    }
-
-    h1 {
-      font-size: 24px;
-    }
-
-    .section {
-      padding: 2rem 1rem;
-    }
-
-    .footer-inner {
-      flex-direction: column;
-      text-align: center;
-    }
-  }
-  .nav-short { display: none; }
-  @media (max-width: 600px) {
-    .nav-short { display: inline; }
-    .nav-full  { display: none; }
-  }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5230S7MNSQ"></script>
   <script>
@@ -205,11 +33,11 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="../index.html"><img src="../favico.png" alt="Gabriel Fortin" style="height:28px;display:block;"></a>
+  <a class="nav-logo" href="../index.html"><img src="../favico.png" alt="Gabriel Fortin"></a>
   <div class="nav-links">
     <a href="../cartes/index.html">Cartes</a>
     <a href="../donnees/index.html">Données</a>
-    <a href="../plans/index.html">Plans</a>
+    <a href="../plans/index.html" aria-current="page">Plans</a>
     <a href="../articles/index.html">Blogue</a>
     <a href="../parcours/index.html">Parcours</a>
     <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
@@ -224,12 +52,11 @@
       <span>/</span>
       <span>Plans</span>
     </div>
-    <h1><img src="../img/logo-metro.png" alt="" style="height:1.3em;width:auto;vertical-align:middle;margin-right:0.4em;border-radius:8px;">Plans</h1>
+    <h1>Plans</h1>
     <p class="hero-desc">Découvrez des plans détaillés représentant divers projets de transport collectif pour la région de Montréal et son impact urbain.</p>
   </div>
 </section>
 
-<hr>
 
 <!-- PLANS -->
 <section class="section">
@@ -237,42 +64,42 @@
   
   <div class="plans-grid">
     <a href="./pum-2050/index.html" class="plan-item">
-      <div class="plan-icon">🚆</div>
+      <div class="plan-icon"><svg class="i" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg></div>
       <h3>PUM 2050</h3>
       <p>Le Plan d'Urbanisme et de Mobilité (PUM) 2050 présente entre autres une vision 2040 et une vision 2050 avec une carte incluant des lignes de tram, SRB et prolongements de Métro qui devraient être prioritarisés.</p>
-      <span class="plan-arrow">Voir le plan →</span>
+      <span class="plan-arrow">Voir le plan <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
     <a href="./metro-2025/index.html" class="plan-item">
-      <div class="plan-icon">🚇</div>
+      <div class="plan-icon"><svg class="i" viewBox="0 0 24 24"><path d="M8 3.1V7a4 4 0 0 0 8 0V3.1"/><path d="m9 15-1-1"/><path d="m15 15 1-1"/><path d="M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z"/><path d="m8 19-2 3"/><path d="m16 19 2 3"/></svg></div>
       <h3>Prolongement métro</h3>
       <p>Dans la plateforme 2025 de Projet Montréal, 2 prolongements de métro sont proposés incluant des extensions majeures du réseau existant.</p>
-      <span class="plan-arrow">Voir le plan →</span>
+      <span class="plan-arrow">Voir le plan <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
     <a href="./reb-2025/index.html" class="plan-item">
-      <div class="plan-icon">🚌</div>
+      <div class="plan-icon"><svg class="i" viewBox="0 0 24 24"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg></div>
       <h3>Réseau Express Bus</h3>
       <p>Dans la plateforme 2025 de Projet Montréal, 11 axes sont identifiés comme futurs tramway ou SRB légers faisant partie du Réseau Express Bus (REB) avec services rapides et fréquents.</p>
-      <span class="plan-arrow">Voir le plan →</span>
+      <span class="plan-arrow">Voir le plan <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
   </div>
 </section>
 
-<hr>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div>
-      <p>© 2026 Gabriel Fortin.</p>
+    <div class="footer-brand">
+      <strong>Gabriel Fortin</strong>
+      <p>© 2026 · <a href="mailto:info@gabfortin.com">info@gabfortin.com</a></p>
     </div>
-    <div>
-      <p>
-        <a href="../index.html">Accueil</a> • 
-        <a href="../plans/index.html">Plans</a>
-      </p>
+    <div class="social-row">
+      <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-icon" aria-label="Instagram"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.facebook.com/gabfortin1/" class="social-icon" aria-label="Facebook"><svg class="i" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://bsky.app/profile/gabfortin.com" class="social-icon" aria-label="Bluesky"><svg class="i i-fill" viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg></a>
+      <a href="mailto:info@gabfortin.com" class="social-icon" aria-label="Email"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
     </div>
   </div>
 </footer>
