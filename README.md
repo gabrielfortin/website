@@ -33,6 +33,7 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 ├── confidentialite/
 │   └── index.html                      # Politique de confidentialité (Loi 25)
 ├── fichiers/                           # PDF des déclarations/résolutions
+├── fonts/                              # Police Inter (woff2) + licence
 ├── 404.html                            # Page « introuvable » (chemins absolus, voir plus bas)
 ├── llms.txt                            # Résumé du site destiné aux IA
 ├── link.json                           # Fiche Person (schema.org) de référence
@@ -270,7 +271,9 @@ Site en production sur `www.gabfortin.com`.
 - **Accessibilité**: Breadcrumbs, navigation logique, sémantique HTML5
 - **Statistiques**: GoatCounter (voir section « Statistiques de visite »)
 - **SEO / IA**: Open Graph, JSON-LD (schema.org), `sitemap.xml`, `llms.txt`, flux RSS
-- **Performance**: Pas de dépendances externes (sauf polices Google)
+- **Performance**: Aucune dépendance externe (sauf les bibliothèques des cartes interactives)
+- **Police**: Inter variable hébergée localement dans `fonts/` (licence SIL OFL, `fonts/OFL.txt`), déclarée en haut de `css/site.css`. Ne pas remettre le lien Google Fonts.
+- **Images**: les balises `<img>` utilisent des fichiers `.webp` redimensionnés à la taille d'affichage (×2 à ×3 pour les écrans Retina). Les originaux PNG/JPG sont conservés pour `og:image`, le JSON-LD et le flux RSS, car certains réseaux sociaux acceptent mal le WebP. Pour une nouvelle image : la convertir en WebP (qualité 85) et garder l'original à côté si elle sert d'aperçu de partage.
 
 ## Contact & Liens
 

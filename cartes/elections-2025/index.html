@@ -19,9 +19,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Élections 2025 — Gabriel Fortin">
 <meta name="twitter:description" content="Résultats de l'élection municipale de Montréal 2025 présentés par section de vote et par district. Les données proviennent des résultats officiels.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="../../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../css/site.css">
 <style>
   .maps-row,
@@ -185,7 +183,7 @@
 
   <div class="maps-row">
     <div class="map-card" onclick="openModal('./ParSectionDeVote.html', 'Carte par sections de vote')">
-      <img class="map-thumb" src="./sections.png" alt="Carte par sections de vote">
+      <img class="map-thumb" src="./sections.webp" alt="Carte par sections de vote">
       <div class="map-card-label">
         <h2>Carte par sections de vote</h2>
         <span>Ouvrir <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
@@ -194,7 +192,7 @@
     </div>
 
     <div class="map-card" onclick="openModal('./mairie2025-metro.html', 'Sections de vote avec métro')">
-      <img loading="lazy" class="map-thumb" src="./metro.png" alt="Sections de vote avec métro">
+      <img loading="lazy" class="map-thumb" src="./metro.webp" alt="Sections de vote avec métro">
       <div class="map-card-label">
         <h2>Sections de vote avec métro</h2>
         <span>Ouvrir <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>

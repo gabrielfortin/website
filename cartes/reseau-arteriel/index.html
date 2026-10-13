@@ -19,9 +19,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Réseau Artériel — Ville de Montréal">
 <meta name="twitter:description" content="Carte présentant le réseau artériel de la Ville de Montréal, basée sur les données ouvertes de la ville et les caractéristiques administratives de chaque rue.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="../../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../css/site.css">
 <style>
   .maps-row,
@@ -186,7 +184,7 @@
 
   <div class="maps-grid">
     <div class="map-card" onclick="openModal('./arteriel-seulement.html', 'Carte du réseau artériel')" style="cursor:pointer;">
-      <img class="map-thumb" src="./Arteriel.png" alt="Carte du réseau artériel">
+      <img class="map-thumb" src="./Arteriel.webp" alt="Carte du réseau artériel">
       <div class="map-card-label">
         <h2>Carte du réseau artériel</h2>
         <span>Ouvrir <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
@@ -195,7 +193,7 @@
     </div>
 
     <div class="map-card" onclick="openModal('./reseau-arteriel.html', 'Carte de toutes les rues')" style="cursor:pointer;">
-      <img loading="lazy" class="map-thumb" src="./Tout.png" alt="Carte de toutes les rues">
+      <img loading="lazy" class="map-thumb" src="./Tout.webp" alt="Carte de toutes les rues">
       <div class="map-card-label">
         <h2>Carte de toutes les rues</h2>
         <span>Ouvrir <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
