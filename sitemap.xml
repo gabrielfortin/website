@@ -139,6 +139,30 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://gabfortin.com/cartes/reseau-arteriel/arteriel-seulement.html</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gabfortin.com/cartes/reseau-arteriel/reseau-arteriel.html</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gabfortin.com/projets/</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://gabfortin.com/don/</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://gabfortin.com/confidentialite/</loc>
     <lastmod>2026-10-13</lastmod>
     <changefreq>yearly</changefreq>

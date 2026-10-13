@@ -33,6 +33,7 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 ├── confidentialite/
 │   └── index.html                      # Politique de confidentialité (Loi 25)
 ├── fichiers/                           # PDF des déclarations/résolutions
+├── 404.html                            # Page « introuvable » (chemins absolus, voir plus bas)
 ├── llms.txt                            # Résumé du site destiné aux IA
 ├── link.json                           # Fiche Person (schema.org) de référence
 ├── sitemap.xml
@@ -251,6 +252,8 @@ Si l'une de ces informations change (titre, district, engagements), la mettre à
 
 ### Navigation
 - Tous les liens utilisent des chemins relatifs pour compatibilité avec le protocole `file://`
+- **Exception : `404.html`** utilise des chemins absolus (`/css/site.css`), car GitHub Pages la sert à n'importe quelle URL introuvable, peu importe sa profondeur. Elle ne s'affiche donc correctement qu'en ligne ou via un serveur local (`python3 -m http.server`). Les visites de pages introuvables apparaissent dans GoatCounter avec le préfixe `404`, ce qui permet de repérer les liens brisés.
+- Les images sous la ligne de flottaison ont `loading="lazy"` (chargement différé). Ne pas le mettre sur le logo ni sur la première image visible d'une page.
 - Les breadcrumbs permettent une navigation facile entre sections
 - La navigation bar est accessible depuis chaque page
 
