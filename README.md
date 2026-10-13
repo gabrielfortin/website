@@ -14,7 +14,8 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 ├── donnees/
 │   └── index.html                      # Données ouvertes
 ├── plans/
-│   └── index.html                      # Plans urbains
+│   ├── index.html                      # Redirection vers le blogue (anciens liens)
+│   ├── pum-2050/  metro-2025/  reb-2025/   # Plans, listés dans le blogue
 ├── articles/
 │   ├── index.html                      # Liste des articles
 │   ├── feed.xml                        # Flux RSS du blogue (mis à jour à la main)
@@ -47,13 +48,12 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 Page principale avec présentation et navigation (section "Explorer") vers:
 - **Compteurs Vélo** (featured) → https://velo.gabfortin.com
 - **Avant / Après** (featured, badge "Nouveau") → https://avantapres.gabfortin.com — comparaison avant/après des améliorations de l'espace public réalisées par Projet Montréal
+- **Blogue** → Avenue du Parc, Refonte STM 2026, REM, et plans (PUM 2050, métro, REB)
 - **Cartes Interactives** → Élections 2025, réseau artériel, modes rapides et fréquents
 - **Données Ouvertes** → Ensembles de données publiques et visualisations
-- **Plans** → PUM 2050, prolongement métro, REB Projet Montréal
-- **Blogue** → Avenue du Parc, Refonte STM 2026, REM et impact sur le Plateau
 - **Parcours** → Formation, carrière chez Bell et dossiers portés comme conseiller
 
-Navigation principale: Cartes, Données, Plans, Blogue, Parcours.
+Navigation principale: Blogue, Cartes, Données, Parcours.
 
 ### Contenu Principal
 
@@ -73,17 +73,19 @@ Navigation principale: Cartes, Données, Plans, Blogue, Parcours.
 3. **Résultats élections municipales Montréal 2025** → `./elections-2025/resultats.html`
 4. **Requêtes 311** → https://311.gabfortin.com
 
-#### Plans (`/plans/`)
+#### Blogue (`/articles/`) : articles et plans
 
-1. **PUM 2050** → `./pum-2050/index.html`
-2. **Prolongement métro** → `./metro-2025/index.html`
-3. **Réseau Express Bus** → `./reb-2025/index.html`
-
-#### Articles (`/articles/`)
-
+Articles :
 1. **Proposition pour sécuriser un tronçon dangereux de l'avenue du Parc** — `/articles/parc-1/index.html`
 2. **L'impact de la refonte STM 2026 au Plateau-Mont-Royal** — `/articles/refonte-stm-2026/index.html`
 3. **L'arrivée du REM et son impact sur le Plateau** — `/articles/le-rem-et-le-plateau/index.html`
+
+Plans (catégorie « Plan », datés de septembre 2025) :
+4. **PUM 2050** — `/plans/pum-2050/index.html`
+5. **Prolongement du métro** — `/plans/metro-2025/index.html`
+6. **Réseau Express Bus** — `/plans/reb-2025/index.html`
+
+Les plans gardent leurs adresses sous `/plans/`, mais sont listés dans le blogue et le flux RSS, et leur fil d'Ariane pointe vers le Blogue. L'ancienne page `/plans/` redirige vers `/articles/` (redirection HTML, GitHub Pages ne permettant pas les redirections serveur). Pour un nouveau plan : le créer sous `/plans/NOM/` et l'ajouter au blogue comme un article.
 
 #### Parcours (`/parcours/`)
 

@@ -50,5 +50,41 @@
       <enclosure url="https://gabfortin.com/articles/le-rem-et-le-plateau/unnamed.jpg" type="image/jpeg" length="300200"/>
     </item>
 
+    <item>
+      <title>PUM 2050 : les priorités du réseau structurant</title>
+      <link>https://gabfortin.com/plans/pum-2050/</link>
+      <guid isPermaLink="true">https://gabfortin.com/plans/pum-2050/</guid>
+      <pubDate>Mon, 01 Sep 2025 12:00:00 -0400</pubDate>
+      <dc:creator>Gabriel Fortin</dc:creator>
+      <category>Plan</category>
+      <category>Transport en commun</category>
+      <description>Le Plan d'urbanisme et de mobilité 2050 présente une vision 2040 et 2050 du réseau : lignes de tramway, SRB et prolongements de métro à prioriser.</description>
+      <enclosure url="https://gabfortin.com/plans/pum-2050/2050.png" type="image/png" length="710872"/>
+    </item>
+
+    <item>
+      <title>Prolongement du métro — Projet Montréal</title>
+      <link>https://gabfortin.com/plans/metro-2025/</link>
+      <guid isPermaLink="true">https://gabfortin.com/plans/metro-2025/</guid>
+      <pubDate>Mon, 01 Sep 2025 12:00:00 -0400</pubDate>
+      <dc:creator>Gabriel Fortin</dc:creator>
+      <category>Plan</category>
+      <category>Transport en commun</category>
+      <description>Dans sa plateforme 2025, Projet Montréal propose deux prolongements de métro, accompagnés d'un réseau express bus (REB) intégrant tramways et SRB.</description>
+      <enclosure url="https://gabfortin.com/plans/metro-2025/metro-1.png" type="image/png" length="484669"/>
+    </item>
+
+    <item>
+      <title>Réseau Express Bus — Projet Montréal</title>
+      <link>https://gabfortin.com/plans/reb-2025/</link>
+      <guid isPermaLink="true">https://gabfortin.com/plans/reb-2025/</guid>
+      <pubDate>Mon, 01 Sep 2025 12:00:00 -0400</pubDate>
+      <dc:creator>Gabriel Fortin</dc:creator>
+      <category>Plan</category>
+      <category>Transport en commun</category>
+      <description>11 axes identifiés comme futurs tramways ou SRB légers dans le Réseau Express Bus de Projet Montréal.</description>
+      <enclosure url="https://gabfortin.com/plans/reb-2025/reb3-1.png" type="image/png" length="569973"/>
+    </item>
+
   </channel>
 </rss>
