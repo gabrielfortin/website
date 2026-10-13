@@ -17,14 +17,24 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 │   └── index.html                      # Plans urbains
 ├── articles/
 │   ├── index.html                      # Liste des articles
+│   ├── feed.xml                        # Flux RSS du blogue (mis à jour à la main)
+│   ├── parc-1/
+│   │   └── index.html                  # Article: Sécuriser l'avenue du Parc
 │   ├── refonte-stm-2026/
 │   │   └── index.html                  # Article: Refonte STM 2026
 │   └── le-rem-et-le-plateau/
 │       └── index.html                  # Article: REM et Plateau
-└── parcours/
-    └── index.html                      # Parcours professionnel et engagements
-└── projets/
-    └── index.html                      # Projets intéressants créés par des amis
+├── parcours/
+│   └── index.html                      # Parcours professionnel et engagements
+├── projets/
+│   └── index.html                      # Projets intéressants créés par des amis
+├── don/
+│   └── index.html                      # Faire un don
+├── fichiers/                           # PDF des déclarations/résolutions
+├── llms.txt                            # Résumé du site destiné aux IA
+├── link.json                           # Fiche Person (schema.org) de référence
+├── sitemap.xml
+└── robots.txt
 ```
 
 ## Pages et Navigation
@@ -36,7 +46,7 @@ Page principale avec présentation et navigation (section "Explorer") vers:
 - **Cartes Interactives** → Élections 2025, réseau artériel, modes rapides et fréquents
 - **Données Ouvertes** → Ensembles de données publiques et visualisations
 - **Plans** → PUM 2050, prolongement métro, REB Projet Montréal
-- **Blogue** → Refonte STM 2026, REM et impact sur le Plateau
+- **Blogue** → Avenue du Parc, Refonte STM 2026, REM et impact sur le Plateau
 - **Parcours** → Formation, carrière chez Bell et dossiers portés comme conseiller
 
 Navigation principale: Cartes, Données, Plans, Blogue, Parcours.
@@ -67,8 +77,9 @@ Navigation principale: Cartes, Données, Plans, Blogue, Parcours.
 
 #### Articles (`/articles/`)
 
-1. **L'impact de la refonte STM 2026 au Plateau-Mont-Royal** — `/articles/refonte-stm-2026/index.html`
-2. **L'arrivée du REM et son impact sur le Plateau** — `/articles/le-rem-et-le-plateau/index.html`
+1. **Proposition pour sécuriser un tronçon dangereux de l'avenue du Parc** — `/articles/parc-1/index.html`
+2. **L'impact de la refonte STM 2026 au Plateau-Mont-Royal** — `/articles/refonte-stm-2026/index.html`
+3. **L'arrivée du REM et son impact sur le Plateau** — `/articles/le-rem-et-le-plateau/index.html`
 
 #### Parcours (`/parcours/`)
 
@@ -80,6 +91,10 @@ Projets créés par des amis:
 1. **Simulateur TC — ARTM** → https://live-transit.regardemon.site
 2. **Carte des trajets Bixi** → https://etienneld.com/bixi-trajets-2025/
 3. **CartoMTL : le GeoGuessr de Montréal** → https://cartomtl.com
+
+#### Don (`/don/`)
+
+Page pour faire un don.
 
 ### Applications (`/applications/`)
 
@@ -156,8 +171,8 @@ Pour un article de blogue, ajouter aussi ce bloc JSON-LD juste avant le script G
   "image": "https://gabfortin.com/CHEMIN/IMAGE.jpg",
   "datePublished": "AAAA-MM-JJ",
   "dateModified": "AAAA-MM-JJ",
-  "author": { "@type": "Person", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
-  "publisher": { "@type": "Person", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
+  "author": { "@type": "Person", "@id": "https://gabfortin.com/#gabriel-fortin", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
+  "publisher": { "@type": "Person", "@id": "https://gabfortin.com/#gabriel-fortin", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
   "mainEntityOfPage": { "@type": "WebPage", "@id": "https://gabfortin.com/CHEMIN/" },
   "articleSection": "CATÉGORIE",
   "inLanguage": "fr-CA"
@@ -165,7 +180,50 @@ Pour un article de blogue, ajouter aussi ce bloc JSON-LD juste avant le script G
 </script>
 ```
 
+Pour les autres pages, ajouter aussi un bloc JSON-LD adapté au type de page, toujours avec l'auteur ci-dessus : `Map` pour une carte (voir `cartes/elections-2025/ParDistrict.html`), `Dataset` pour des données (voir `donnees/elections-2025/resultats.html`), `CollectionPage` pour une page de section (voir `cartes/index.html`).
+
+**Toujours inclure `"@id": "https://gabfortin.com/#gabriel-fortin"` dans l'auteur.** C'est cet identifiant qui relie chaque page au profil de Gabriel Fortin (voir la section « Identité » plus bas).
+
+Chaque page doit aussi contenir le lien vers le flux RSS, juste avant le script Google Analytics :
+
+```html
+<link rel="alternate" type="application/rss+xml" title="Blogue — Gabriel Fortin" href="https://gabfortin.com/articles/feed.xml">
+```
+
+Pour un nouvel article, ajouter une entrée `<item>` en haut de `articles/feed.xml` (titre, lien, `guid`, `pubDate` au format RFC 822, description, image avec sa taille en octets dans `length`) et mettre à jour `<lastBuildDate>`. Le flux n'est pas généré automatiquement.
+
 Enfin, ajouter l'URL de la nouvelle page dans `sitemap.xml` (avec `lastmod` à la date du jour) — c'est ce fichier que Google et les robots IA utilisent pour découvrir le contenu. `robots.txt` à la racine pointe déjà vers `sitemap.xml`. Pour un nouvel article, ajouter aussi une ligne dans `llms.txt` (sous la section "Articles") — c'est un résumé destiné aux IA/agents qui lisent le site, pas aux moteurs de recherche classiques.
+
+## Favicon
+
+`favico.png` (1254 px, 1,4 Mo) est l'image source : elle n'est plus chargée par les pages. Les versions légères en sont dérivées :
+
+- `favicon.ico` (16/32/48 px) : à la racine, pour les outils qui le cherchent sans lire le HTML
+- `favicon-48.png`, `favicon-192.png` : icônes d'onglet et de résultats Google
+- `apple-touch-icon.png` (180 px, fond blanc) : écran d'accueil iOS
+- `favicon-96.png` : logo de la barre de navigation et image du flux RSS
+
+Chaque page doit inclure dans le `<head>` (adapter le préfixe `../` selon la profondeur) :
+
+```html
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="../favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+```
+
+Si le logo change, remplacer `favico.png` puis régénérer les dérivés (redimensionnement Lanczos avec Pillow).
+
+## Identité et désambiguïsation (homonymes)
+
+Un autre Gabriel Fortin, propriétaire, existe. Pour que Google et les IA ne les confondent pas, le site contient des informations invisibles à l'écran, à garder cohérentes partout :
+
+- **Identifiant unique** : `https://gabfortin.com/#gabriel-fortin`, utilisé comme `@id` de la fiche Person (`index.html`, `parcours/index.html`) et de l'auteur de chaque page.
+- **`disambiguatingDescription`** (schema.org) dans `index.html`, `parcours/index.html` et `link.json` : locataire, n'a jamais été propriétaire ni locateur; tout Gabriel Fortin propriétaire ou locateur est un homonyme.
+- **`description` et `knowsAbout`** dans les mêmes fichiers : implication pour le réseau cyclable et militantisme pour le transport en commun.
+- **`llms.txt`** : sections « Engagements » et « Désambiguïsation (homonymes) ».
+
+Si l'une de ces informations change (titre, district, engagements), la mettre à jour dans les quatre fichiers. Ne pas nommer ni décrire l'homonyme : se limiter aux faits sur Gabriel Fortin.
 
 ## Développement Local
 
@@ -192,6 +250,7 @@ Site en production sur `www.gabfortin.com`.
 - **Glassmorphism**: Effets visuels modernes (blur, backdrop-filter)
 - **Accessibilité**: Breadcrumbs, navigation logique, sémantique HTML5
 - **Analytics**: Google Analytics (gtag)
+- **SEO / IA**: Open Graph, JSON-LD (schema.org), `sitemap.xml`, `llms.txt`, flux RSS
 - **Performance**: Pas de dépendances externes (sauf polices Google)
 
 ## Contact & Liens

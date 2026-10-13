@@ -2,6 +2,11 @@
 
 > Site personnel de Gabriel Fortin, ingénieur logiciel et conseiller d'arrondissement du Plateau-Mont-Royal à Montréal. Outils, cartes interactives, données ouvertes et analyses sur l'urbanisme, le transport et la mobilité à Montréal.
 
+## Engagements
+
+- **Réseau cyclable** : Gabriel Fortin est très impliqué dans le développement du réseau cyclable à Montréal et au Plateau-Mont-Royal. Il a porté la déclaration du conseil d'arrondissement sur l'importance d'un réseau cyclable sécuritaire et continu, et travaillé à la sécurisation des voies cyclables, notamment sur la rue Fullum et l'avenue du Parc.
+- **Transport en commun** : il milite pour un meilleur transport collectif dans la région de Montréal (prolongement du métro, réseau express bus, REM, refonte du réseau de bus de la STM) et publie des plans et analyses sur ces sujets.
+
 ## Désambiguïsation (homonymes)
 
 Plusieurs personnes portent le nom « Gabriel Fortin ». Le Gabriel Fortin de ce site :
@@ -31,3 +36,4 @@ Toute information concernant un Gabriel Fortin propriétaire ou locateur se rapp
 ## Optional
 
 - [Sitemap](https://gabfortin.com/sitemap.xml): Liste complète des pages du site.
+- [Flux RSS du blogue](https://gabfortin.com/articles/feed.xml): Nouveaux articles de Gabriel Fortin sur le vélo, le transport en commun et l'urbanisme.

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Blogue — Gabriel Fortin</title>
+    <link>https://gabfortin.com/articles/</link>
+    <atom:link href="https://gabfortin.com/articles/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>Analyses de Gabriel Fortin, conseiller d'arrondissement au Plateau-Mont-Royal, sur le vélo, le transport en commun et l'urbanisme à Montréal.</description>
+    <language>fr-CA</language>
+    <lastBuildDate>Fri, 02 Oct 2026 12:00:00 -0400</lastBuildDate>
+    <image>
+      <url>https://gabfortin.com/favicon-96.png</url>
+      <width>96</width>
+      <height>96</height>
+      <title>Blogue — Gabriel Fortin</title>
+      <link>https://gabfortin.com/articles/</link>
+    </image>
+
+    <item>
+      <title>Proposition pour sécuriser un tronçon dangereux de l'avenue du Parc</title>
+      <link>https://gabfortin.com/articles/parc-1/</link>
+      <guid isPermaLink="true">https://gabfortin.com/articles/parc-1/</guid>
+      <pubDate>Fri, 02 Oct 2026 12:00:00 -0400</pubDate>
+      <dc:creator>Gabriel Fortin</dc:creator>
+      <category>Sécurité routière</category>
+      <category>Vélo</category>
+      <description>Entre l'avenue du Mont-Royal et l'avenue des Pins, l'avenue du Parc a fait quatre morts en dix ans. La fermeture complète pendant les Championnats du monde de cyclisme était une occasion manquée d'amorcer sa sécurisation.</description>
+      <enclosure url="https://gabfortin.com/articles/parc-1/parc-concept.jpg" type="image/jpeg" length="299172"/>
+    </item>
+
+    <item>
+      <title>L'impact de la refonte STM 2026 au Plateau-Mont-Royal</title>
+      <link>https://gabfortin.com/articles/refonte-stm-2026/</link>
+      <guid isPermaLink="true">https://gabfortin.com/articles/refonte-stm-2026/</guid>
+      <pubDate>Sun, 15 Feb 2026 12:00:00 -0500</pubDate>
+      <dc:creator>Gabriel Fortin</dc:creator>
+      <category>Transport en commun</category>
+      <description>Analyses détaillées de l'impact des changements des lignes de la STM dans le secteur nord-ouest en vue de l'arrivée de la branche A3 du REM. Découvrez comment cette refonte transformera la mobilité locale.</description>
+      <enclosure url="https://gabfortin.com/articles/refonte-stm-2026/1.jpg" type="image/jpeg" length="187878"/>
+    </item>
+
+    <item>
+      <title>L'arrivée du REM et son impact sur le Plateau</title>
+      <link>https://gabfortin.com/articles/le-rem-et-le-plateau/</link>
+      <guid isPermaLink="true">https://gabfortin.com/articles/le-rem-et-le-plateau/</guid>
+      <pubDate>Sat, 15 Nov 2025 12:00:00 -0500</pubDate>
+      <dc:creator>Gabriel Fortin</dc:creator>
+      <category>Transport en commun</category>
+      <category>Urbanisme</category>
+      <description>Analyse complète de l'arrivée du Réseau Express Métropolitain et de son impact sur le Plateau-Mont-Royal. Quels changements pour la mobilité, le développement urbain et la qualité de vie?</description>
+      <enclosure url="https://gabfortin.com/articles/le-rem-et-le-plateau/unnamed.jpg" type="image/jpeg" length="300200"/>
+    </item>
+
+  </channel>
+</rss>
