@@ -30,6 +30,8 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 │   └── index.html                      # Projets intéressants créés par des amis
 ├── don/
 │   └── index.html                      # Faire un don
+├── confidentialite/
+│   └── index.html                      # Politique de confidentialité (Loi 25)
 ├── fichiers/                           # PDF des déclarations/résolutions
 ├── llms.txt                            # Résumé du site destiné aux IA
 ├── link.json                           # Fiche Person (schema.org) de référence
@@ -159,7 +161,7 @@ Pour qu'une page soit bien indexée par les moteurs de recherche et comprise par
 <meta name="twitter:image" content="https://gabfortin.com/CHEMIN/IMAGE.jpg">
 ```
 
-Pour un article de blogue, ajouter aussi ce bloc JSON-LD juste avant le script Google Analytics (voir `articles/parc-1/index.html` comme exemple) :
+Pour un article de blogue, ajouter aussi ce bloc JSON-LD juste avant le script GoatCounter (voir `articles/parc-1/index.html` comme exemple) :
 
 ```html
 <script type="application/ld+json">
@@ -184,7 +186,7 @@ Pour les autres pages, ajouter aussi un bloc JSON-LD adapté au type de page, to
 
 **Toujours inclure `"@id": "https://gabfortin.com/#gabriel-fortin"` dans l'auteur.** C'est cet identifiant qui relie chaque page au profil de Gabriel Fortin (voir la section « Identité » plus bas).
 
-Chaque page doit aussi contenir le lien vers le flux RSS, juste avant le script Google Analytics :
+Chaque page doit aussi contenir le lien vers le flux RSS, juste avant le script GoatCounter :
 
 ```html
 <link rel="alternate" type="application/rss+xml" title="Blogue — Gabriel Fortin" href="https://gabfortin.com/articles/feed.xml">
@@ -193,6 +195,20 @@ Chaque page doit aussi contenir le lien vers le flux RSS, juste avant le script 
 Pour un nouvel article, ajouter une entrée `<item>` en haut de `articles/feed.xml` (titre, lien, `guid`, `pubDate` au format RFC 822, description, image avec sa taille en octets dans `length`) et mettre à jour `<lastBuildDate>`. Le flux n'est pas généré automatiquement.
 
 Enfin, ajouter l'URL de la nouvelle page dans `sitemap.xml` (avec `lastmod` à la date du jour) — c'est ce fichier que Google et les robots IA utilisent pour découvrir le contenu. `robots.txt` à la racine pointe déjà vers `sitemap.xml`. Pour un nouvel article, ajouter aussi une ligne dans `llms.txt` (sous la section "Articles") — c'est un résumé destiné aux IA/agents qui lisent le site, pas aux moteurs de recherche classiques.
+
+## Statistiques de visite
+
+Le site utilise [GoatCounter](https://www.goatcounter.com) : open source, sans cookies, sans donnée personnelle, donc pas de bandeau de consentement requis (Loi 25). Tableau de bord : https://gabfortin.goatcounter.com
+
+Chaque page doit inclure, à la fin du `<head>` :
+
+```html
+<script data-goatcounter="https://gabfortin.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+```
+
+La page `/confidentialite/` décrit ce que le site collecte. **La mettre à jour (et changer la date en bas de page) si on ajoute un outil ou un service externe** : formulaire, infolettre, vidéo intégrée, autre outil de statistiques, etc. Un lien « Confidentialité » figure dans le pied de page de chaque page.
+
+Les cartes interactives ouvertes dans une fenêtre modale sont comptées comme des pages vues distinctes, ce qui permet de voir quelles cartes sont consultées.
 
 ## Favicon
 
@@ -249,7 +265,7 @@ Site en production sur `www.gabfortin.com`.
 - **Animations**: Keyframes CSS (fadeIn, slideIn, glow, float, badgePulse)
 - **Glassmorphism**: Effets visuels modernes (blur, backdrop-filter)
 - **Accessibilité**: Breadcrumbs, navigation logique, sémantique HTML5
-- **Analytics**: Google Analytics (gtag)
+- **Statistiques**: GoatCounter (voir section « Statistiques de visite »)
 - **SEO / IA**: Open Graph, JSON-LD (schema.org), `sitemap.xml`, `llms.txt`, flux RSS
 - **Performance**: Pas de dépendances externes (sauf polices Google)
 
