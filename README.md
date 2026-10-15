@@ -47,7 +47,7 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 ### Accueil (`/index.html`)
 Page principale avec présentation et navigation (section "Explorer") vers:
 - **Compteurs Vélo** (featured) → https://velo.gabfortin.com
-- **Avant / Après** (featured, badge "Nouveau") → https://avantapres.gabfortin.com — comparaison avant/après des améliorations de l'espace public réalisées par Projet Montréal
+- **Avant / Après** (featured, badge "Nouveau") → https://avant-apres.ca — comparaison avant/après des améliorations de l'espace public réalisées par Projet Montréal
 - **Blogue** → Avenue du Parc, Refonte STM 2026, REM, et plans (PUM 2050, métro, REB)
 - **Cartes Interactives** → Élections 2025, réseau artériel, modes rapides et fréquents
 - **Données Ouvertes** → Ensembles de données publiques et visualisations
@@ -59,7 +59,7 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 
 #### Cartes (`/cartes/`)
 
-1. **Avant / Après** → https://avantapres.gabfortin.com
+1. **Avant / Après** → https://avant-apres.ca
 2. **Réseau Artériel de Montréal** → `./reseau-arteriel/index.html`
 3. **Pistes cyclables Plateau** → https://pistes.gabfortin.com
 4. **Résultats Élections 2025** → `./elections-2025/index.html`
