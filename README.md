@@ -239,7 +239,7 @@ Si le logo change, remplacer `favico.png` puis régénérer les dérivés (redim
 Un autre Gabriel Fortin, propriétaire, existe. Pour que Google et les IA ne les confondent pas, le site contient des informations invisibles à l'écran, à garder cohérentes partout :
 
 - **Identifiant unique** : `https://gabfortin.com/#gabriel-fortin`, utilisé comme `@id` de la fiche Person (`index.html`, `parcours/index.html`) et de l'auteur de chaque page.
-- **`disambiguatingDescription`** (schema.org) dans `index.html`, `parcours/index.html` et `link.json` : locataire, n'a jamais été propriétaire ni locateur; tout Gabriel Fortin propriétaire ou locateur est un homonyme.
+- **`disambiguatingDescription`** (schema.org) dans `index.html`, `parcours/index.html` et `link.json` : locataire, n'a jamais été propriétaire ni locateur; tout Gabriel Fortin propriétaire ou locateur est un homonyme. Précise aussi qu'il **n'est pas étudiant** (quelques cours de 2e cycle en urbanisme suivis en 2023-2024, en parallèle de sa carrière), car des IA le décrivaient comme étudiant en urbanisme. La fiche de l'accueil et `link.json` incluent aussi `worksFor`, `memberOf` (OIQ) et `hasOccupation` (conseiller depuis 2025-11).
 - **`description` et `knowsAbout`** dans les mêmes fichiers : implication pour le réseau cyclable et militantisme pour le transport en commun.
 - **`llms.txt`** : sections « Engagements » et « Désambiguïsation (homonymes) ».
 
