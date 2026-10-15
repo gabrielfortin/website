@@ -80,10 +80,10 @@ Articles :
 2. **L'impact de la refonte STM 2026 au Plateau-Mont-Royal** — `/articles/refonte-stm-2026/index.html`
 3. **L'arrivée du REM et son impact sur le Plateau** — `/articles/le-rem-et-le-plateau/index.html`
 
-Plans (catégorie « Plan », datés de septembre 2025) :
-4. **PUM 2050** — `/plans/pum-2050/index.html`
-5. **Prolongement du métro** — `/plans/metro-2025/index.html`
-6. **Réseau Express Bus** — `/plans/reb-2025/index.html`
+Plans (catégorie « Plan ») :
+4. **Prolongement du métro** (15 octobre 2025) — `/plans/metro-2025/index.html`
+5. **Réseau Express Bus** (14 octobre 2025) — `/plans/reb-2025/index.html`
+6. **PUM 2050** (septembre 2025) — `/plans/pum-2050/index.html`
 
 Les plans gardent leurs adresses sous `/plans/`, mais sont listés dans le blogue et le flux RSS, et leur fil d'Ariane pointe vers le Blogue. L'ancienne page `/plans/` redirige vers `/articles/` (redirection HTML, GitHub Pages ne permettant pas les redirections serveur). Pour un nouveau plan : le créer sous `/plans/NOM/` et l'ajouter au blogue comme un article.
 

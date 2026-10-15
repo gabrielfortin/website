@@ -315,6 +315,16 @@
       grid-template-columns: minmax(0, 1fr);
     }
   }
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 768px) {
+    .media-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
 </style>
   <!-- Structured Data JSON-LD -->
   <script type="application/ld+json">
@@ -383,6 +393,28 @@
       }
     ],
     "knowsAbout": ["Réseau cyclable", "Vélo urbain", "Sécurité routière", "Transport en commun", "Mobilité durable", "Génie logiciel", "Urbanisme", "Politique municipale"],
+    "subjectOf": [
+      {
+        "@type": "VideoObject",
+        "name": "Quelles ont été les retombées pour les Mondiaux de cyclisme à Montréal?",
+        "url": "https://www.noovo.info/videos/2026/09/28/quelles-ont-ete-les-retombees-pour-les-mondiaux-de-cyclisme-a-montreal/",
+        "uploadDate": "2026-09-28",
+        "publisher": { "@type": "NewsMediaOrganization", "name": "Noovo Info", "url": "https://www.noovo.info" }
+      },
+      {
+        "@type": "NewsArticle",
+        "headline": "Comment gérer la présence de rats et de ratons laveurs en ville?",
+        "url": "https://www.noovo.info/regions/grand-montreal/article/comment-gerer-la-presence-de-rats-et-de-ratons-laveurs-en-ville/",
+        "datePublished": "2026-07-29",
+        "publisher": { "@type": "NewsMediaOrganization", "name": "Noovo Info", "url": "https://www.noovo.info" }
+      },
+      {
+        "@type": "NewsArticle",
+        "headline": "De l'informatique à la politique : l'apprentissage en accéléré du conseiller Gabriel Fortin",
+        "url": "https://www.monplateau.info/de-linformatique-a-la-politique-lapprentissage-en-accelere-du-conseiller-gabriel-fortin/",
+        "publisher": { "@type": "NewsMediaOrganization", "name": "Mon Plateau", "url": "https://www.monplateau.info" }
+      }
+    ],
     "inLanguage": "fr-CA"
   }
   </script>
@@ -590,6 +622,72 @@
         <span class="decl-item-date">8 septembre 2026</span>
       </div>
       <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+  </div>
+</section>
+
+
+<!-- MÉDIAS -->
+<section class="section">
+  <h2 class="section-label">Dans les médias</h2>
+  <p class="section-intro">Entrevues et articles de presse.</p>
+
+  <div class="decl-list media-grid">
+    <a class="decl-item" href="https://www.monplateau.info/des-voies-reservees-pour-securiser-la-portion-la-plus-large-de-lavenue-du-parc/" target="_blank" rel="noopener">
+      <div>
+        <p>Des voies réservées pour sécuriser la portion la plus large de l'avenue du Parc</p>
+        <span class="decl-item-date">Mon Plateau · 10 octobre 2026</span>
+      </div>
+      <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+    </a>
+    <a class="decl-item" href="https://www.lesaffaires.com/secteurs/aeronautique-et-transport/avenue-du-parc-des-voies-reservees-pour-ameliorer-la-securite/" target="_blank" rel="noopener">
+      <div>
+        <p>Avenue du Parc : des voies réservées pour améliorer la sécurité</p>
+        <span class="decl-item-date">Les Affaires · 10 octobre 2026</span>
+      </div>
+      <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+    </a>
+    <a class="decl-item" href="https://www.noovo.info/videos/2026/09/28/quelles-ont-ete-les-retombees-pour-les-mondiaux-de-cyclisme-a-montreal/" target="_blank" rel="noopener">
+      <div>
+        <p>Entrevue : quelles ont été les retombées des Mondiaux de cyclisme à Montréal?</p>
+        <span class="decl-item-date">Noovo Info · vidéo · 28 septembre 2026</span>
+      </div>
+      <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+    </a>
+    <a class="decl-item" href="https://www.noovo.info/regions/grand-montreal/article/comment-gerer-la-presence-de-rats-et-de-ratons-laveurs-en-ville/" target="_blank" rel="noopener">
+      <div>
+        <p>Comment gérer la présence de rats et de ratons laveurs en ville?</p>
+        <span class="decl-item-date">Noovo Info · 29 juillet 2026</span>
+      </div>
+      <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+    </a>
+    <a class="decl-item" href="https://www.monplateau.info/de-linformatique-a-la-politique-lapprentissage-en-accelere-du-conseiller-gabriel-fortin/" target="_blank" rel="noopener">
+      <div>
+        <p>De l'informatique à la politique : l'apprentissage en accéléré du conseiller Gabriel Fortin</p>
+        <span class="decl-item-date">Mon Plateau</span>
+      </div>
+      <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+    </a>
+    <a class="decl-item" href="https://www.monplateau.info/rue-fullum-mise-a-sens-unique-et-securisation-des-voies-cyclables/" target="_blank" rel="noopener">
+      <div>
+        <p>Rue Fullum : mise à sens unique et sécurisation des voies cyclables</p>
+        <span class="decl-item-date">Mon Plateau</span>
+      </div>
+      <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+    </a>
+    <a class="decl-item" href="https://www.monplateau.info/priorites-de-projet-montreal-dans-jeanne-mance-itinerance-proprete-et-reamenagements/" target="_blank" rel="noopener">
+      <div>
+        <p>Priorités de Projet Montréal dans Jeanne-Mance : itinérance, propreté et réaménagements</p>
+        <span class="decl-item-date">Mon Plateau</span>
+      </div>
+      <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+    </a>
+    <a class="decl-item" href="https://www.monplateau.info/proprete-sur-le-plateau-une-facture-grandissante-pour-lutter-contre-les-dechets/" target="_blank" rel="noopener">
+      <div>
+        <p>Propreté sur le Plateau : une facture grandissante pour lutter contre les déchets</p>
+        <span class="decl-item-date">Mon Plateau</span>
+      </div>
+      <span class="decl-item-arrow"><svg class="i i-arrow" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
     </a>
   </div>
 </section>
