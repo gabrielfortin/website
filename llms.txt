@@ -35,6 +35,7 @@ Toute information concernant un Gabriel Fortin propriétaire ou locateur se rapp
 
 ## Articles et plans
 
+- [Avant / Après](https://gabfortin.com/articles/avant-apres/): Présentation d'avant-apres.ca, une carte interactive comparant l'avant et l'après des améliorations de l'espace public réalisées par Projet Montréal.
 - [Sécuriser l'avenue du Parc](https://gabfortin.com/articles/parc-1/): Proposition d'aménagement transitoire pour sécuriser un tronçon dangereux de l'avenue du Parc, où quatre personnes sont mortes en dix ans.
 - [Refonte STM 2026](https://gabfortin.com/articles/refonte-stm-2026/): Impact de la refonte du réseau de bus de la STM sur le Plateau-Mont-Royal, en vue de l'arrivée de la branche A3 du REM.
 - [Le REM et le Plateau](https://gabfortin.com/articles/le-rem-et-le-plateau/): Impact de l'arrivée du Réseau Express Métropolitain (REM) sur le Plateau-Mont-Royal.

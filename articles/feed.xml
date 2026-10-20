@@ -6,7 +6,7 @@
     <atom:link href="https://gabfortin.com/articles/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Analyses de Gabriel Fortin, conseiller d'arrondissement au Plateau-Mont-Royal, sur le vélo, le transport en commun et l'urbanisme à Montréal.</description>
     <language>fr-CA</language>
-    <lastBuildDate>Fri, 02 Oct 2026 12:00:00 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 20 Oct 2026 12:00:00 -0400</lastBuildDate>
     <image>
       <url>https://gabfortin.com/favicon-96.png</url>
       <width>96</width>
@@ -14,6 +14,16 @@
       <title>Blogue — Gabriel Fortin</title>
       <link>https://gabfortin.com/articles/</link>
     </image>
+
+    <item>
+      <title>Avant / Après : voir comment l'espace public se transforme</title>
+      <link>https://gabfortin.com/articles/avant-apres/</link>
+      <guid isPermaLink="true">https://gabfortin.com/articles/avant-apres/</guid>
+      <pubDate>Tue, 20 Oct 2026 12:00:00 -0400</pubDate>
+      <dc:creator>Gabriel Fortin</dc:creator>
+      <category>Espace public</category>
+      <description>J'ai lancé avant-apres.ca, une carte interactive qui compare, photo à l'appui, l'avant et l'après des améliorations de l'espace public réalisées par Projet Montréal : agrandissements de parcs, rues scolaires, pistes cyclables, apaisement de la circulation et plus encore.</description>
+    </item>
 
     <item>
       <title>Proposition pour sécuriser un tronçon dangereux de l'avenue du Parc</title>
