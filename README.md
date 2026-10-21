@@ -48,7 +48,7 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 
 ### Accueil (`/index.html`)
 Page principale avec présentation et navigation (section "Explorer") vers:
-- **Compteurs Vélo** (featured) → https://velo.gabfortin.com
+- **Compteurs Vélo** (featured) → https://compteurvelo.com
 - **Avant / Après** (featured, badge "Nouveau") → https://avant-apres.ca — comparaison avant/après des améliorations de l'espace public réalisées par Projet Montréal
 - **Blogue** → Avenue du Parc, Refonte STM 2026, REM, et plans (PUM 2050, métro, REB)
 - **Cartes Interactives** → Élections 2025, réseau artériel, modes rapides et fréquents
@@ -70,7 +70,7 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 
 #### Données (`/donnees/`)
 
-1. **Compteurs Vélo** → https://velo.gabfortin.com
+1. **Compteurs Vélo** → https://compteurvelo.com
 2. **Déchets Montréal** → https://dechets.gabfortin.com
 3. **Résultats élections municipales Montréal 2025** → `./elections-2025/resultats.html`
 4. **Requêtes 311** → https://311.gabfortin.com
@@ -107,7 +107,7 @@ Page pour faire un don.
 
 ### Applications (`/applications/`)
 
-- **Compteurs Vélo** → https://velo.gabfortin.com
+- **Compteurs Vélo** → https://compteurvelo.com
 - **Pistes cyclables Plateau** → https://pistes.gabfortin.com
 - **Stationnement Plateau** → https://parking.gabfortin.com
 - **Déchets Montréal** → https://dechets.gabfortin.com
