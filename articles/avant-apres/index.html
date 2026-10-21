@@ -54,6 +54,24 @@
     height: 16px;
   }
 
+  .article-figure {
+    margin: 1.75rem 0;
+  }
+
+  .article-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .article-figure figcaption {
+    font-size: 13px;
+    color: var(--faint);
+    margin-top: 0.5rem;
+  }
+
   .doc-link {
     display: flex;
     align-items: center;
@@ -212,6 +230,11 @@
   <h2>Une carte, deux photos, un curseur</h2>
 
   <p>Avant / Après est une carte interactive de Montréal. Chaque point correspond à un lieu transformé. En cliquant dessus, on fait glisser un curseur entre une photo prise avant les travaux et une photo de l'aménagement actuel, prises du même point de vue. Le contraste parle de lui-même : là où il y avait de l'asphalte et des voitures stationnées, on trouve aujourd'hui des arbres, des bancs et des gens.</p>
+
+  <figure class="article-figure">
+    <img loading="lazy" src="./avantapres.jpg" width="2110" height="1354" alt="Carte Avant / Après centrée sur le Plateau-Mont-Royal, avec les lieux transformés classés par type et la fiche du parc Lahaie ouverte">
+    <figcaption>La carte Avant / Après, ici sur le Plateau-Mont-Royal</figcaption>
+  </figure>
 
   <h2>Ce qu'on y trouve</h2>
 
