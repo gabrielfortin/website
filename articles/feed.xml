@@ -6,7 +6,7 @@
     <atom:link href="https://gabfortin.com/articles/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Analyses de Gabriel Fortin, conseiller d'arrondissement au Plateau-Mont-Royal, sur le vélo, le transport en commun et l'urbanisme à Montréal.</description>
     <language>fr-CA</language>
-    <lastBuildDate>Tue, 20 Oct 2026 12:00:00 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 23 Oct 2026 12:00:00 -0400</lastBuildDate>
     <image>
       <url>https://gabfortin.com/favicon-96.png</url>
       <width>96</width>
@@ -14,6 +14,17 @@
       <title>Blogue — Gabriel Fortin</title>
       <link>https://gabfortin.com/articles/</link>
     </image>
+
+    <item>
+      <title>Le vélo d'hiver et les données</title>
+      <link>https://gabfortin.com/articles/velo-hiver/</link>
+      <guid isPermaLink="true">https://gabfortin.com/articles/velo-hiver/</guid>
+      <pubDate>Fri, 23 Oct 2026 12:00:00 -0400</pubDate>
+      <dc:creator>Gabriel Fortin</dc:creator>
+      <category>Vélo</category>
+      <description>Certaines pistes cyclables seraient peu utilisées en hiver. Pour donner l'heure juste, j'ai ajouté un onglet Vélo d'hiver à compteurvelo.com : achalandage selon le jour et la météo, journées les plus calmes et les plus fréquentées.</description>
+      <enclosure url="https://gabfortin.com/articles/velo-hiver/velohome.jpg" type="image/jpeg" length="291475"/>
+    </item>
 
     <item>
       <title>Avant / Après : voir comment l'espace public se transforme</title>

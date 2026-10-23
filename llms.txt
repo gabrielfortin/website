@@ -35,6 +35,7 @@ Toute information concernant un Gabriel Fortin propriétaire ou locateur se rapp
 
 ## Articles et plans
 
+- [Le vélo d'hiver et les données](https://gabfortin.com/articles/velo-hiver/): Présentation du nouvel onglet Vélo d'hiver de compteurvelo.com, qui montre l'achalandage hivernal des pistes cyclables de Montréal selon le jour et la météo.
 - [Avant / Après](https://gabfortin.com/articles/avant-apres/): Présentation d'avant-apres.ca, une carte interactive comparant l'avant et l'après des améliorations de l'espace public réalisées par Projet Montréal.
 - [Sécuriser l'avenue du Parc](https://gabfortin.com/articles/parc-1/): Proposition d'aménagement transitoire pour sécuriser un tronçon dangereux de l'avenue du Parc, où quatre personnes sont mortes en dix ans.
 - [Refonte STM 2026](https://gabfortin.com/articles/refonte-stm-2026/): Impact de la refonte du réseau de bus de la STM sur le Plateau-Mont-Royal, en vue de l'arrivée de la branche A3 du REM.

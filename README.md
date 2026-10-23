@@ -18,6 +18,8 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 │   ├── pum-2050/  metro-2025/  reb-2025/   # Plans, listés dans le blogue
 ├── articles/
 │   ├── index.html                      # Liste des articles
+│   ├── velo-hiver/
+│   │   └── index.html                  # Article: Le vélo d'hiver et les données
 │   ├── avant-apres/
 │   │   └── index.html                  # Article: Outil Avant / Après
 │   ├── feed.xml                        # Flux RSS du blogue (mis à jour à la main)
@@ -50,7 +52,7 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 Page principale avec présentation et navigation (section "Explorer") vers:
 - **Compteurs Vélo** (featured) → https://compteurvelo.com
 - **Avant / Après** (featured, badge "Nouveau") → https://avant-apres.ca — comparaison avant/après des améliorations de l'espace public réalisées par Projet Montréal
-- **Blogue** → Avenue du Parc, Refonte STM 2026, REM, et plans (PUM 2050, métro, REB)
+- **Blogue** → Analyses et propositions sur la mobilité, le transport collectif et l'espace public
 - **Cartes Interactives** → Élections 2025, réseau artériel, modes rapides et fréquents
 - **Données Ouvertes** → Ensembles de données publiques et visualisations
 - **Parcours** → Formation, carrière chez Bell et dossiers portés comme conseiller
@@ -78,10 +80,11 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 #### Blogue (`/articles/`) : articles et plans
 
 Articles :
-1. **Avant / Après : voir comment l'espace public se transforme** — `/articles/avant-apres/index.html`
-2. **Proposition pour sécuriser un tronçon dangereux de l'avenue du Parc** — `/articles/parc-1/index.html`
-3. **L'impact de la refonte STM 2026 au Plateau-Mont-Royal** — `/articles/refonte-stm-2026/index.html`
-4. **L'arrivée du REM et son impact sur le Plateau** — `/articles/le-rem-et-le-plateau/index.html`
+1. **Le vélo d'hiver et les données** — `/articles/velo-hiver/index.html`
+2. **Avant / Après : voir comment l'espace public se transforme** — `/articles/avant-apres/index.html`
+3. **Proposition pour sécuriser un tronçon dangereux de l'avenue du Parc** — `/articles/parc-1/index.html`
+4. **L'impact de la refonte STM 2026 au Plateau-Mont-Royal** — `/articles/refonte-stm-2026/index.html`
+5. **L'arrivée du REM et son impact sur le Plateau** — `/articles/le-rem-et-le-plateau/index.html`
 
 Plans (catégorie « Plan ») :
 4. **Prolongement du métro** (15 octobre 2025) — `/plans/metro-2025/index.html`
