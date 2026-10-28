@@ -124,7 +124,7 @@
   </url>
   <url>
     <loc>https://gabfortin.com/cartes/modes-rapides-et-frequents/map.html</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-10-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -157,14 +157,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://gabfortin.com/cartes/reseau-arteriel/arteriel-seulement.html</loc>
-    <lastmod>2026-10-13</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://gabfortin.com/cartes/reseau-arteriel/reseau-arteriel.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <loc>https://gabfortin.com/cartes/reseau-arteriel/carte.html</loc>
+    <lastmod>2026-10-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>

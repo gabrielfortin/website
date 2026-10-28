@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="../../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="../../favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../../favicon-192.png">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réseau artériel de Montréal, par arrondissement — Gabriel Fortin</title>
+<meta name="description" content="Carte interactive du réseau artériel administratif de Montréal, classée par type de voie et filtrable par arrondissement, à partir des données ouvertes de la Ville.">
+<link rel="canonical" href="https://gabfortin.com/cartes/reseau-arteriel/carte.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gabriel Fortin">
+<meta property="og:title" content="Réseau artériel de Montréal, par arrondissement">
+<meta property="og:description" content="Carte interactive du réseau artériel administratif de Montréal, classée par type de voie et filtrable par arrondissement, à partir des données ouvertes de la Ville.">
+<meta property="og:url" content="https://gabfortin.com/cartes/reseau-arteriel/carte.html">
+<meta property="og:image" content="https://gabfortin.com/cartes/reseau-arteriel/Arteriel.png">
+<meta property="og:locale" content="fr_CA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Réseau artériel de Montréal, par arrondissement">
+<meta name="twitter:description" content="Carte interactive du réseau artériel administratif de Montréal, classée par type de voie et filtrable par arrondissement, à partir des données ouvertes de la Ville.">
+<meta name="twitter:image" content="https://gabfortin.com/cartes/reseau-arteriel/Arteriel.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root {
+    --brand: #16a34a;
+    --brand-dark: #0f7a37;
+    --brand-light: #4ade80;
+    --ink-900: #0b1120;
+    --ink-700: #33413a;
+    --ink-500: #5b6b62;
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 9px;
+    --glass: rgba(255, 255, 255, 0.6);
+    --glass-strong: rgba(255, 255, 255, 0.82);
+    --glass-border: rgba(255, 255, 255, 0.55);
+    --glass-shadow: 0 8px 32px -12px rgba(15, 23, 42, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    --glass-blur: blur(20px) saturate(180%);
+    --shadow-soft: 0 10px 30px -12px rgba(11, 17, 32, 0.25);
+    --shadow-pop: 0 20px 50px -18px rgba(11, 17, 32, 0.35);
+    --ease: cubic-bezier(.16, .84, .44, 1);
+    --gap: 16px;
+    --sidebar-w: 260px;
+  }
+
+  html, body {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--ink-900);
+  }
+  #map { position: absolute; inset: 0; background: #eef1ea; }
+
+  /* ---------- Header ---------- */
+  .gf-header {
+    position: fixed;
+    top: var(--gap); left: var(--gap); right: var(--gap);
+    z-index: 1000;
+    display: flex; align-items: center; flex-wrap: wrap; gap: 14px;
+    padding: 10px 18px;
+    border-radius: var(--radius-lg);
+    background: var(--glass-strong);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+  .gf-sidebar-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border); background: var(--glass);
+    color: var(--ink-900); cursor: pointer; flex-shrink: 0;
+    transition: background .18s var(--ease), transform .18s var(--ease);
+  }
+  .gf-sidebar-toggle:hover { background: var(--glass-strong); transform: translateY(-1px); }
+  .gf-sidebar-toggle svg { width: 19px; height: 19px; }
+  .gf-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .gf-brand-mark {
+    width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0;
+    background: linear-gradient(140deg, var(--brand-light), var(--brand-dark));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 16px -4px rgba(15,122,55,.55), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .gf-brand-mark svg { width: 20px; height: 20px; }
+  .gf-brand-text { line-height: 1.15; min-width: 0; }
+  .gf-brand-word {
+    font-family: 'Poppins', 'Inter', sans-serif; font-weight: 700; font-size: 1rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .gf-brand-word span { color: var(--brand-dark); }
+  .gf-brand-sub { font-size: .72rem; color: var(--ink-500); font-weight: 500; white-space: nowrap; }
+  .gf-brand-sub a { color: var(--brand-dark); font-weight: 700; text-decoration: none; }
+  .gf-brand-sub a:hover { text-decoration: underline; }
+  .gf-header-spacer { flex: 1; }
+  .gf-back {
+    font-size: .78rem; font-weight: 600; color: var(--ink-700); text-decoration: none;
+    white-space: nowrap; padding: 7px 14px; border-radius: 999px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    transition: background .18s var(--ease), transform .18s var(--ease);
+  }
+  .gf-back:hover { background: var(--glass-strong); transform: translateY(-1px); }
+
+  .arrond-control {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .82rem; font-weight: 500; color: var(--ink-700);
+  }
+  .arrond-control select {
+    appearance: none; font-family: inherit; font-size: .82rem; font-weight: 500; color: var(--ink-900);
+    background: var(--glass); border: 1px solid var(--glass-border); border-radius: 999px;
+    padding: 7px 16px; cursor: pointer; max-width: 42vw; box-sizing: border-box;
+    box-shadow: var(--shadow-soft);
+    transition: border-color .18s var(--ease), transform .18s var(--ease);
+  }
+  .arrond-control select:hover { border-color: var(--brand); transform: translateY(-1px); }
+
+  @media (max-width: 760px) {
+    .gf-header { top: 10px; left: 10px; right: 10px; padding: 10px 14px; gap: 8px 10px; }
+    .gf-back { padding: 7px 11px; }
+    .gf-back-label { display: none; }
+    .arrond-control { order: 10; flex: 1 1 100%; }
+    .arrond-control select { flex: 1 1 0; width: 0; min-width: 0; max-width: none; }
+  }
+
+  /* ---------- Sidebar ---------- */
+  .gf-sidebar {
+    position: fixed;
+    top: calc(var(--gap) * 2 + 60px); left: var(--gap); bottom: var(--gap);
+    width: var(--sidebar-w);
+    border-radius: var(--radius-lg);
+    background: var(--glass);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    z-index: 950;
+    display: flex; flex-direction: column; overflow-y: auto;
+    transition: opacity .3s var(--ease), transform .3s var(--ease);
+  }
+  @media (min-width: 761px) {
+    body.gf-sidebar-collapsed .gf-sidebar {
+      opacity: 0; pointer-events: none; transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  .gf-sidebar-header {
+    display: flex; align-items: center; justify-content: space-between; padding: 18px 18px 8px;
+  }
+  .gf-sidebar-header h2 {
+    margin: 0; font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--ink-500);
+  }
+  .gf-sidebar-close {
+    display: none; width: 30px; height: 30px; border-radius: 50%; border: none;
+    background: var(--glass-strong); color: var(--ink-900); cursor: pointer;
+    align-items: center; justify-content: center; flex-shrink: 0;
+    transition: background .15s var(--ease), transform .15s var(--ease);
+  }
+  .gf-sidebar-close:hover { background: var(--surface, #fff); transform: scale(1.08); }
+  .gf-sidebar-list { display: flex; flex-direction: column; padding: 4px 10px 10px; gap: 3px; }
+  .gf-sidebar-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 8px;
+    border-radius: var(--radius-sm); cursor: pointer; font-size: .85rem; font-weight: 500;
+    transition: background .18s var(--ease), transform .18s var(--ease);
+  }
+  .gf-sidebar-item:hover { background: rgba(255,255,255,.55); transform: translateX(2px); }
+  .gf-sidebar-item input[type="checkbox"] {
+    width: 16px; height: 16px; accent-color: var(--brand-dark); cursor: pointer; flex-shrink: 0;
+  }
+  .gf-sidebar-swatch {
+    width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; font-size: 13px;
+    background: linear-gradient(140deg, var(--brand-light), var(--brand-dark));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 2px 6px -2px rgba(11,17,32,.4);
+    transition: transform .18s var(--ease);
+  }
+  .gf-sidebar-item:hover .gf-sidebar-swatch { transform: scale(1.08); }
+  .gf-sidebar-label { flex: 1; color: var(--ink-900); }
+  .gf-sidebar-note { padding: 0 14px 16px; font-size: .74rem; color: var(--ink-500); line-height: 1.5; }
+
+  .gf-sidebar-divider { height: 1px; background: var(--glass-border); margin: 2px 14px 4px; flex-shrink: 0; }
+  .gf-legend { padding: 10px 14px 18px; }
+  .gf-legend-row {
+    display: flex; align-items: center; gap: 10px; padding: 6px 4px;
+    border-radius: var(--radius-sm);
+  }
+  .gf-legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .gf-legend-label { font-size: .82rem; color: var(--ink-900); font-weight: 500; }
+  .gf-legend-count { padding: 0 14px 8px; font-size: .74rem; color: var(--ink-500); }
+
+  .gf-sidebar-scrim {
+    position: fixed; inset: 0; z-index: 940; background: rgba(11,17,32,.35);
+    backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+    opacity: 0; pointer-events: none; transition: opacity .3s var(--ease);
+  }
+
+  @media (max-width: 760px) {
+    .gf-sidebar {
+      width: min(80vw, 300px); z-index: 1450;
+      box-shadow: var(--glass-shadow), var(--shadow-pop);
+      transform: translateX(calc(-100% - var(--gap)));
+      transition: transform .3s var(--ease);
+      top: var(--gap); bottom: var(--gap);
+    }
+    .gf-sidebar.open { transform: translateX(0); }
+    .gf-sidebar-close { display: flex; }
+    .gf-sidebar-scrim.open { opacity: 1; pointer-events: auto; z-index: 1440; }
+  }
+
+  /* ---------- Loading indicator ---------- */
+  .gf-loading {
+    position: fixed; top: calc(var(--gap) * 2 + 70px); left: 50%; transform: translateX(-50%);
+    z-index: 900; display: none; align-items: center; gap: 10px;
+    padding: 9px 18px; border-radius: 999px;
+    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);
+    font-size: .8rem; font-weight: 600; color: var(--ink-700);
+  }
+  .gf-loading.show { display: flex; }
+  .gf-spinner {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid rgba(15,122,55,.25); border-top-color: var(--brand-dark);
+    animation: gf-spin .7s linear infinite;
+  }
+  @keyframes gf-spin { to { transform: rotate(360deg); } }
+
+  /* ---------- Credits badge ---------- */
+  .watermark {
+    position: fixed; left: var(--gap); bottom: var(--gap); z-index: 1000;
+    display: flex; align-items: center;
+    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border); border-radius: 999px;
+    padding: 6px 14px 6px 14px; box-shadow: var(--glass-shadow);
+    font: 600 .68rem/1.2 'Inter', sans-serif; color: var(--ink-700);
+    transition: left .3s var(--ease), box-shadow .18s var(--ease);
+  }
+  .watermark:hover { box-shadow: var(--shadow-pop); }
+  .watermark a { color: var(--brand-dark); text-decoration: none; font-weight: 700; }
+  .watermark a:hover { text-decoration: underline; }
+  @media (min-width: 761px) {
+    .watermark { left: calc(var(--sidebar-w) + var(--gap) * 2 + 14px); }
+    body.gf-sidebar-collapsed .watermark { left: 14px; }
+  }
+
+  /* ---------- Leaflet overrides ---------- */
+  .leaflet-control-zoom {
+    border: 1px solid var(--glass-border) !important; border-radius: var(--radius-sm) !important;
+    background: var(--glass-strong) !important; backdrop-filter: var(--glass-blur) !important; -webkit-backdrop-filter: var(--glass-blur) !important;
+    box-shadow: var(--glass-shadow) !important; overflow: hidden;
+  }
+  .leaflet-control-zoom a { background: transparent !important; color: var(--ink-900) !important; border-bottom: 1px solid var(--glass-border) !important; }
+  .leaflet-control-zoom a:last-child { border-bottom: none !important; }
+  .leaflet-control-zoom a:hover { background: rgba(255,255,255,.5) !important; }
+  .leaflet-control-attribution {
+    font-size: 10px !important; background: rgba(255,255,255,.7) !important;
+    backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important;
+    border-radius: var(--radius-sm) 0 0 0 !important;
+  }
+
+  /* ---------- Popup ---------- */
+  .leaflet-popup-content-wrapper {
+    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border); border-radius: 16px;
+    box-shadow: 0 20px 50px -20px rgba(11,17,32,.4);
+  }
+  .leaflet-popup-tip { background: var(--glass-strong); }
+  .leaflet-popup-content { margin: 16px 18px; width: min(260px, calc(100vw - 72px)) !important; font-family: 'Inter', sans-serif; }
+  .leaflet-popup-close-button { color: var(--ink-500) !important; }
+  .gf-pop-eyebrow {
+    display: inline-flex; align-items: center; gap: 6px; font-size: .7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--brand-dark);
+    background: rgba(22,163,74,.1); padding: 5px 11px; border-radius: 999px; margin-bottom: 10px;
+  }
+  .gf-pop-name { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; font-family: 'Poppins','Inter',sans-serif; }
+  .gf-pop-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 7px 0; border-bottom: 1px solid rgba(11,17,32,.06); font-size: .82rem;
+  }
+  .gf-pop-row:last-child { border-bottom: none; }
+  .gf-pop-row .k { color: var(--ink-500); }
+  .gf-pop-row .v { font-weight: 600; color: var(--ink-900); display: flex; align-items: center; gap: 6px; }
+  .gf-pop-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Map",
+  "name": "Réseau artériel de Montréal, par arrondissement",
+  "description": "Carte interactive du réseau artériel administratif de Montréal, classée par type de voie et filtrable par arrondissement, à partir des données ouvertes de la Ville.",
+  "url": "https://gabfortin.com/cartes/reseau-arteriel/carte.html",
+  "image": "https://gabfortin.com/cartes/reseau-arteriel/Arteriel.png",
+  "author": { "@type": "Person", "@id": "https://gabfortin.com/#gabriel-fortin", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
+  "creator": { "@type": "Person", "@id": "https://gabfortin.com/#gabriel-fortin", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
+  "isPartOf": { "@type": "CollectionPage", "url": "https://gabfortin.com/cartes/reseau-arteriel/" },
+  "inLanguage": "fr-CA"
+}
+</script>
+<link rel="alternate" type="application/rss+xml" title="Blogue — Gabriel Fortin" href="https://gabfortin.com/articles/feed.xml">
+<!-- Statistiques de visite : GoatCounter (open source, sans cookies, aucune donnée personnelle) -->
+<script data-goatcounter="https://gabfortin.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div class="gf-header">
+    <button class="gf-sidebar-toggle" id="gfSidebarToggle" aria-label="Calques et légende" aria-expanded="true" aria-controls="gfSidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+    </button>
+    <div class="gf-brand">
+      <div class="gf-brand-mark"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="6" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/><path d="M5 16 10 8l3 5 2-3 4 6" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="gf-brand-text">
+        <div class="gf-brand-word">Réseau <span>artériel</span></div>
+        <div class="gf-brand-sub">Montréal — <a href="https://gabfortin.com" target="_blank" rel="noopener">Gabriel Fortin</a></div>
+      </div>
+    </div>
+    <div class="arrond-control">
+      <select id="arrondSelect" aria-label="Choisir un arrondissement"></select>
+    </div>
+    <div class="gf-header-spacer"></div>
+    <a class="gf-back" href="./index.html" aria-label="Toutes les cartes"><span aria-hidden="true">←</span><span class="gf-back-label"> Toutes les cartes</span></a>
+  </div>
+
+  <aside class="gf-sidebar" id="gfSidebar" aria-label="Calques et légende">
+    <div class="gf-sidebar-header">
+      <h2>Calques</h2>
+      <button class="gf-sidebar-close" id="gfSidebarClose" aria-label="Fermer">✕</button>
+    </div>
+    <div class="gf-sidebar-list">
+      <label class="gf-sidebar-item">
+        <input type="checkbox" id="allStreetsToggle">
+        <span class="gf-sidebar-swatch">🛣️</span>
+        <span class="gf-sidebar-label">Afficher toutes les rues</span>
+      </label>
+    </div>
+    <p class="gf-sidebar-note">Par défaut, seules les rues du réseau artériel administratif de la Ville sont affichées.</p>
+
+    <div class="gf-sidebar-divider"></div>
+    <div class="gf-legend">
+      <div class="gf-sidebar-header" style="padding: 0 0 8px;"><h2>Légende</h2></div>
+      <div id="gfLegendBody"></div>
+    </div>
+    <p class="gf-legend-count" id="gfSegmentCount"></p>
+  </aside>
+  <div class="gf-sidebar-scrim" id="gfSidebarScrim"></div>
+
+  <div class="gf-loading" id="gfLoading"><span class="gf-spinner"></span><span>Chargement…</span></div>
+
+  <div class="watermark" title="Carte du réseau artériel">
+    <span>Gabriel Fortin · <a href="https://donnees.montreal.ca/dataset/reseau-arteriel-administratif" target="_blank" rel="noopener">Données ouvertes, Ville de Montréal</a></span>
+  </div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+  <script>
+    const MANIFEST = [
+      {"name": "Ahuntsic-Cartierville", "slug": "ahuntsic-cartierville"},
+      {"name": "Anjou", "slug": "anjou"},
+      {"name": "Côte-des-Neiges—Notre-Dame-de-Grâce", "slug": "cote-des-neiges-notre-dame-de-grace"},
+      {"name": "L'Île-Bizard—Sainte-Geneviève", "slug": "l-ile-bizard-sainte-genevieve"},
+      {"name": "Lachine", "slug": "lachine"},
+      {"name": "LaSalle", "slug": "lasalle"},
+      {"name": "Le Plateau-Mont-Royal", "slug": "le-plateau-mont-royal"},
+      {"name": "Le Sud-Ouest", "slug": "le-sud-ouest"},
+      {"name": "Mercier—Hochelaga-Maisonneuve", "slug": "mercier-hochelaga-maisonneuve"},
+      {"name": "Montréal-Nord", "slug": "montreal-nord"},
+      {"name": "Outremont", "slug": "outremont"},
+      {"name": "Pierrefonds-Roxboro", "slug": "pierrefonds-roxboro"},
+      {"name": "Rivière-des-Prairies—Pointe-aux-Trembles", "slug": "riviere-des-prairies-pointe-aux-trembles"},
+      {"name": "Rosemont—La Petite-Patrie", "slug": "rosemont-la-petite-patrie"},
+      {"name": "Saint-Laurent", "slug": "saint-laurent"},
+      {"name": "Saint-Léonard", "slug": "saint-leonard"},
+      {"name": "Verdun", "slug": "verdun"},
+      {"name": "Ville-Marie", "slug": "ville-marie"},
+      {"name": "Villeray—Saint-Michel—Parc-Extension", "slug": "villeray-saint-michel-parc-extension"}
+    ];
+    const DEFAULT_SLUG = "le-plateau-mont-royal";
+
+    const CLASSE_NAMES = {
+      0: "Rue locale",
+      1: "Voie piétonnière",
+      2: "Place d'affaires",
+      3: "Quai",
+      4: "Voie privée",
+      5: "Collectrice",
+      6: "Artère secondaire",
+      7: "Artère principale",
+      8: "Autoroute",
+      9: "Rue projetée"
+    };
+    const CLASSE_COLORS = {
+      0: "#94a3b8",
+      1: "#14b8a6",
+      2: "#eab308",
+      3: "#0ea5e9",
+      4: "#a78bfa",
+      5: "#3b82f6",
+      6: "#f97316",
+      7: "#ef4444",
+      8: "#1e293b",
+      9: "#ec4899"
+    };
+    const CLASSE_ORDER = [7, 8, 6, 5, 2, 3, 1, 4, 9, 0];
+
+    function classeColor(c) { return CLASSE_COLORS[c] || "#999999"; }
+    function classeName(c) { return CLASSE_NAMES[c] || ("Classe " + c); }
+
+    // ---------- Légende (statique, mêmes catégories partout) ----------
+    (function renderLegend() {
+      const body = document.getElementById('gfLegendBody');
+      const list = document.createElement('div');
+      list.className = 'gf-sidebar-list';
+      CLASSE_ORDER.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'gf-legend-row';
+        row.innerHTML = '<span class="gf-legend-dot" style="background:' + classeColor(c) + '"></span><span class="gf-legend-label">' + classeName(c) + '</span>';
+        list.appendChild(row);
+      });
+      body.appendChild(list);
+    })();
+
+    // ---------- Carte ----------
+    const map = L.map('map', { preferCanvas: true });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    map.setView([45.55, -73.6], 12);
+
+    let currentLayer = null;
+    let currentData = null;
+    let showAllStreets = false;
+    const dataCache = new Map();
+
+    function styleFor(artere) {
+      return artere === 1
+        ? { weight: 3, opacity: 0.92 }
+        : { weight: 1.3, opacity: 0.55 };
+    }
+
+    function renderStreets(rows) {
+      if (currentLayer) { map.removeLayer(currentLayer); currentLayer = null; }
+      const group = L.layerGroup();
+      let shown = 0;
+      rows.forEach(row => {
+        const [coords, classe, artere, nom] = row;
+        if (!showAllStreets && artere !== 1) return;
+        shown++;
+        const latlngs = coords.map(c => [c[1], c[0]]);
+        const base = styleFor(artere);
+        const line = L.polyline(latlngs, Object.assign({ color: classeColor(classe) }, base));
+        line.on('click', function(e) {
+          const headerEl = document.querySelector('.gf-header');
+          const topPad = (headerEl ? headerEl.offsetHeight : 76) + 16;
+          const html =
+            '<div class="gf-pop-eyebrow">' + (artere === 1 ? 'Réseau artériel' : 'Hors réseau artériel') + '</div>' +
+            '<h3 class="gf-pop-name">' + (nom || 'Voie sans nom') + '</h3>' +
+            '<div class="gf-pop-row"><span class="k">Classification</span><span class="v"><span class="gf-pop-dot" style="background:' + classeColor(classe) + '"></span>' + classeName(classe) + '</span></div>' +
+            '<div class="gf-pop-row"><span class="k">Réseau artériel admin.</span><span class="v">' + (artere === 1 ? 'Oui' : 'Non') + '</span></div>';
+          line.bindPopup(html, {
+            maxWidth: 300,
+            autoPan: true,
+            autoPanPaddingTopLeft: [24, topPad],
+            autoPanPaddingBottomRight: [24, 24]
+          }).openPopup(e.latlng);
+        });
+        group.addLayer(line);
+      });
+      group.addTo(map);
+      currentLayer = group;
+      document.getElementById('gfSegmentCount').textContent = shown.toLocaleString('fr-CA') + ' tronçon' + (shown > 1 ? 's' : '') + ' affiché' + (shown > 1 ? 's' : '');
+      return group;
+    }
+
+    function showResult(rows, fit) {
+      const group = renderStreets(rows);
+      if (fit && group.getLayers().length) {
+        try { map.fitBounds(group.getBounds(), { padding: [40, 40] }); } catch (e) {}
+      }
+    }
+
+    function fetchArrondissement(slug) {
+      if (dataCache.has(slug)) return Promise.resolve(dataCache.get(slug));
+      return fetch('./data/' + slug + '.json')
+        .then(res => res.json())
+        .then(rows => { dataCache.set(slug, rows); return rows; });
+    }
+
+    function loadArrondissement(slug, fit) {
+      const loading = document.getElementById('gfLoading');
+      if (dataCache.has(slug)) {
+        currentData = dataCache.get(slug);
+        showResult(currentData, fit);
+        return;
+      }
+      loading.classList.add('show');
+      const request = slug === 'all'
+        ? Promise.all(MANIFEST.map(a => fetchArrondissement(a.slug))).then(all => {
+            const combined = [].concat(...all);
+            dataCache.set('all', combined);
+            return combined;
+          })
+        : fetchArrondissement(slug);
+      request
+        .then(rows => {
+          currentData = rows;
+          showResult(rows, fit);
+        })
+        .catch(err => { console.error('Erreur de chargement', slug, err); })
+        .finally(() => loading.classList.remove('show'));
+    }
+
+    const sel = document.getElementById('arrondSelect');
+    const allOpt = document.createElement('option');
+    allOpt.value = 'all';
+    allOpt.textContent = 'Tous les arrondissements';
+    sel.appendChild(allOpt);
+    MANIFEST.forEach(a => {
+      const opt = document.createElement('option');
+      opt.value = a.slug;
+      opt.textContent = a.name;
+      sel.appendChild(opt);
+    });
+    sel.value = DEFAULT_SLUG;
+    sel.addEventListener('change', function() {
+      loadArrondissement(this.value, true);
+    });
+
+    document.getElementById('allStreetsToggle').addEventListener('change', function() {
+      showAllStreets = this.checked;
+      if (currentData) renderStreets(currentData);
+    });
+
+    loadArrondissement(DEFAULT_SLUG, true);
+
+    // ---------- Sidebar toggle (ouverte par défaut sur desktop, fermée sur mobile) ----------
+    const sidebarToggle = document.getElementById('gfSidebarToggle');
+    const sidebar = document.getElementById('gfSidebar');
+    const sidebarScrim = document.getElementById('gfSidebarScrim');
+    const sidebarClose = document.getElementById('gfSidebarClose');
+    const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
+
+    function setSidebarOpenMobile(open) {
+      sidebar.classList.toggle('open', open);
+      sidebarScrim.classList.toggle('open', open);
+      sidebarToggle.setAttribute('aria-expanded', String(open));
+    }
+    function toggleSidebar() {
+      if (isMobile()) {
+        setSidebarOpenMobile(!sidebar.classList.contains('open'));
+      } else {
+        const collapsed = document.body.classList.toggle('gf-sidebar-collapsed');
+        sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
+      }
+    }
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    sidebarClose.addEventListener('click', () => setSidebarOpenMobile(false));
+    sidebarScrim.addEventListener('click', () => setSidebarOpenMobile(false));
+  </script>
+</body>
+</html>

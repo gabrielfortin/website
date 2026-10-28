@@ -118,12 +118,12 @@
       <span class="carte-arrow">Explorer la carte <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
-    <div class="carte-item" onclick="openModal('./modes-rapides-et-frequents/map.html', 'Modes Rapides et Fréquents')" style="cursor:pointer;">
+    <a href="./modes-rapides-et-frequents/map.html" class="carte-item">
       <div class="carte-icon"><svg class="i" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="M8 15h.01"/><path d="M16 15h.01"/></svg></div>
       <h3>Modes Rapides et Fréquents</h3>
-      <p>Carte regroupant les données des modes fréquents et rapides opérés par la STM et Pulsar à Montréal.</p>
+      <p>Carte regroupant les données des modes fréquents et rapides opérés par la STM et le REM à Montréal.</p>
       <span class="carte-arrow">Explorer la carte <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-    </div>
+    </a>
 
     <a href="https://parking.gabfortin.com/" class="carte-item">
       <div class="carte-icon"><img loading="lazy" src="../img/statio.webp" alt="Stationnement Plateau"></div>
@@ -152,55 +152,6 @@
   </div>
 </footer>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h3 id="modal-title"></h3>
-      <button class="modal-close" onclick="closeModal()" aria-label="Fermer"><svg class="i" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-loader" id="modal-loader">
-        <div class="spinner"></div>
-        <p>Chargement de la carte…</p>
-        <p id="modal-warning" class="modal-warning" style="display:none;"><svg class="i" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg> <span>Cette carte est volumineuse et peut prendre du temps à charger.</span></p>
-      </div>
-      <iframe class="modal-iframe" id="modal-iframe" src="" title="Carte interactive"></iframe>
-    </div>
-  </div>
-</div>
-
-<script>
-  const WARN_THRESHOLD = 20 * 1024 * 1024;
-
-  async function openModal(url, title) {
-    document.getElementById('modal-title').textContent = title;
-    document.getElementById('modal-loader').classList.remove('hidden');
-    document.getElementById('modal-warning').style.display = 'none';
-    document.getElementById('modal-iframe').src = url;
-    document.getElementById('modal').classList.add('open');
-    try {
-      const res = await fetch(url, { method: 'HEAD' });
-      const size = parseInt(res.headers.get('content-length') || '0');
-      if (size > WARN_THRESHOLD) {
-        document.getElementById('modal-warning').style.display = 'flex';
-      }
-    } catch (e) {}
-  }
-
-  function closeModal() {
-    document.getElementById('modal').classList.remove('open');
-    document.getElementById('modal-iframe').src = '';
-  }
-
-  document.getElementById('modal-iframe').addEventListener('load', () => {
-    document.getElementById('modal-loader').classList.add('hidden');
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-  });
-</script>
 
 </body>
 </html>

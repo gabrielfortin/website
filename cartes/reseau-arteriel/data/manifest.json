@@ -1,0 +1,97 @@
+[
+{
+"name": "Ahuntsic-Cartierville",
+"slug": "ahuntsic-cartierville",
+"count": 3014
+},
+{
+"name": "Anjou",
+"slug": "anjou",
+"count": 1403
+},
+{
+"name": "Côte-des-Neiges-Notre-Dame-de-Grâce",
+"slug": "cote-des-neiges-notre-dame-de-grace",
+"count": 2357
+},
+{
+"name": "L'Île-Bizard-Sainte-Geneviève",
+"slug": "l-ile-bizard-sainte-genevieve",
+"count": 910
+},
+{
+"name": "LaSalle",
+"slug": "lasalle",
+"count": 1610
+},
+{
+"name": "Lachine",
+"slug": "lachine",
+"count": 1352
+},
+{
+"name": "Le Plateau-Mont-Royal",
+"slug": "le-plateau-mont-royal",
+"count": 1457
+},
+{
+"name": "Le Sud-Ouest",
+"slug": "le-sud-ouest",
+"count": 2060
+},
+{
+"name": "Mercier-Hochelaga-Maisonneuve",
+"slug": "mercier-hochelaga-maisonneuve",
+"count": 3184
+},
+{
+"name": "Montréal-Nord",
+"slug": "montreal-nord",
+"count": 1671
+},
+{
+"name": "Outremont",
+"slug": "outremont",
+"count": 439
+},
+{
+"name": "Pierrefonds-Roxboro",
+"slug": "pierrefonds-roxboro",
+"count": 2183
+},
+{
+"name": "Rivière-des-Prairies-Pointe-aux-Trembles",
+"slug": "riviere-des-prairies-pointe-aux-trembles",
+"count": 3538
+},
+{
+"name": "Rosemont-La Petite-Patrie",
+"slug": "rosemont-la-petite-patrie",
+"count": 1950
+},
+{
+"name": "Saint-Laurent",
+"slug": "saint-laurent",
+"count": 3305
+},
+{
+"name": "Saint-Léonard",
+"slug": "saint-leonard",
+"count": 1645
+},
+{
+"name": "Verdun",
+"slug": "verdun",
+"count": 1050
+},
+{
+"name": "Ville-Marie",
+"slug": "ville-marie",
+"count": 2616
+},
+{
+"name": "Villeray-Saint-Michel-Parc-Extension",
+"slug": "villeray-saint-michel-parc-extension",
+"count": 2184
+}
+]
