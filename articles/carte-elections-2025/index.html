@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="../../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="../../favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../../favicon-192.png">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Une carte interactive des résultats de l'élection municipale 2025 — Gabriel Fortin</title>
+<meta name="description" content="Après l'élection municipale du 2 novembre 2025, j'ai mis en ligne une carte interactive des résultats officiels : par section de vote, par district électoral, avec le réseau du métro en calque.">
+<link rel="canonical" href="https://gabfortin.com/articles/carte-elections-2025/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Gabriel Fortin">
+<meta property="og:title" content="Une carte interactive des résultats de l'élection municipale 2025">
+<meta property="og:description" content="Après l'élection municipale du 2 novembre 2025, j'ai mis en ligne une carte interactive des résultats officiels : par section de vote, par district électoral, avec le réseau du métro en calque.">
+<meta property="og:url" content="https://gabfortin.com/articles/carte-elections-2025/">
+<meta property="og:image" content="https://gabfortin.com/cartes/elections-2025/sections.png">
+<meta property="og:locale" content="fr_CA">
+<meta property="article:published_time" content="2025-11-24">
+<meta property="article:author" content="Gabriel Fortin">
+<meta property="article:section" content="Élections">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Une carte interactive des résultats de l'élection municipale 2025">
+<meta name="twitter:description" content="Après l'élection municipale du 2 novembre 2025, j'ai mis en ligne une carte interactive des résultats officiels : par section de vote, par district électoral, avec le réseau du métro en calque.">
+<meta name="twitter:image" content="https://gabfortin.com/cartes/elections-2025/sections.png">
+<link rel="preload" href="../../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/site.css">
+<style>
+  .hero-content { max-width: 696px; }
+
+  .hero-subtitle {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--warn);
+    margin-bottom: 1rem;
+  }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .meta-item .i {
+    width: 16px;
+    height: 16px;
+  }
+
+  .doc-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.3s ease;
+  }
+
+  .doc-link:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow);
+  }
+
+  .doc-link-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .doc-link-icon .i { width: 20px; height: 20px; }
+
+  .doc-link div p:first-child {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .doc-link div p:last-child {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .press-note {
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    background: #f8f9fa;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--warn, #b45309);
+    border-radius: 10px;
+  }
+
+  .press-note h3 {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.6rem;
+    color: var(--muted);
+  }
+
+  .press-note ul {
+    list-style: none;
+  }
+
+  .press-note li {
+    font-size: 14px;
+    margin-bottom: 0.4rem;
+  }
+
+  .press-note li:last-child {
+    margin-bottom: 0;
+  }
+
+  .press-note a {
+    color: var(--brand);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .press-note a:hover {
+    text-decoration: underline;
+  }
+</style>
+  <!-- Structured Data JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Une carte interactive des résultats de l'élection municipale 2025",
+    "description": "Après l'élection municipale du 2 novembre 2025, j'ai mis en ligne une carte interactive des résultats officiels : par section de vote, par district électoral, avec le réseau du métro en calque.",
+    "datePublished": "2025-11-24",
+    "dateModified": "2025-11-24",
+    "author": {
+      "@type": "Person",
+      "@id": "https://gabfortin.com/#gabriel-fortin",
+      "name": "Gabriel Fortin",
+      "url": "https://gabfortin.com"
+    },
+    "publisher": {
+      "@type": "Person",
+      "@id": "https://gabfortin.com/#gabriel-fortin",
+      "name": "Gabriel Fortin",
+      "url": "https://gabfortin.com"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://gabfortin.com/articles/carte-elections-2025/"
+    },
+    "articleSection": "Élections",
+    "inLanguage": "fr-CA"
+  }
+  </script>
+  <link rel="alternate" type="application/rss+xml" title="Blogue — Gabriel Fortin" href="https://gabfortin.com/articles/feed.xml">
+  <!-- Statistiques de visite : GoatCounter (open source, sans cookies, aucune donnée personnelle) -->
+  <script data-goatcounter="https://gabfortin.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a class="nav-logo" href="../../index.html"><img src="../../favicon-96.png" alt="Gabriel Fortin"></a>
+  <div class="nav-links">
+    <a href="../../articles/index.html" aria-current="page">Blogue</a>
+    <a href="../../cartes/index.html">Cartes</a>
+    <a href="../../donnees/index.html">Données</a>
+    <a href="../../parcours/index.html">Parcours</a>
+    <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="../../index.html">Accueil</a>
+      <span>/</span>
+      <a href="../index.html">Blogue</a>
+      <span>/</span>
+      <span>Carte des résultats — Élections 2025</span>
+    </div>
+    <h1>Une carte interactive des résultats de l'élection municipale 2025</h1>
+    <p class="hero-subtitle">Résultats officiels, section de vote par section de vote</p>
+    <div class="article-meta">
+      <div class="meta-item"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> 24 novembre 2025</div>
+      <div class="meta-item"><svg class="i" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5"/></svg> Élections</div>
+      <div class="meta-item"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 2 min de lecture</div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE CONTENT -->
+<section class="article-content">
+  <p>Le 2 novembre 2025, les Montréalais et Montréalaises ont élu leur nouveau conseil municipal. Une fois les résultats officiels compilés par la Ville, j'ai voulu les rendre plus faciles à explorer qu'un simple tableau de chiffres — j'ai donc créé une carte interactive à partir des données officielles.</p>
+
+  <p>La carte permet de consulter les résultats <strong>par section de vote</strong> et <strong>par district électoral</strong>, partout à Montréal — pas seulement au Plateau-Mont-Royal. On choisit d'abord un arrondissement, puis le poste qui nous intéresse (mairie d'arrondissement, conseiller·ère de ville, conseiller·ère d'arrondissement), et chaque section de vote se colore selon le parti gagnant. Un clic sur une section affiche le détail du vote — candidat·es, votes et pourcentages — et la barre latérale présente les résultats globaux agrégés pour le poste sélectionné. Le réseau du métro peut aussi être affiché en calque, pour mieux repérer les secteurs.</p>
+
+  <p>Cette carte a été réalisée avec Nicolas Jolicoeur, à partir des résultats détaillés publiés par la Ville de Montréal.</p>
+
+  <a class="doc-link" href="../../cartes/elections-2025/index.html">
+    <div class="doc-link-icon"><svg class="i" viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></div>
+    <div>
+      <p>Explorer la carte des résultats</p>
+      <p>Élections municipales de Montréal, 2 novembre 2025</p>
+    </div>
+  </a>
+
+  <div class="press-note">
+    <h3>Dans les médias</h3>
+    <ul>
+      <li><a href="https://www.monplateau.info/un-soleil-et-une-carte/" target="_blank" rel="noopener">Un soleil et une carte</a> — Mon Plateau, 27 novembre 2025</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>Gabriel Fortin</strong>
+      <p>© 2026 · <a href="mailto:info@gabfortin.com">info@gabfortin.com</a> · <a href="../../confidentialite/index.html">Confidentialité</a></p>
+    </div>
+    <div class="social-row">
+      <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-icon" aria-label="Instagram"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.facebook.com/gabfortin1/" class="social-icon" aria-label="Facebook"><svg class="i" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://bsky.app/profile/gabfortin.com" class="social-icon" aria-label="Bluesky"><svg class="i i-fill" viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg></a>
+      <a href="mailto:info@gabfortin.com" class="social-icon" aria-label="Email"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

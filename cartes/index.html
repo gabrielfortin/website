@@ -21,6 +21,12 @@
 <meta name="twitter:description" content="Explorez des cartes interactives utilisant les données ouvertes de la Ville de Montréal. Du réseau artériel aux résultats électoraux.">
 <link rel="preload" href="../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../css/site.css">
+<style>
+  .icon-elections {
+    background: linear-gradient(140deg, #4ade80, #0f7a37);
+    box-shadow: 0 6px 16px -4px rgba(15,122,55,.55), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+</style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -106,7 +112,7 @@
     </a>
 
     <a href="./elections-2025/index.html" class="carte-item">
-      <div class="carte-icon"><svg class="i" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><path d="M5 7c0-1.1.9-2 2-2h10a2 2 0 0 1 2 2v12H5V7Z"/><path d="M22 19H2"/></svg></div>
+      <div class="carte-icon icon-elections"><svg viewBox="0 0 24 24" fill="none" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="6" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/><path d="M8 12.5l2.5 2.5L16 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h3>Résultats Élections 2025</h3>
       <p>Cartes présentant les résultats de l'élection municipale 2025 à Montréal par quartier et secteur.</p>
       <span class="carte-arrow">Explorer la carte <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
