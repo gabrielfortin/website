@@ -22,14 +22,6 @@
 <link rel="preload" href="../../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../css/site.css">
 <style>
-  .maps-row,
-  .maps-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-
   .maps-center {
     display: flex;
     justify-content: center;
@@ -49,11 +41,14 @@
     transition: border-color 0.2s ease, box-shadow 0.3s ease;
   }
 
-  .map-card[onclick] {
+  .map-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
     cursor: pointer;
   }
 
-  .map-card[onclick]:hover {
+  .map-card:hover {
     border-color: var(--border-strong);
     box-shadow: var(--shadow);
   }
@@ -111,12 +106,6 @@
     color: var(--warn);
   }
 
-  @media (max-width: 768px) {
-    .maps-row,
-    .maps-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
 </style>
   <script type="application/ld+json">
   {
@@ -180,24 +169,15 @@
 <section class="section">
   <h2 class="section-label">Cartes interactives</h2>
 
-  <div class="maps-row">
-    <div class="map-card" onclick="openModal('./ParSectionDeVote.html', 'Carte par sections de vote')">
+  <div class="maps-center">
+    <a class="map-card" href="./ParSectionDeVote.html">
       <img class="map-thumb" src="./sections.webp" alt="Carte par sections de vote">
       <div class="map-card-label">
         <h2>Carte par sections de vote</h2>
         <span>Ouvrir <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
       </div>
-      <p class="map-note">Carte représentant les résultats par sections de vote.</p>
-    </div>
-
-    <div class="map-card" onclick="openModal('./mairie2025-metro.html', 'Sections de vote avec métro')">
-      <img loading="lazy" class="map-thumb" src="./metro.webp" alt="Sections de vote avec métro">
-      <div class="map-card-label">
-        <h2>Sections de vote avec métro</h2>
-        <span>Ouvrir <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-      </div>
-      <p class="map-note">Le réseau du métro de la STM a été superposé sur la carte des résultats électoraux par section de vote. Le tracé provient directement des données ouvertes de la STM.</p>
-    </div>
+      <p class="map-note">Résultats par section de vote, avec le réseau du métro de la STM en calque optionnel.</p>
+    </a>
   </div>
 </section>
 
@@ -217,46 +197,6 @@
     </div>
   </div>
 </footer>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h3 id="modal-title"></h3>
-      <button class="modal-close" onclick="closeModal()" aria-label="Fermer"><svg class="i" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-loader" id="modal-loader">
-        <div class="spinner"></div>
-        <p>Chargement de la carte…</p>
-        <p class="modal-warning"><svg class="i" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg> <span>Ces cartes sont volumineuses et peuvent prendre quelques secondes à charger.</span></p>
-      </div>
-      <iframe class="modal-iframe" id="modal-iframe" src="" title="Carte interactive"></iframe>
-    </div>
-  </div>
-</div>
-
-<script>
-  function openModal(url, title) {
-    document.getElementById('modal-title').textContent = title;
-    document.getElementById('modal-loader').classList.remove('hidden');
-    document.getElementById('modal-iframe').src = url;
-    document.getElementById('modal').classList.add('open');
-  }
-
-  function closeModal() {
-    document.getElementById('modal').classList.remove('open');
-    document.getElementById('modal-iframe').src = '';
-  }
-
-  document.getElementById('modal-iframe').addEventListener('load', () => {
-    document.getElementById('modal-loader').classList.add('hidden');
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-  });
-</script>
 
 </body>
 </html>
