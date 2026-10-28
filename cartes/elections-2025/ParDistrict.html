@@ -215,6 +215,44 @@
       transition: background .18s var(--ease), transform .18s var(--ease);
     }
     .gf-back:hover { background: var(--glass-strong); transform: translateY(-1px); }
+    .gf-info-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+      border: 1px solid var(--glass-border); background: var(--glass);
+      color: var(--ink-700); cursor: pointer;
+      font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 700; font-size: .95rem;
+      transition: background .18s var(--ease), transform .18s var(--ease);
+    }
+    .gf-info-btn:hover { background: var(--glass-strong); transform: translateY(-1px); }
+    .gf-info-overlay {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(11, 17, 32, 0.45);
+      display: none; align-items: center; justify-content: center; padding: 24px;
+    }
+    .gf-info-overlay.open { display: flex; }
+    .gf-info-panel {
+      max-width: 480px; width: 100%; max-height: 80vh; overflow-y: auto;
+      border-radius: var(--radius-lg); background: var(--glass-strong);
+      backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border); box-shadow: var(--shadow-pop);
+      padding: 22px 24px; position: relative;
+    }
+    .gf-info-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 1px solid var(--glass-border); background: var(--glass);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--ink-700); font-size: .9rem;
+    }
+    .gf-info-close:hover { background: var(--glass-strong); }
+    .gf-info-panel h2 {
+      font-family: 'Poppins', 'Inter', sans-serif; font-size: 1.05rem; font-weight: 700;
+      margin: 0 0 10px; padding-right: 28px; color: var(--ink-900);
+    }
+    .gf-info-panel p { font-size: .88rem; line-height: 1.55; color: var(--ink-700); margin: 0 0 12px; }
+    .gf-info-panel p:last-child { margin-bottom: 0; }
+    .gf-info-panel a { color: var(--brand-dark); font-weight: 600; text-decoration: none; }
+    .gf-info-panel a:hover { text-decoration: underline; }
 
     .poste-control {
       position: static !important;
@@ -309,8 +347,32 @@
     </div>
     
     <div class="gf-header-spacer"></div>
+    <button class="gf-info-btn" id="gfInfoBtn" aria-label="À propos de cette carte" aria-haspopup="dialog">i</button>
     <a class="gf-back" href="../index.html">← Toutes les cartes</a>
   </div>
+
+  <div class="gf-info-overlay" id="gfInfoOverlay" role="dialog" aria-modal="true" aria-labelledby="gfInfoTitle">
+    <div class="gf-info-panel">
+      <button class="gf-info-close" id="gfInfoClose" aria-label="Fermer">✕</button>
+      <h2 id="gfInfoTitle">À propos de cette carte</h2>
+      <p>Cette carte présente les résultats de l'élection municipale de Montréal du 2 novembre 2025, par district électoral. Elle a été réalisée après l'élection pour mieux comprendre les résultats quartier par quartier.</p>
+      <p><strong>Données :</strong> résultats officiels de l'élection municipale 2025. <a href="../../donnees/elections-2025/resultats.html">Voir les données détaillées</a>.</p>
+      <p>Carte réalisée par Gabriel Fortin, avec la collaboration de Nicolas Jolicoeur. <a href="../../articles/carte-elections-2025/index.html">Lire l'article de blogue</a>.</p>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById('gfInfoBtn');
+      var overlay = document.getElementById('gfInfoOverlay');
+      var closeBtn = document.getElementById('gfInfoClose');
+      function openInfo() { overlay.classList.add('open'); }
+      function closeInfo() { overlay.classList.remove('open'); }
+      btn.addEventListener('click', openInfo);
+      closeBtn.addEventListener('click', closeInfo);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) closeInfo(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeInfo(); });
+    })();
+  </script>
 
   <div id="wm" class="watermark" title="Carte des résultats 2025">
   <div class="wm-avatars" id="wmAvatars"></div>
