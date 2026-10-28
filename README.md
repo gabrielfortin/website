@@ -18,6 +18,10 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 │   ├── pum-2050/  metro-2025/  reb-2025/   # Plans, listés dans le blogue
 ├── articles/
 │   ├── index.html                      # Liste des articles
+│   ├── velo-hiver/
+│   │   └── index.html                  # Article: Le vélo d'hiver et les données
+│   ├── avant-apres/
+│   │   └── index.html                  # Article: Outil Avant / Après
 │   ├── feed.xml                        # Flux RSS du blogue (mis à jour à la main)
 │   ├── parc-1/
 │   │   └── index.html                  # Article: Sécuriser l'avenue du Parc
@@ -46,9 +50,9 @@ Site web moderne et responsif showcasing des projets, articles, cartes et donné
 
 ### Accueil (`/index.html`)
 Page principale avec présentation et navigation (section "Explorer") vers:
-- **Compteurs Vélo** (featured) → https://velo.gabfortin.com
-- **Avant / Après** (featured, badge "Nouveau") → https://avantapres.gabfortin.com — comparaison avant/après des améliorations de l'espace public réalisées par Projet Montréal
-- **Blogue** → Avenue du Parc, Refonte STM 2026, REM, et plans (PUM 2050, métro, REB)
+- **Compteurs Vélo** (featured) → https://compteurvelo.com
+- **Avant / Après** (featured, badge "Nouveau") → https://avant-apres.ca — comparaison avant/après des améliorations de l'espace public réalisées par Projet Montréal
+- **Blogue** → Analyses et propositions sur la mobilité, le transport collectif et l'espace public
 - **Cartes Interactives** → Élections 2025, réseau artériel, modes rapides et fréquents
 - **Données Ouvertes** → Ensembles de données publiques et visualisations
 - **Parcours** → Formation, carrière chez Bell et dossiers portés comme conseiller
@@ -59,7 +63,7 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 
 #### Cartes (`/cartes/`)
 
-1. **Avant / Après** → https://avantapres.gabfortin.com
+1. **Avant / Après** → https://avant-apres.ca
 2. **Réseau Artériel de Montréal** → `./reseau-arteriel/index.html`
 3. **Pistes cyclables Plateau** → https://pistes.gabfortin.com
 4. **Résultats Élections 2025** → `./elections-2025/index.html`
@@ -68,7 +72,7 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 
 #### Données (`/donnees/`)
 
-1. **Compteurs Vélo** → https://velo.gabfortin.com
+1. **Compteurs Vélo** → https://compteurvelo.com
 2. **Déchets Montréal** → https://dechets.gabfortin.com
 3. **Résultats élections municipales Montréal 2025** → `./elections-2025/resultats.html`
 4. **Requêtes 311** → https://311.gabfortin.com
@@ -76,14 +80,16 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 #### Blogue (`/articles/`) : articles et plans
 
 Articles :
-1. **Proposition pour sécuriser un tronçon dangereux de l'avenue du Parc** — `/articles/parc-1/index.html`
-2. **L'impact de la refonte STM 2026 au Plateau-Mont-Royal** — `/articles/refonte-stm-2026/index.html`
-3. **L'arrivée du REM et son impact sur le Plateau** — `/articles/le-rem-et-le-plateau/index.html`
+1. **Le vélo d'hiver et les données** — `/articles/velo-hiver/index.html`
+2. **Avant / Après : voir comment l'espace public se transforme** — `/articles/avant-apres/index.html`
+3. **Proposition pour sécuriser un tronçon dangereux de l'avenue du Parc** — `/articles/parc-1/index.html`
+4. **L'impact de la refonte STM 2026 au Plateau-Mont-Royal** — `/articles/refonte-stm-2026/index.html`
+5. **L'arrivée du REM et son impact sur le Plateau** — `/articles/le-rem-et-le-plateau/index.html`
 
-Plans (catégorie « Plan », datés de septembre 2025) :
-4. **PUM 2050** — `/plans/pum-2050/index.html`
-5. **Prolongement du métro** — `/plans/metro-2025/index.html`
-6. **Réseau Express Bus** — `/plans/reb-2025/index.html`
+Plans (catégorie « Plan ») :
+4. **Prolongement du métro** (15 octobre 2025) — `/plans/metro-2025/index.html`
+5. **Réseau Express Bus** (14 octobre 2025) — `/plans/reb-2025/index.html`
+6. **PUM 2050** (septembre 2025) — `/plans/pum-2050/index.html`
 
 Les plans gardent leurs adresses sous `/plans/`, mais sont listés dans le blogue et le flux RSS, et leur fil d'Ariane pointe vers le Blogue. L'ancienne page `/plans/` redirige vers `/articles/` (redirection HTML, GitHub Pages ne permettant pas les redirections serveur). Pour un nouveau plan : le créer sous `/plans/NOM/` et l'ajouter au blogue comme un article.
 
@@ -104,7 +110,7 @@ Page pour faire un don.
 
 ### Applications (`/applications/`)
 
-- **Compteurs Vélo** → https://velo.gabfortin.com
+- **Compteurs Vélo** → https://compteurvelo.com
 - **Pistes cyclables Plateau** → https://pistes.gabfortin.com
 - **Stationnement Plateau** → https://parking.gabfortin.com
 - **Déchets Montréal** → https://dechets.gabfortin.com
@@ -239,7 +245,7 @@ Si le logo change, remplacer `favico.png` puis régénérer les dérivés (redim
 Un autre Gabriel Fortin, propriétaire, existe. Pour que Google et les IA ne les confondent pas, le site contient des informations invisibles à l'écran, à garder cohérentes partout :
 
 - **Identifiant unique** : `https://gabfortin.com/#gabriel-fortin`, utilisé comme `@id` de la fiche Person (`index.html`, `parcours/index.html`) et de l'auteur de chaque page.
-- **`disambiguatingDescription`** (schema.org) dans `index.html`, `parcours/index.html` et `link.json` : locataire, n'a jamais été propriétaire ni locateur; tout Gabriel Fortin propriétaire ou locateur est un homonyme.
+- **`disambiguatingDescription`** (schema.org) dans `index.html`, `parcours/index.html` et `link.json` : locataire, n'a jamais été propriétaire ni locateur; tout Gabriel Fortin propriétaire ou locateur est un homonyme. Précise aussi qu'il **n'est pas étudiant** (quelques cours de 2e cycle en urbanisme suivis en 2023-2024, en parallèle de sa carrière), car des IA le décrivaient comme étudiant en urbanisme. La fiche de l'accueil et `link.json` incluent aussi `worksFor`, `memberOf` (OIQ) et `hasOccupation` (conseiller depuis 2025-11).
 - **`description` et `knowsAbout`** dans les mêmes fichiers : implication pour le réseau cyclable et militantisme pour le transport en commun.
 - **`llms.txt`** : sections « Engagements » et « Désambiguïsation (homonymes) ».
 

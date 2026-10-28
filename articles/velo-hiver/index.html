@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="../../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="../../favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../../favicon-192.png">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le vélo d'hiver et les données — Gabriel Fortin</title>
+<meta name="description" content="Certaines pistes cyclables seraient peu utilisées en hiver. Pour donner l'heure juste, j'ai ajouté un onglet Vélo d'hiver à compteurvelo.com : achalandage selon le jour et la météo, journées les plus calmes et les plus fréquentées.">
+<link rel="canonical" href="https://gabfortin.com/articles/velo-hiver/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Gabriel Fortin">
+<meta property="og:title" content="Le vélo d'hiver et les données">
+<meta property="og:description" content="Certaines pistes cyclables seraient peu utilisées en hiver. Pour donner l'heure juste, j'ai ajouté un onglet Vélo d'hiver à compteurvelo.com : achalandage selon le jour et la météo, journées les plus calmes et les plus fréquentées.">
+<meta property="og:url" content="https://gabfortin.com/articles/velo-hiver/">
+<meta property="og:image" content="https://gabfortin.com/articles/velo-hiver/velohome.jpg">
+<meta property="og:locale" content="fr_CA">
+<meta property="article:published_time" content="2026-10-23">
+<meta property="article:author" content="Gabriel Fortin">
+<meta property="article:section" content="Vélo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Le vélo d'hiver et les données">
+<meta name="twitter:description" content="Certaines pistes cyclables seraient peu utilisées en hiver. Pour donner l'heure juste, j'ai ajouté un onglet Vélo d'hiver à compteurvelo.com : achalandage selon le jour et la météo, journées les plus calmes et les plus fréquentées.">
+<meta name="twitter:image" content="https://gabfortin.com/articles/velo-hiver/velohome.jpg">
+<link rel="preload" href="../../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/site.css">
+<style>
+  .hero-content { max-width: 696px; }
+
+  .hero-subtitle {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--warn);
+    margin-bottom: 1rem;
+  }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .meta-item .i {
+    width: 16px;
+    height: 16px;
+  }
+
+  .article-figure {
+    margin: 1.75rem 0;
+  }
+
+  .article-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .article-figure figcaption {
+    font-size: 13px;
+    color: var(--faint);
+    margin-top: 0.5rem;
+  }
+
+  .doc-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.3s ease;
+  }
+
+  .doc-link:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow);
+  }
+
+  .doc-link-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .doc-link-icon .i { width: 20px; height: 20px; }
+
+  .doc-link div p:first-child {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .doc-link div p:last-child {
+    font-size: 13px;
+    color: var(--muted);
+  }
+</style>
+  <!-- Structured Data JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Le vélo d'hiver et les données",
+    "description": "Certaines pistes cyclables seraient peu utilisées en hiver. Pour donner l'heure juste, j'ai ajouté un onglet Vélo d'hiver à compteurvelo.com : achalandage selon le jour et la météo, journées les plus calmes et les plus fréquentées.",
+    "image": "https://gabfortin.com/articles/velo-hiver/velohome.jpg",
+    "datePublished": "2026-10-23",
+    "dateModified": "2026-10-23",
+    "author": {
+      "@type": "Person",
+      "@id": "https://gabfortin.com/#gabriel-fortin",
+      "name": "Gabriel Fortin",
+      "url": "https://gabfortin.com"
+    },
+    "publisher": {
+      "@type": "Person",
+      "@id": "https://gabfortin.com/#gabriel-fortin",
+      "name": "Gabriel Fortin",
+      "url": "https://gabfortin.com"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://gabfortin.com/articles/velo-hiver/"
+    },
+    "articleSection": "Vélo",
+    "inLanguage": "fr-CA"
+  }
+  </script>
+  <link rel="alternate" type="application/rss+xml" title="Blogue — Gabriel Fortin" href="https://gabfortin.com/articles/feed.xml">
+  <!-- Statistiques de visite : GoatCounter (open source, sans cookies, aucune donnée personnelle) -->
+  <script data-goatcounter="https://gabfortin.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a class="nav-logo" href="../../index.html"><img src="../../favicon-96.png" alt="Gabriel Fortin"></a>
+  <div class="nav-links">
+    <a href="../../articles/index.html" aria-current="page">Blogue</a>
+    <a href="../../cartes/index.html">Cartes</a>
+    <a href="../../donnees/index.html">Données</a>
+    <a href="../../parcours/index.html">Parcours</a>
+    <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="nav-pill">Plateau-Mont-Royal</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="../../index.html">Accueil</a>
+      <span>/</span>
+      <a href="../index.html">Blogue</a>
+      <span>/</span>
+      <span>Vélo d'hiver</span>
+    </div>
+    <h1>Le vélo d'hiver et les données</h1>
+    <p class="hero-subtitle">Si on veut parler de données, citons-les de façon transparente et honnête</p>
+    <div class="article-meta">
+      <div class="meta-item"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> 23 octobre 2026</div>
+      <div class="meta-item"><svg class="i" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5"/></svg> Vélo</div>
+      <div class="meta-item"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 2 min de lecture</div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE CONTENT -->
+<section class="article-content">
+  <p>On a beaucoup entendu parler de données sur le vélo dernièrement. Certaines pistes cyclables seraient peu utilisées en hiver, ce qui justifierait d'en démanteler une partie pendant la saison froide.</p>
+
+  <p>Si on veut parler de données (une vision et les moyens mis en place pour la réaliser devraient toujours se baser sur les données plutôt que sur les perceptions), encore faut-il les citer de façon transparente et honnête.</p>
+
+  <h2>Des données difficiles d'accès</h2>
+
+  <p>Les données des compteurs cyclistes ont connu quelques problèmes au cours de la dernière année : le financement pour Éco-Compteurs avait été coupé par l'administration de la Ville de Montréal, rendant les données des compteurs indisponibles pendant plusieurs mois. Certaines données restaient disponibles dans les données ouvertes de la Ville, mais impossibles à consulter pour une personne sans connaissances en informatique. J'avais donc créé un site Web pour regrouper et analyser les données d'utilisation des pistes cyclables de la Ville, afin de rendre la consultation disponible pour toustes.</p>
+
+  <h2>Un nouvel onglet : Vélo d'hiver</h2>
+
+  <p>Afin de donner l'heure juste sur l'utilisation du vélo en hiver, j'ai récemment mis le site à jour en y ajoutant un onglet consacré au vélo d'hiver. On peut maintenant y consulter :</p>
+  <ul>
+    <li>les passages moyens selon le jour de la semaine et les conditions météo durant l'hiver;</li>
+    <li>les journées où l'achalandage est le plus faible;</li>
+    <li>à l'inverse, les journées où les pistes cyclables sont les plus fréquentées.</li>
+  </ul>
+
+  <figure class="article-figure">
+    <img loading="lazy" src="./velohome.jpg" width="1434" height="1410" alt="Onglet Vélo d'hiver de compteurvelo.com : 1 279 459 passages à l'hiver 2025-2026, des cyclistes à -27,3 °C le 2 janvier 2026, un record de 29 920 passages le 10 mars 2026, et un graphique de l'évolution du vélo d'hiver au fil des années">
+    <figcaption>L'onglet Vélo d'hiver de compteurvelo.com</figcaption>
+  </figure>
+
+  <p>Si on veut prendre des décisions en se basant sur les données, assurons-nous de consulter les bonnes données et de les citer correctement. Je vous invite à explorer le site et à consulter les données par vous-mêmes.</p>
+
+  <p>Avez-vous repéré votre parcours? Les données semblent-elles bien refléter l'achalandage que vous y voyez, été comme hiver? Écrivez-moi à <a href="mailto:info@gabfortin.com">info@gabfortin.com</a>.</p>
+
+  <a class="doc-link" href="https://compteurvelo.com/#hiver" target="_blank" rel="noopener">
+    <div class="doc-link-icon"><svg class="i" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div>
+    <div>
+      <p>Explorer les données du vélo d'hiver</p>
+      <p>compteurvelo.com</p>
+    </div>
+  </a>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>Gabriel Fortin</strong>
+      <p>© 2026 · <a href="mailto:info@gabfortin.com">info@gabfortin.com</a> · <a href="../../confidentialite/index.html">Confidentialité</a></p>
+    </div>
+    <div class="social-row">
+      <a href="https://www.instagram.com/gabrielfortin.mtl" class="social-icon" aria-label="Instagram"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.facebook.com/gabfortin1/" class="social-icon" aria-label="Facebook"><svg class="i" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://bsky.app/profile/gabfortin.com" class="social-icon" aria-label="Bluesky"><svg class="i i-fill" viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg></a>
+      <a href="mailto:info@gabfortin.com" class="social-icon" aria-label="Email"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
