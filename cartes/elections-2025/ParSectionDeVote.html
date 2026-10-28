@@ -151,12 +151,23 @@
   .poste-control select:hover { border-color: var(--brand); transform: translateY(-1px); }
 
   @media (max-width: 760px) {
-    .gf-header { top: 10px; left: 10px; right: 10px; padding: 10px 14px; gap: 8px 10px; }
-    .gf-back { padding: 7px 11px; }
+    .gf-header { top: 8px; left: 8px; right: 8px; padding: 8px 10px; gap: 6px 8px; }
+    .gf-back { padding: 6px 10px; }
     .gf-back-label { display: none; }
-    .poste-control { order: 10; flex: 1 1 100%; flex-wrap: wrap; row-gap: 8px; }
-    .gf-select-group { flex: 1 1 100%; width: 100%; }
-    .gf-select-group select { flex: 1 1 0; width: 0; min-width: 0; max-width: none; }
+    .gf-brand-sub { display: none; }
+    .poste-control {
+      order: 10; flex: 1 1 100%;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px 8px;
+    }
+    .gf-select-group {
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px;
+      min-width: 0; width: 100%;
+    }
+    .gf-select-group span { font-size: .68rem; }
+    .gf-select-group select {
+      width: 100%; min-width: 0; max-width: none; box-sizing: border-box;
+      padding: 6px 10px; font-size: .78rem;
+    }
   }
 
   /* ---------- Sidebar ---------- */
@@ -572,11 +583,14 @@
         const info = posteData ? posteData[key] : null;
         const headerEl = document.querySelector('.gf-header');
         const topPad = (headerEl ? headerEl.offsetHeight : 76) + 16;
+        const bottomPad = 24;
+        const maxHeight = Math.max(160, window.innerHeight - topPad - bottomPad);
         layer.bindPopup(buildDetailHtml(info, key), {
           maxWidth: 320,
+          maxHeight: maxHeight,
           autoPan: true,
           autoPanPaddingTopLeft: [24, topPad],
-          autoPanPaddingBottomRight: [24, 24]
+          autoPanPaddingBottomRight: [24, bottomPad]
         }).openPopup(e.latlng);
       });
     }
