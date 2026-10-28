@@ -216,43 +216,71 @@
     }
     .gf-back:hover { background: var(--glass-strong); transform: translateY(-1px); }
     .gf-info-btn {
+      position: relative;
       display: flex; align-items: center; justify-content: center;
-      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
-      border: 1px solid var(--glass-border); background: var(--glass);
-      color: var(--ink-700); cursor: pointer;
-      font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 700; font-size: .95rem;
-      transition: background .18s var(--ease), transform .18s var(--ease);
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      border: none; background: linear-gradient(140deg, var(--brand-light), var(--brand-dark));
+      color: #fff; cursor: pointer;
+      box-shadow: 0 4px 14px -4px rgba(15, 122, 55, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      transition: transform .2s var(--ease), box-shadow .2s var(--ease);
     }
-    .gf-info-btn:hover { background: var(--glass-strong); transform: translateY(-1px); }
+    .gf-info-btn svg { width: 16px; height: 16px; position: relative; z-index: 1; }
+    .gf-info-btn::before {
+      content: ''; position: absolute; inset: -5px; border-radius: 50%;
+      border: 2px solid var(--brand); opacity: .4;
+      animation: gf-info-pulse 2.6s ease-out infinite; pointer-events: none;
+    }
+    .gf-info-btn:hover {
+      box-shadow: 0 8px 22px -4px rgba(15, 122, 55, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      transform: translateY(-1px) scale(1.1);
+    }
+    .gf-info-btn:active { transform: scale(0.94); }
+    @keyframes gf-info-pulse {
+      0% { transform: scale(0.6); opacity: 0.45; }
+      80% { transform: scale(1.7); opacity: 0; }
+      100% { transform: scale(1.7); opacity: 0; }
+    }
     .gf-info-overlay {
       position: fixed; inset: 0; z-index: 2000;
       background: rgba(11, 17, 32, 0.45);
-      display: none; align-items: center; justify-content: center; padding: 24px;
+      backdrop-filter: blur(8px) saturate(140%); -webkit-backdrop-filter: blur(8px) saturate(140%);
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s var(--ease);
     }
-    .gf-info-overlay.open { display: flex; }
+    .gf-info-overlay.open { opacity: 1; pointer-events: auto; }
     .gf-info-panel {
-      max-width: 480px; width: 100%; max-height: 80vh; overflow-y: auto;
-      border-radius: var(--radius-lg); background: var(--glass-strong);
-      backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--glass-border); box-shadow: var(--shadow-pop);
-      padding: 22px 24px; position: relative;
+      position: relative; width: min(440px, 100%); max-height: min(84vh, 640px); overflow-y: auto;
+      background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border); border-radius: var(--radius-lg);
+      box-shadow: var(--glass-shadow), var(--shadow-pop);
+      padding: 30px 26px 26px;
+      transform: scale(0.94) translateY(8px); opacity: 0;
+      transition: transform .28s var(--ease), opacity .28s var(--ease);
     }
-    .gf-info-close {
-      position: absolute; top: 14px; right: 14px;
-      width: 30px; height: 30px; border-radius: 50%;
-      border: 1px solid var(--glass-border); background: var(--glass);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--ink-700); font-size: .9rem;
-    }
-    .gf-info-close:hover { background: var(--glass-strong); }
+    .gf-info-overlay.open .gf-info-panel { transform: scale(1) translateY(0); opacity: 1; }
     .gf-info-panel h2 {
-      font-family: 'Poppins', 'Inter', sans-serif; font-size: 1.05rem; font-weight: 700;
-      margin: 0 0 10px; padding-right: 28px; color: var(--ink-900);
+      margin: 0 0 12px; font-size: 1.25rem; letter-spacing: -0.01em;
+      font-family: 'Poppins', 'Inter', sans-serif; font-weight: 700; color: var(--ink-900); padding-right: 28px;
     }
-    .gf-info-panel p { font-size: .88rem; line-height: 1.55; color: var(--ink-700); margin: 0 0 12px; }
+    .gf-info-panel p { margin: 0 0 14px; font-size: .88rem; line-height: 1.6; color: var(--ink-700); }
     .gf-info-panel p:last-child { margin-bottom: 0; }
     .gf-info-panel a { color: var(--brand-dark); font-weight: 600; text-decoration: none; }
     .gf-info-panel a:hover { text-decoration: underline; }
+    .gf-info-panel strong { color: var(--brand-dark); }
+    .gf-info-close {
+      position: absolute; top: 16px; right: 16px;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid var(--glass-border); background: var(--glass);
+      color: var(--ink-900); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .18s var(--ease), transform .18s var(--ease);
+    }
+    .gf-info-close:hover { background: var(--glass-strong); transform: scale(1.08); }
+    @media (max-width: 760px) {
+      .gf-info-btn { width: 28px; height: 28px; }
+      .gf-info-btn svg { width: 14px; height: 14px; }
+    }
 
     .poste-control {
       position: static !important;
@@ -347,7 +375,12 @@
     </div>
     
     <div class="gf-header-spacer"></div>
-    <button class="gf-info-btn" id="gfInfoBtn" aria-label="À propos de cette carte" aria-haspopup="dialog">i</button>
+    <button class="gf-info-btn" id="gfInfoBtn" aria-label="À propos de cette carte" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="7.6" r="1.4" fill="currentColor"/>
+        <path d="M12 11v6.2" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+      </svg>
+    </button>
     <a class="gf-back" href="../index.html">← Toutes les cartes</a>
   </div>
 
