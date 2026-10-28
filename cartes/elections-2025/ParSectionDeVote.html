@@ -144,18 +144,19 @@
   .poste-control select {
     appearance: none; font-family: inherit; font-size: .82rem; font-weight: 500; color: var(--ink-900);
     background: var(--glass); border: 1px solid var(--glass-border); border-radius: 999px;
-    padding: 7px 16px; cursor: pointer; max-width: 28vw;
+    padding: 7px 16px; cursor: pointer; max-width: 28vw; box-sizing: border-box;
     box-shadow: var(--shadow-soft);
     transition: border-color .18s var(--ease), transform .18s var(--ease);
   }
   .poste-control select:hover { border-color: var(--brand); transform: translateY(-1px); }
 
   @media (max-width: 760px) {
-    .gf-header { top: 10px; left: 10px; right: 10px; padding: 10px 14px; }
-    .gf-back { order: 9; margin-left: auto; }
+    .gf-header { top: 10px; left: 10px; right: 10px; padding: 10px 14px; gap: 8px 10px; }
+    .gf-back { padding: 7px 11px; }
+    .gf-back-label { display: none; }
     .poste-control { order: 10; flex: 1 1 100%; flex-wrap: wrap; row-gap: 8px; }
-    .gf-select-group { flex: 1 1 100%; }
-    .gf-select-group select { flex: 1; min-width: 0; width: auto; max-width: none; }
+    .gf-select-group { flex: 1 1 100%; width: 100%; }
+    .gf-select-group select { flex: 1 1 0; width: 0; min-width: 0; max-width: none; }
   }
 
   /* ---------- Sidebar ---------- */
@@ -345,7 +346,7 @@
       </div>
     </div>
     <div class="gf-header-spacer"></div>
-    <a class="gf-back" href="./index.html">← Toutes les cartes</a>
+    <a class="gf-back" href="./index.html" aria-label="Toutes les cartes"><span aria-hidden="true">←</span><span class="gf-back-label"> Toutes les cartes</span></a>
   </div>
 
   <aside class="gf-sidebar" id="gfSidebar" aria-label="Calques de la carte">
