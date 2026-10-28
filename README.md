@@ -64,9 +64,9 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 #### Cartes (`/cartes/`)
 
 1. **Avant / Après** → https://avant-apres.ca
-2. **Réseau Artériel de Montréal** → `./reseau-arteriel/index.html`
+2. **Réseau Artériel de Montréal** → `./reseau-arteriel/carte.html`
 3. **Pistes cyclables Plateau** → https://pistes.gabfortin.com
-4. **Résultats Élections 2025** → `./elections-2025/index.html`
+4. **Résultats Élections 2025** → `./elections-2025/ParSectionDeVote.html`
 5. **Modes Rapides et Fréquents**
 6. **Stationnement Plateau** → https://parking.gabfortin.com
 

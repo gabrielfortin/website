@@ -93,12 +93,6 @@
 
   <!-- Cartes -->
   <url>
-    <loc>https://gabfortin.com/cartes/elections-2025/</loc>
-    <lastmod>2026-05-08</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://gabfortin.com/cartes/elections-2025/ParDistrict.html</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>yearly</changefreq>
@@ -106,13 +100,7 @@
   </url>
   <url>
     <loc>https://gabfortin.com/cartes/elections-2025/ParSectionDeVote.html</loc>
-    <lastmod>2026-05-08</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://gabfortin.com/cartes/reseau-arteriel/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-10-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -160,7 +148,7 @@
     <loc>https://gabfortin.com/cartes/reseau-arteriel/carte.html</loc>
     <lastmod>2026-10-28</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gabfortin.com/projets/</loc>
