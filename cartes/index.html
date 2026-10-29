@@ -30,6 +30,15 @@
     background: linear-gradient(140deg, #4ade80 35%, #9333ea);
     box-shadow: 0 6px 16px -4px rgba(124,58,237,.5), inset 0 1px 0 rgba(255,255,255,.4);
   }
+  .carte-item.is-disabled {
+    opacity: .5;
+    filter: grayscale(.6);
+    cursor: default;
+  }
+  .carte-item.is-disabled:hover {
+    border-color: var(--border);
+    box-shadow: none;
+  }
 </style>
   <script type="application/ld+json">
   {
@@ -101,10 +110,17 @@
       <span class="carte-arrow">Explorer la carte <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
+    <div class="carte-item is-disabled" aria-disabled="true">
+      <div class="carte-icon"><img src="../img/carte-au.svg" alt="Carte accessibilité universelle"></div>
+      <h3>Carte accessibilité universelle</h3>
+      <p>Carte interactive de l'accessibilité universelle sur le Plateau-Mont-Royal, à partir des avis de Promo-Accès et des données de l'arrondissement et de la Ville de Montréal.</p>
+      <span class="carte-arrow">Bientôt disponible</span>
+    </div>
+
     <a href="./reseau-arteriel/carte.html" class="carte-item">
       <div class="carte-icon icon-elections"><svg viewBox="0 0 24 24" fill="none" width="28" height="28"><rect x="0.7" y="0.7" width="22.6" height="22.6" rx="8" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/><path d="M9 0.5v23M15 0.5v23M0.5 9h23M0.5 15h23" stroke="#fff" stroke-opacity=".5" stroke-width="0.9" stroke-linecap="round"/><path d="M12 0.15v23.7M0.15 12h23.7" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg></div>
       <h3>Réseau Artériel de Montréal</h3>
-      <p>Cartes présentant le réseau artériel administratif de la ville de Montréal utilisant les données ouvertes de la ville.</p>
+      <p>Carte présentant le réseau artériel administratif de la ville de Montréal utilisant les données ouvertes de la ville.</p>
       <span class="carte-arrow">Explorer la carte <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
@@ -118,7 +134,7 @@
     <a href="./elections-2025/ParSectionDeVote.html" class="carte-item">
       <div class="carte-icon icon-elections-gradient"><svg viewBox="0 0 24 24" fill="none" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="6" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/><path d="M8 12.5l2.5 2.5L16 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h3>Résultats Élections 2025</h3>
-      <p>Cartes présentant les résultats de l'élection municipale 2025 à Montréal par quartier et secteur.</p>
+      <p>Carte présentant les résultats de l'élection municipale 2025 à Montréal par quartier et secteur.</p>
       <span class="carte-arrow">Explorer la carte <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
 
