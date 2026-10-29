@@ -64,11 +64,14 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 #### Cartes (`/cartes/`)
 
 1. **Avant / Après** → https://avant-apres.ca
-2. **Réseau Artériel de Montréal** → `./reseau-arteriel/carte.html`
-3. **Pistes cyclables Plateau** → https://pistes.gabfortin.com
-4. **Résultats Élections 2025** → `./elections-2025/ParSectionDeVote.html`
-5. **Modes Rapides et Fréquents**
-6. **Stationnement Plateau** → https://parking.gabfortin.com
+2. **Carte accessibilité universelle** — grisée, non cliquable (`<div class="carte-item is-disabled">`, pas un `<a>`), en attendant la mise en ligne du projet `carte-au`. Icône : `img/carte-au.svg`.
+3. **Réseau Artériel de Montréal** → `./reseau-arteriel/carte.html`
+4. **Pistes cyclables Plateau** → https://pistes.gabfortin.com
+5. **Résultats Élections 2025** → `./elections-2025/ParSectionDeVote.html`
+6. **Modes Rapides et Fréquents**
+7. **Stationnement Plateau** → https://parking.gabfortin.com
+
+Pour ajouter une carte « à venir » (grisée, non cliquable) : utiliser un `<div class="carte-item is-disabled" aria-disabled="true">` au lieu d'un `<a>`, et remplacer la flèche « Explorer la carte » par `<span class="carte-arrow">Bientôt disponible</span>`. Le style `.is-disabled` (opacité réduite, `grayscale`, pas de hover) est défini dans le `<style>` de `cartes/index.html`.
 
 #### Données (`/donnees/`)
 
@@ -92,6 +95,8 @@ Plans (catégorie « Plan ») :
 6. **PUM 2050** (septembre 2025) — `/plans/pum-2050/index.html`
 
 Les plans gardent leurs adresses sous `/plans/`, mais sont listés dans le blogue et le flux RSS, et leur fil d'Ariane pointe vers le Blogue. L'ancienne page `/plans/` redirige vers `/articles/` (redirection HTML, GitHub Pages ne permettant pas les redirections serveur). Pour un nouveau plan : le créer sous `/plans/NOM/` et l'ajouter au blogue comme un article.
+
+**Recherche et filtre par catégorie** : `articles/index.html` a une barre de recherche (filtre en direct sur le titre, le texte et la catégorie de chaque article, via JS vanilla, pas de dépendance) et des « chips » de filtre par catégorie (Tous, Vélo, Espace public, Mobilité, Environnement, Transport, Élections, Plan). Les deux filtres se combinent. Pour une nouvelle catégorie d'article : ajouter un bouton `<button class="filter-chip" data-category="nom-en-minuscules">Nom</button>` dans `#articles-filters`, la valeur de `data-category` doit correspondre (en minuscules) au texte de `.article-category` de l'article.
 
 #### Parcours (`/parcours/`)
 
@@ -219,6 +224,10 @@ Chaque page doit inclure, à la fin du `<head>` :
 La page `/confidentialite/` décrit ce que le site collecte. **La mettre à jour (et changer la date en bas de page) si on ajoute un outil ou un service externe** : formulaire, infolettre, vidéo intégrée, autre outil de statistiques, etc. Un lien « Confidentialité » figure dans le pied de page de chaque page.
 
 Les cartes interactives ouvertes dans une fenêtre modale sont comptées comme des pages vues distinctes, ce qui permet de voir quelles cartes sont consultées.
+
+## Mise en page des sections de contenu
+
+Les pages `cartes/`, `donnees/` et `articles/` n'ont plus de `<h2 class="section-label">` au-dessus de leur grille/liste (ex. « Cartes Disponibles », « Ensembles de Données », « Articles et plans ») — retiré pour alléger la page. Leur `<section class="section">` principale porte en plus la classe `.section-top-tight` (définie dans `css/site.css`, à côté de `.section`), qui réduit le `padding-top` de `3.5rem` à `2rem` pour compenser l'absence du label. Si un label est réintroduit sur une de ces pages, retirer `.section-top-tight` pour revenir à l'espacement standard.
 
 ## Favicon
 

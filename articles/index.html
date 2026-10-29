@@ -110,6 +110,96 @@
       padding: 1.25rem;
     }
   }
+
+  .articles-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.75rem;
+  }
+
+  .articles-search {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    max-width: 360px;
+  }
+
+  .articles-search svg {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .articles-search input {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  .articles-search input:focus {
+    outline: none;
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow);
+  }
+
+  .articles-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .filter-chip {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    font-family: inherit;
+  }
+
+  .filter-chip:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+
+  .filter-chip.is-active {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+  }
+
+  .article-item.is-hidden {
+    display: none;
+  }
+
+  .articles-empty {
+    display: none;
+    color: var(--muted);
+    font-size: 14px;
+    padding: 2.5rem 0;
+    text-align: center;
+  }
+
+  .articles-empty.is-visible {
+    display: block;
+  }
 </style>
   <script type="application/ld+json">
   {
@@ -172,10 +262,25 @@
 
 
 <!-- ARTICLES -->
-<section class="section">
-  <h2 class="section-label">Articles et plans</h2>
-  
-  <div class="articles-list">
+<section class="section section-top-tight">
+  <div class="articles-toolbar">
+    <div class="articles-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="search" id="articles-search" placeholder="Rechercher un article…" aria-label="Rechercher un article">
+    </div>
+    <div class="articles-filters" id="articles-filters" role="group" aria-label="Filtrer par catégorie">
+      <button type="button" class="filter-chip is-active" data-category="tous">Tous</button>
+      <button type="button" class="filter-chip" data-category="vélo">Vélo</button>
+      <button type="button" class="filter-chip" data-category="espace public">Espace public</button>
+      <button type="button" class="filter-chip" data-category="mobilité">Mobilité</button>
+      <button type="button" class="filter-chip" data-category="environnement">Environnement</button>
+      <button type="button" class="filter-chip" data-category="transport">Transport</button>
+      <button type="button" class="filter-chip" data-category="élections">Élections</button>
+      <button type="button" class="filter-chip" data-category="plan">Plan</button>
+    </div>
+  </div>
+
+  <div class="articles-list" id="articles-list">
     <a href="./velo-hiver/index.html" class="article-item">
       <div class="article-item-body">
         <div class="article-meta">
@@ -336,6 +441,8 @@
     </a>
 
   </div>
+
+  <p class="articles-empty" id="articles-empty">Aucun article ne correspond à votre recherche.</p>
 </section>
 
 
@@ -354,6 +461,53 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  var list = document.getElementById('articles-list');
+  var items = Array.prototype.slice.call(list.querySelectorAll('.article-item'));
+  var searchInput = document.getElementById('articles-search');
+  var filters = document.getElementById('articles-filters');
+  var empty = document.getElementById('articles-empty');
+  var activeCategory = 'tous';
+
+  var entries = items.map(function (item) {
+    var categoryEl = item.querySelector('.article-category');
+    return {
+      el: item,
+      category: categoryEl ? categoryEl.textContent.trim().toLowerCase() : '',
+      text: item.textContent.toLowerCase()
+    };
+  });
+
+  function applyFilters() {
+    var query = searchInput.value.trim().toLowerCase();
+    var visibleCount = 0;
+
+    entries.forEach(function (entry) {
+      var matchesCategory = activeCategory === 'tous' || entry.category === activeCategory;
+      var matchesQuery = query === '' || entry.text.indexOf(query) !== -1;
+      var visible = matchesCategory && matchesQuery;
+      entry.el.classList.toggle('is-hidden', !visible);
+      if (visible) visibleCount++;
+    });
+
+    empty.classList.toggle('is-visible', visibleCount === 0);
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+
+  filters.addEventListener('click', function (e) {
+    var chip = e.target.closest('.filter-chip');
+    if (!chip) return;
+    activeCategory = chip.dataset.category;
+    Array.prototype.forEach.call(filters.querySelectorAll('.filter-chip'), function (c) {
+      c.classList.toggle('is-active', c === chip);
+    });
+    applyFilters();
+  });
+})();
+</script>
 
 </body>
 </html>
