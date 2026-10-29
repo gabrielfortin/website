@@ -101,15 +101,36 @@
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
   }
+  /* Burger : en haut à droite du panneau quand il est ouvert ; bouton flottant sous le bandeau quand il est fermé */
   .gf-sidebar-toggle {
+    position: fixed; z-index: 960;
+    top: calc(var(--gap) * 2 + 70px); left: calc(var(--gap) + var(--sidebar-w) - 44px);
     display: flex; align-items: center; justify-content: center;
-    width: 38px; height: 38px; border-radius: var(--radius-sm);
-    border: 1px solid var(--glass-border); background: var(--glass);
-    color: var(--ink-900); cursor: pointer; flex-shrink: 0;
-    transition: background .18s var(--ease), transform .18s var(--ease);
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid var(--glass-border); background: var(--glass-strong);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    color: var(--ink-900); cursor: pointer;
+    transition: top .3s var(--ease), left .3s var(--ease), width .3s var(--ease), height .3s var(--ease),
+                box-shadow .3s var(--ease), background .18s var(--ease), transform .18s var(--ease);
   }
-  .gf-sidebar-toggle:hover { background: var(--glass-strong); transform: translateY(-1px); }
-  .gf-sidebar-toggle svg { width: 19px; height: 19px; }
+  .gf-sidebar-toggle:hover { background: var(--surface, #fff); transform: translateY(-1px); }
+  .gf-sidebar-toggle svg { width: 18px; height: 18px; }
+  @media (min-width: 761px) {
+    body.gf-sidebar-collapsed .gf-sidebar-toggle {
+      top: calc(var(--gap) * 2 + 60px); left: var(--gap);
+      width: 42px; height: 42px; box-shadow: var(--glass-shadow);
+    }
+  }
+  @media (max-width: 760px) {
+    .gf-sidebar-toggle {
+      top: calc(20px + var(--gf-header-h, 60px)); left: 10px;
+      width: 38px; height: 38px; box-shadow: var(--glass-shadow);
+    }
+    body:has(.gf-sidebar.open) .gf-sidebar-toggle {
+      z-index: 1460; top: calc(var(--gap) + 10px); left: calc(var(--gap) + min(80vw, 300px) - 44px);
+      width: 34px; height: 34px; box-shadow: none;
+    }
+  }
   .gf-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
   .gf-brand-mark {
     width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0;
@@ -130,7 +151,7 @@
   .gf-header-spacer { flex: 1; }
   .gf-back {
     font-size: .78rem; font-weight: 600; color: var(--ink-700); text-decoration: none;
-    white-space: nowrap; padding: 7px 14px; border-radius: 999px;
+    white-space: nowrap; padding: 7px 11px; border-radius: 999px;
     background: var(--glass); border: 1px solid var(--glass-border);
     transition: background .18s var(--ease), transform .18s var(--ease);
   }
@@ -218,8 +239,6 @@
 
   @media (max-width: 760px) {
     .gf-header { top: 8px; left: 8px; right: 8px; padding: 8px 10px; gap: 6px 8px; }
-    .gf-back { padding: 6px 10px; }
-    .gf-back-label { display: none; }
     .gf-brand-sub { display: none; }
     .poste-control {
       order: 10; flex: 1 1 100%;
@@ -263,13 +282,6 @@
     margin: 0; font-size: .72rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: .06em; color: var(--ink-500);
   }
-  .gf-sidebar-close {
-    display: none; width: 30px; height: 30px; border-radius: 50%; border: none;
-    background: var(--glass-strong); color: var(--ink-900); cursor: pointer;
-    align-items: center; justify-content: center; flex-shrink: 0;
-    transition: background .15s var(--ease), transform .15s var(--ease);
-  }
-  .gf-sidebar-close:hover { background: var(--surface, #fff); transform: scale(1.08); }
   .gf-sidebar-list { display: flex; flex-direction: column; padding: 4px 10px 18px; gap: 3px; }
   .gf-sidebar-item {
     display: flex; align-items: center; gap: 10px; padding: 9px 8px;
@@ -317,7 +329,6 @@
       top: var(--gap); bottom: var(--gap);
     }
     .gf-sidebar.open { transform: translateX(0); }
-    .gf-sidebar-close { display: flex; }
     .gf-sidebar-scrim.open { opacity: 1; pointer-events: auto; z-index: 1440; }
   }
 
@@ -402,9 +413,7 @@
   <div id="map"></div>
 
   <div class="gf-header">
-    <button class="gf-sidebar-toggle" id="gfSidebarToggle" aria-label="Calques de la carte" aria-expanded="true" aria-controls="gfSidebar">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
-    </button>
+    <a class="gf-back" href="../index.html" aria-label="Toutes les cartes" title="Toutes les cartes"><span aria-hidden="true">←</span></a>
     <div class="gf-brand">
       <div class="gf-brand-mark"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="6" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/><path d="M8 12.5l2.5 2.5L16 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="gf-brand-text">
@@ -429,7 +438,6 @@
         <path d="M12 11v6.2" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
       </svg>
     </button>
-    <a class="gf-back" href="../index.html" aria-label="Toutes les cartes"><span aria-hidden="true">←</span><span class="gf-back-label"> Toutes les cartes</span></a>
   </div>
 
   <div class="gf-info-overlay" id="gfInfoOverlay" role="dialog" aria-modal="true" aria-labelledby="gfInfoTitle">
@@ -455,10 +463,13 @@
     })();
   </script>
 
+  <button class="gf-sidebar-toggle" id="gfSidebarToggle" aria-label="Calques de la carte" aria-expanded="true" aria-controls="gfSidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+  </button>
+
   <aside class="gf-sidebar" id="gfSidebar" aria-label="Calques de la carte">
     <div class="gf-sidebar-header">
       <h2>Calques</h2>
-      <button class="gf-sidebar-close" id="gfSidebarClose" aria-label="Fermer">✕</button>
     </div>
     <div class="gf-sidebar-list">
       <label class="gf-sidebar-item">
@@ -801,7 +812,6 @@
     const sidebarToggle = document.getElementById('gfSidebarToggle');
     const sidebar = document.getElementById('gfSidebar');
     const sidebarScrim = document.getElementById('gfSidebarScrim');
-    const sidebarClose = document.getElementById('gfSidebarClose');
     const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
 
     function setSidebarOpenMobile(open) {
@@ -818,7 +828,11 @@
       }
     }
     sidebarToggle.addEventListener('click', toggleSidebar);
-    sidebarClose.addEventListener('click', () => setSidebarOpenMobile(false));
+
+    // Le bouton flottant se place sous le bandeau, dont la hauteur varie en mobile (contrôles sur 2 lignes)
+    const headerEl = document.querySelector('.gf-header');
+    const syncHeaderH = () => document.documentElement.style.setProperty('--gf-header-h', headerEl.offsetHeight + 'px');
+    new ResizeObserver(syncHeaderH).observe(headerEl);
     sidebarScrim.addEventListener('click', () => setSidebarOpenMobile(false));
 
     // Initialiser la bannière images + noms
