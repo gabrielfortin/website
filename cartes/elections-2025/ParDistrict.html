@@ -68,7 +68,9 @@
 
     
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <title>Carte des résultats par district — Élections Montréal 2025 — Gabriel Fortin</title>
+    <meta name="theme-color" content="#eef1ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1310" media="(prefers-color-scheme: dark)">
+<title>Carte des résultats par district — Élections Montréal 2025 — Gabriel Fortin</title>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -363,6 +365,7 @@
     .foliumtooltip th { color: var(--brand-dark) !important; }
 
 </style>
+<link rel="stylesheet" href="../carte-sombre.css">
 
 <div class="gf-header">
     <a class="gf-back" href="../index.html" aria-label="Toutes les cartes" title="Toutes les cartes"><span aria-hidden="true">←</span></a>
@@ -459,14 +462,14 @@
         
     
             var tile_layer_7450941bf69d258dce901197e5979ee7 = L.tileLayer(
-                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                // Tuiles OSM : les fonds CARTO (light_all) exigent maintenant une clé API
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
-  "maxZoom": 20,
-  "maxNativeZoom": 20,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
   "noWrap": false,
-  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
-  "subdomains": "abcd",
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
   "detectRetina": false,
   "tms": false,
   "opacity": 1,
@@ -547,7 +550,7 @@
     
             var layer_control_68ddde19228bba0eedf273d667dc2192_layers = {
                 base_layers : {
-                    "cartodbpositron" : tile_layer_7450941bf69d258dce901197e5979ee7,
+                    "OpenStreetMap" : tile_layer_7450941bf69d258dce901197e5979ee7,
                 },
                 overlays :  {
                     "Poste 0.00" : geo_json_228d8146bc3ccd4cc9bf1d95cb57f6c5,

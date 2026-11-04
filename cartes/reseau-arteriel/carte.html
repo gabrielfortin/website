@@ -7,6 +7,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="../../favicon-192.png">
 <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#eef1ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1310" media="(prefers-color-scheme: dark)">
 <title>Réseau artériel de Montréal, par arrondissement — Gabriel Fortin</title>
 <meta name="description" content="Carte interactive du réseau artériel administratif de Montréal, classée par type de voie et filtrable par arrondissement, à partir des données ouvertes de la Ville.">
 <link rel="canonical" href="https://gabfortin.com/cartes/reseau-arteriel/carte.html">
@@ -358,6 +360,7 @@
   .gf-pop-row .v { font-weight: 600; color: var(--ink-900); display: flex; align-items: center; gap: 6px; }
   .gf-pop-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 </style>
+<link rel="stylesheet" href="../carte-sombre.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -504,7 +507,8 @@
       5: "#3b82f6",
       6: "#f97316",
       7: "#ef4444",
-      8: "#1e293b",
+      // Autoroute : ardoise foncée en clair, ardoise très claire en sombre (invisible sinon sur le fond sombre)
+      8: matchMedia("(prefers-color-scheme: dark)").matches ? "#e2e8f0" : "#1e293b",
       9: "#ec4899"
     };
     const CLASSE_ORDER = [7, 8, 6, 5, 2, 3, 1, 4, 9, 0];

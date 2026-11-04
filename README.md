@@ -73,6 +73,8 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 
 Pour ajouter une carte « à venir » (grisée, non cliquable) : utiliser un `<div class="carte-item is-disabled" aria-disabled="true">` au lieu d'un `<a>`, et remplacer la flèche « Explorer la carte » par `<span class="carte-arrow">Bientôt disponible</span>`. Le style `.is-disabled` (opacité réduite, `grayscale`, pas de hover) est défini dans le `<style>` de `cartes/index.html`.
 
+
+**Mode sombre des cartes verre** : `cartes/reseau-arteriel/carte.html`, `cartes/modes-rapides-et-frequents/map.html` et les deux cartes `cartes/elections-2025/Par*.html` chargent `cartes/carte-sombre.css` **après** leur `<style>`. Cette feuille ne contient que les règles sombres (jetons du dashboard verre, tuiles inversées, textes de marque, popups) ; le mode clair reste dans chaque page. Une nouvelle carte de `cartes/` doit la relier aussi, et toute couleur claire écrite en dur dans une carte doit y être surchargée. Recette : `~/Developer/MAP-DESIGN-SYSTEM.md`, section « Mode sombre ».
 #### Données (`/donnees/`)
 
 1. **Compteurs Vélo** → https://compteurvelo.com

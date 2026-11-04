@@ -1,0 +1,81 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Mode sombre commun des cartes « verre » de gabfortin.com/cartes/
+   (réseau artériel, modes rapides et fréquents, élections 2025).
+
+   Recette : ~/Developer/MAP-DESIGN-SYSTEM.md, section « Mode sombre ».
+   Valeurs du « dashboard verre » (requetes-311/docs/glass.css).
+
+   Chargé APRÈS le <style> de chaque carte : il ne contient que des règles
+   sombres, le mode clair de chaque page reste celui de son propre <style>.
+   Les sélecteurs reprennent ceux des pages (composants gf-, Leaflet, Folium) ;
+   toute nouvelle couleur claire en dur dans une carte doit être ajoutée ici.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --brand-ink: #4ade80;                     /* texte de marque lisible sur verre sombre */
+    --ink-900: #e4eee8;
+    --ink-700: #b4c4bb;
+    --ink-500: #8b9d94;
+    --surface: rgba(255, 255, 255, 0.12);
+    --glass: rgba(24, 33, 29, 0.62);
+    --glass-strong: rgba(34, 45, 40, 0.82);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 10px 36px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    --shadow-soft: 0 10px 30px -12px rgba(0, 0, 0, 0.5);
+    --shadow-pop: 0 24px 60px -16px rgba(0, 0, 0, 0.6);
+    --surface-hover: rgba(255, 255, 255, 0.07);
+    --hairline: rgba(255, 255, 255, 0.08);
+    --map-bg: #0b1310;
+    --tile-filter: invert(1) hue-rotate(180deg) saturate(0.35) brightness(0.88) contrast(0.92);
+  }
+
+  :root:not([data-theme="light"]) body,
+  :root:not([data-theme="light"]) #map,
+  :root:not([data-theme="light"]) .leaflet-container { background: var(--map-bg); }
+  :root:not([data-theme="light"]) .leaflet-tile-pane { filter: var(--tile-filter); }
+
+  /* Textes de marque (--brand-dark est trop foncé sur le verre sombre) */
+  :root:not([data-theme="light"]) .gf-brand-word span,
+  :root:not([data-theme="light"]) .gf-brand-sub a,
+  :root:not([data-theme="light"]) .gf-info-panel a,
+  :root:not([data-theme="light"]) .gf-info-panel strong,
+  :root:not([data-theme="light"]) .gf-pop-eyebrow,
+  :root:not([data-theme="light"]) .gf-detail-eyebrow,
+  :root:not([data-theme="light"]) .watermark a { color: var(--brand-ink); }
+  :root:not([data-theme="light"]) .leaflet-popup-content table th,
+  :root:not([data-theme="light"]) .foliumtooltip th { color: var(--brand-ink) !important; }
+
+  /* Survols et fonds blancs en dur */
+  :root:not([data-theme="light"]) .gf-sidebar-item:hover { background: var(--surface-hover); }
+  :root:not([data-theme="light"]) .gf-sidebar-toggle:hover { background: var(--glass-strong); }
+  :root:not([data-theme="light"]) .gf-info-overlay { background: rgba(0, 0, 0, 0.5); }
+  :root:not([data-theme="light"]) .gf-sidebar-scrim { background: rgba(0, 0, 0, 0.45); }
+  :root:not([data-theme="light"]) .gf-pop-row,
+  :root:not([data-theme="light"]) .gf-result-row { border-bottom-color: var(--hairline); }
+
+  /* Leaflet / Folium */
+  :root:not([data-theme="light"]) .leaflet-control-zoom a:hover { background: var(--surface-hover) !important; }
+  :root:not([data-theme="light"]) .leaflet-control-attribution {
+    background: rgba(24, 33, 29, 0.75) !important;
+    color: var(--ink-700) !important;
+  }
+  :root:not([data-theme="light"]) .leaflet-control-attribution a { color: var(--brand-ink) !important; }
+  :root:not([data-theme="light"]) .leaflet-control-layers { color: var(--ink-900) !important; }
+  /* Leaflet impose #333 aux popups et #222 aux infobulles : illisible en sombre */
+  :root:not([data-theme="light"]) .leaflet-popup-content-wrapper,
+  :root:not([data-theme="light"]) .foliumtooltip,
+  :root:not([data-theme="light"]) .leaflet-tooltip { color: var(--ink-900) !important; }
+  :root:not([data-theme="light"]) .leaflet-tooltip-top::before { border-top-color: var(--glass-strong); }
+  :root:not([data-theme="light"]) .leaflet-tooltip-bottom::before { border-bottom-color: var(--glass-strong); }
+  :root:not([data-theme="light"]) .leaflet-tooltip-left::before { border-left-color: var(--glass-strong); }
+  :root:not([data-theme="light"]) .leaflet-tooltip-right::before { border-right-color: var(--glass-strong); }
+  :root:not([data-theme="light"]) .leaflet-container a.leaflet-popup-close-button { color: var(--ink-500); }
+
+  /* Badge de crédits des cartes d'élections (fond blanc et texte #111 en dur) */
+  :root:not([data-theme="light"]) .watermark {
+    background: var(--glass-strong) !important;
+    color: var(--ink-700) !important;
+  }
+}
