@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--
+  Gabarit des images de partage (1200 × 630) de gabfortin.com, même famille
+  que celles d'avantapres et de montrealaccessible.ca.
+    scripts/og-image.html          → img/og-accueil.jpg (page d'accueil)
+    scripts/og-image.html?page=don → img/og-don.jpg     (page /don)
+  Pour les refaire : servir la racine du site (python3 -m http.server),
+  ouvrir la page dans une fenêtre de 1200 × 630, faire une capture, puis la
+  convertir en JPG (ex. ffmpeg -i capture.png -q:v 2 img/og-don.jpg).
+-->
+<html lang="fr"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+<style>
+  @font-face { font-family: 'Inter'; src: url('../fonts/inter-latin.woff2') format('woff2'); font-weight: 100 900; }
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative;
+    background:
+      radial-gradient(560px 400px at 78% 20%, rgba(74, 222, 128, 0.30), transparent 70%),
+      linear-gradient(120deg, #0a1a12 0%, #0f4a2c 45%, #1a9455 100%);
+    font-family: 'Inter', sans-serif; color: #fff;
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .content { position: absolute; left: 80px; top: 0; bottom: 70px; width: 640px;
+    display: flex; flex-direction: column; justify-content: center; }
+  .eyebrow {
+    align-self: flex-start; display: inline-flex; align-items: center; gap: 10px;
+    font-size: 22px; font-weight: 600; color: #bbf7d0;
+    background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.22);
+    padding: 9px 20px; border-radius: 999px;
+  }
+  .eyebrow::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #4ade80; }
+  h1 {
+    margin: 30px 0 0; font-family: 'Poppins', sans-serif; font-weight: 700;
+    font-size: 70px; line-height: 1.04; letter-spacing: -0.02em;
+  }
+  h1 span { color: #86efac; }
+  p { margin: 24px 0 0; font-size: 29px; font-weight: 500; line-height: 1.35; color: rgba(255,255,255,.88); }
+  .chip {
+    align-self: flex-start; margin-top: 34px; display: inline-flex; align-items: center; gap: 12px;
+    font-size: 24px; font-weight: 700; color: #0f4a2c; background: #fff;
+    padding: 14px 26px; border-radius: 999px;
+    box-shadow: 0 16px 36px -14px rgba(0,0,0,.6);
+  }
+  .chip svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .portrait {
+    position: absolute; right: 80px; top: 75px; width: 384px; height: 480px;
+    border-radius: 32px; overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.25);
+    transform: rotate(2deg);
+  }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block; }
+  .url { position: absolute; left: 80px; bottom: 40px; font-size: 22px; font-weight: 600; color: rgba(255,255,255,.7); }
+  [data-page]:not(.on) { display: none !important; }
+</style></head>
+<body>
+  <div class="grid"></div>
+  <div class="portrait"><img src="../img/Gabriel%20Fortin.png" alt=""></div>
+
+  <div class="content" data-page="accueil">
+    <div class="eyebrow">Plateau-Mont-Royal</div>
+    <h1>Gabriel <span>Fortin</span></h1>
+    <p>Conseiller d'arrondissement, district de Jeanne-Mance. Outils, cartes et analyses pour rendre les données municipales plus accessibles.</p>
+  </div>
+
+  <div class="content" data-page="don">
+    <div class="eyebrow">Campagne de financement</div>
+    <h1>Un don pour continuer à faire avancer le <span>Plateau</span>.</h1>
+    <div class="chip"><svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>Faire un don</div>
+  </div>
+
+  <div class="url">gabfortin.com<span data-page="don">/don</span></div>
+  <script>
+    var page = new URLSearchParams(location.search).get('page') || 'accueil';
+    document.querySelectorAll('[data-page="' + page + '"]').forEach(function (el) { el.classList.add('on'); });
+  </script>
+</body></html>

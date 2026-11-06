@@ -293,6 +293,7 @@ Site en production sur `www.gabfortin.com`.
 - **Performance**: Aucune dépendance externe (sauf les bibliothèques des cartes interactives)
 - **Police**: Inter variable hébergée localement dans `fonts/` (licence SIL OFL, `fonts/OFL.txt`), déclarée en haut de `css/site.css`. Ne pas remettre le lien Google Fonts.
 - **Images**: les balises `<img>` utilisent des fichiers `.webp` redimensionnés à la taille d'affichage (×2 à ×3 pour les écrans Retina). Les originaux PNG/JPG sont conservés pour `og:image`, le JSON-LD et le flux RSS, car certains réseaux sociaux acceptent mal le WebP. Pour une nouvelle image : la convertir en WebP (qualité 85) et garder l'original à côté si elle sert d'aperçu de partage.
+- **Images de partage de l'accueil et de `/don`** : `img/og-accueil.jpg` et `img/og-don.jpg` (1200 × 630, même famille que celles d'avantapres et de montrealaccessible.ca) sont faites à partir du gabarit `scripts/og-image.html` (`?page=don` pour la seconde). Pour les modifier, éditer le gabarit, puis suivre les étapes en commentaire en tête du fichier.
 
 ## Contact & Liens
 
