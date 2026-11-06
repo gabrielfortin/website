@@ -150,17 +150,14 @@ nav {
   z-index: 100;
 }
 
-.nav-logo img {
-  height: 28px;
-  display: block;
-}
-
 .nav-links {
+  margin-left: auto;
   display: flex;
   gap: 1.75rem;
   align-items: center;
 }
 
+.nav-home,
 .nav-links a {
   font-size: 14px;
   color: var(--muted);
@@ -169,6 +166,13 @@ nav {
   transition: color 0.2s ease;
 }
 
+.nav-home {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.nav-home:hover,
+.nav-home[aria-current="page"],
 .nav-links a:hover,
 .nav-links a[aria-current="page"] {
   color: var(--text);
@@ -776,6 +780,7 @@ footer {
     scrollbar-width: none;
   }
 
+  .nav-home,
   .nav-links a {
     font-size: 13px;
     white-space: nowrap;

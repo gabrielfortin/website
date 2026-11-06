@@ -239,7 +239,7 @@ Les icônes d'onglet sont la photo de Gabriel en cercle, générées par `script
 - `favicon-48.png`, `favicon-192.png` : icônes d'onglet et de résultats Google (cercle sur fond transparent)
 - `apple-touch-icon.png` (180 px) : écran d'accueil iOS ; photo carrée pleine, car iOS arrondit les coins lui-même et remplit la transparence en noir
 
-Le logo de la barre de navigation et l'image du flux RSS restent l'ancien logo : `favicon-96.png`, dérivé de `favico.png` (1254 px, 1,4 Mo, plus chargé par les pages). Le script n'y touche pas.
+La barre de navigation n'affiche plus de logo : un lien texte « Accueil » (`.nav-home`, `aria-current="page"` sur l'accueil) est à gauche, les autres liens à droite. L'image du flux RSS reste l'ancien logo : `favicon-96.png`, dérivé de `favico.png` (1254 px, 1,4 Mo, plus chargé par les pages). Le script n'y touche pas.
 
 Chaque page doit inclure, à la fin du `<head>` :
 
@@ -250,30 +250,6 @@ Chaque page doit inclure, à la fin du `<head>` :
 La page `/confidentialite/` décrit ce que le site collecte. **La mettre à jour (et changer la date en bas de page) si on ajoute un outil ou un service externe** : formulaire, infolettre, vidéo intégrée, autre outil de statistiques, etc. Un lien « Confidentialité » figure dans le pied de page de chaque page.
 
 Les cartes interactives ouvertes dans une fenêtre modale sont comptées comme des pages vues distinctes, ce qui permet de voir quelles cartes sont consultées.
-
-## Mise en page des sections de contenu
-
-Les pages `cartes/`, `donnees/` et `articles/` n'ont plus de `<h2 class="section-label">` au-dessus de leur grille/liste (ex. « Cartes Disponibles », « Ensembles de Données », « Articles et plans ») — retiré pour alléger la page. Leur `<section class="section">` principale porte en plus la classe `.section-top-tight` (définie dans `css/site.css`, à côté de `.section`), qui réduit le `padding-top` de `3.5rem` à `2rem` pour compenser l'absence du label. Si un label est réintroduit sur une de ces pages, retirer `.section-top-tight` pour revenir à l'espacement standard.
-
-## Favicon
-
-`favico.png` (1254 px, 1,4 Mo) est l'image source : elle n'est plus chargée par les pages. Les versions légères en sont dérivées :
-
-- `favicon.ico` (16/32/48 px) : à la racine, pour les outils qui le cherchent sans lire le HTML
-- `favicon-48.png`, `favicon-192.png` : icônes d'onglet et de résultats Google
-- `apple-touch-icon.png` (180 px, fond blanc) : écran d'accueil iOS
-- `favicon-96.png` : logo de la barre de navigation et image du flux RSS
-
-Chaque page doit inclure dans le `<head>` (adapter le préfixe `../` selon la profondeur) :
-
-```html
-<link rel="icon" href="../favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="48x48" href="../favicon-48.png">
-<link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png">
-<link rel="apple-touch-icon" href="../apple-touch-icon.png">
-```
-
-Si la photo change, remplacer `img/Gabriel Fortin.png`, ajuster au besoin le recadrage, puis lancer `python3 scripts/favicon.py` depuis la racine (nécessite Pillow). Les navigateurs gardent longtemps l'ancienne icône en cache : vider le cache pour vérifier.
 
 ## Identité et désambiguïsation (homonymes)
 
