@@ -233,6 +233,30 @@ Les pages `cartes/`, `donnees/` et `articles/` n'ont plus de `<h2 class="section
 
 ## Favicon
 
+Les icônes d'onglet sont la photo de Gabriel en cercle, générées par `scripts/favicon.py` à partir de `img/Gabriel Fortin.png` (recadrage centré sur le visage, réglable en tête du script) :
+
+- `favicon.ico` (16/32/48 px) : à la racine, pour les outils qui le cherchent sans lire le HTML
+- `favicon-48.png`, `favicon-192.png` : icônes d'onglet et de résultats Google (cercle sur fond transparent)
+- `apple-touch-icon.png` (180 px) : écran d'accueil iOS ; photo carrée pleine, car iOS arrondit les coins lui-même et remplit la transparence en noir
+
+Le logo de la barre de navigation et l'image du flux RSS restent l'ancien logo : `favicon-96.png`, dérivé de `favico.png` (1254 px, 1,4 Mo, plus chargé par les pages). Le script n'y touche pas.
+
+Chaque page doit inclure, à la fin du `<head>` :
+
+```html
+<script data-goatcounter="https://gabfortin.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+```
+
+La page `/confidentialite/` décrit ce que le site collecte. **La mettre à jour (et changer la date en bas de page) si on ajoute un outil ou un service externe** : formulaire, infolettre, vidéo intégrée, autre outil de statistiques, etc. Un lien « Confidentialité » figure dans le pied de page de chaque page.
+
+Les cartes interactives ouvertes dans une fenêtre modale sont comptées comme des pages vues distinctes, ce qui permet de voir quelles cartes sont consultées.
+
+## Mise en page des sections de contenu
+
+Les pages `cartes/`, `donnees/` et `articles/` n'ont plus de `<h2 class="section-label">` au-dessus de leur grille/liste (ex. « Cartes Disponibles », « Ensembles de Données », « Articles et plans ») — retiré pour alléger la page. Leur `<section class="section">` principale porte en plus la classe `.section-top-tight` (définie dans `css/site.css`, à côté de `.section`), qui réduit le `padding-top` de `3.5rem` à `2rem` pour compenser l'absence du label. Si un label est réintroduit sur une de ces pages, retirer `.section-top-tight` pour revenir à l'espacement standard.
+
+## Favicon
+
 `favico.png` (1254 px, 1,4 Mo) est l'image source : elle n'est plus chargée par les pages. Les versions légères en sont dérivées :
 
 - `favicon.ico` (16/32/48 px) : à la racine, pour les outils qui le cherchent sans lire le HTML
@@ -249,7 +273,7 @@ Chaque page doit inclure dans le `<head>` (adapter le préfixe `../` selon la pr
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 ```
 
-Si le logo change, remplacer `favico.png` puis régénérer les dérivés (redimensionnement Lanczos avec Pillow).
+Si la photo change, remplacer `img/Gabriel Fortin.png`, ajuster au besoin le recadrage, puis lancer `python3 scripts/favicon.py` depuis la racine (nécessite Pillow). Les navigateurs gardent longtemps l'ancienne icône en cache : vider le cache pour vérifier.
 
 ## Identité et désambiguïsation (homonymes)
 
