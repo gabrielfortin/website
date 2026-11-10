@@ -50,7 +50,7 @@ Vue d'ensemble : [README.md](README.md) ; procédures : [CONTENU.md](CONTENU.md)
 
 ### Accueil (`/index.html`)
 Page principale avec présentation et navigation (section "Explorer") vers:
-- **Compteurs Vélo** (featured) → https://compteurvelo.com
+- **Compteurs Vélo Montréal** (featured) → https://compteurvelo.com
 - **Avant / Après** (featured, badge "Nouveau") → https://avant-apres.ca — comparaison avant/après des améliorations de l'espace public réalisées par Projet Montréal
 - **Blogue** → Analyses et propositions sur la mobilité, le transport collectif et l'espace public
 - **Cartes Interactives** → Élections 2025, réseau artériel, modes rapides et fréquents
@@ -77,7 +77,7 @@ Pour ajouter une carte « à venir » (grisée, non cliquable) : utiliser un `<d
 **Mode sombre des cartes verre** : `cartes/reseau-arteriel/carte.html`, `cartes/modes-rapides-et-frequents/map.html` et les deux cartes `cartes/elections-2025/Par*.html` chargent `cartes/carte-sombre.css` **après** leur `<style>`. Cette feuille ne contient que les règles sombres (jetons du dashboard verre, tuiles inversées, textes de marque, popups) ; le mode clair reste dans chaque page. Une nouvelle carte de `cartes/` doit la relier aussi, et toute couleur claire écrite en dur dans une carte doit y être surchargée. Recette : `~/Developer/MAP-DESIGN-SYSTEM.md`, section « Mode sombre ».
 #### Données (`/donnees/`)
 
-1. **Compteurs Vélo** → https://compteurvelo.com
+1. **Compteurs Vélo Montréal** → https://compteurvelo.com
 2. **Mobilité Montréal (ARTM)** → https://artm.gabfortin.com
 3. **Déchets Montréal** → https://dechets.gabfortin.com
 4. **Résultats élections municipales Montréal 2025** → `./elections-2025/resultats.html`
@@ -118,7 +118,7 @@ Page pour faire un don.
 
 ### Applications (`/applications/`)
 
-- **Compteurs Vélo** → https://compteurvelo.com
+- **Compteurs Vélo Montréal** → https://compteurvelo.com
 - **Pistes cyclables Plateau** → https://pistes.gabfortin.com
 - **Stationnement Plateau** → https://parking.gabfortin.com
 - **Déchets Montréal** → https://dechets.gabfortin.com
