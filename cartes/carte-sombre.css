@@ -43,12 +43,14 @@
   :root:not([data-theme="light"]) .gf-info-panel strong,
   :root:not([data-theme="light"]) .gf-pop-eyebrow,
   :root:not([data-theme="light"]) .gf-detail-eyebrow,
+  :root:not([data-theme="light"]) .gf-legend-all,
   :root:not([data-theme="light"]) .watermark a { color: var(--brand-ink); }
   :root:not([data-theme="light"]) .leaflet-popup-content table th,
   :root:not([data-theme="light"]) .foliumtooltip th { color: var(--brand-ink) !important; }
 
   /* Survols et fonds blancs en dur */
-  :root:not([data-theme="light"]) .gf-sidebar-item:hover { background: var(--surface-hover); }
+  :root:not([data-theme="light"]) .gf-sidebar-item:hover,
+  :root:not([data-theme="light"]) .gf-legend-row:hover { background: var(--surface-hover); }
   :root:not([data-theme="light"]) .gf-sidebar-toggle:hover { background: var(--glass-strong); }
   :root:not([data-theme="light"]) .gf-info-overlay { background: rgba(0, 0, 0, 0.5); }
   :root:not([data-theme="light"]) .gf-sidebar-scrim { background: rgba(0, 0, 0, 0.45); }

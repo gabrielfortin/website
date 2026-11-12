@@ -262,8 +262,21 @@
   .gf-legend { padding: 10px 14px 18px; }
   .gf-legend-row {
     display: flex; align-items: center; gap: 10px; padding: 6px 4px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-sm); cursor: pointer;
+    transition: background .18s var(--ease), opacity .18s var(--ease);
   }
+  .gf-legend-row:hover { background: rgba(255,255,255,.55); }
+  .gf-legend-row input[type="checkbox"] {
+    width: 15px; height: 15px; margin: 0; accent-color: var(--brand-dark); cursor: pointer; flex-shrink: 0;
+  }
+  .gf-legend-row:has(input:not(:checked)) .gf-legend-dot,
+  .gf-legend-row:has(input:not(:checked)) .gf-legend-label { opacity: .4; }
+  .gf-legend-row:has(input:focus-visible) { outline: 2px solid var(--brand); outline-offset: 1px; }
+  .gf-legend-all {
+    font: inherit; font-size: .72rem; font-weight: 600; color: var(--brand-dark);
+    background: none; border: none; padding: 2px 4px; cursor: pointer; border-radius: 6px;
+  }
+  .gf-legend-all:hover { text-decoration: underline; }
   .gf-legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
   .gf-legend-label { font-size: .82rem; color: var(--ink-900); font-weight: 500; }
   .gf-legend-count { padding: 0 14px 8px; font-size: .74rem; color: var(--ink-500); }
@@ -445,7 +458,7 @@
 
     <div class="gf-sidebar-divider"></div>
     <div class="gf-legend">
-      <div class="gf-sidebar-header" style="padding: 0 0 8px;"><h2>Légende</h2></div>
+      <div class="gf-sidebar-header" style="padding: 0 0 8px;"><h2>Légende</h2><button type="button" class="gf-legend-all" id="gfLegendAll">Tout masquer</button></div>
       <div id="gfLegendBody"></div>
     </div>
     <p class="gf-legend-count" id="gfSegmentCount"></p>
@@ -516,15 +529,19 @@
     function classeColor(c) { return CLASSE_COLORS[c] || "#999999"; }
     function classeName(c) { return CLASSE_NAMES[c] || ("Classe " + c); }
 
-    // ---------- Légende (statique, mêmes catégories partout) ----------
+    // Types de voie masqués par l'utilisateur (cases décochées dans la légende)
+    const hiddenClasses = new Set();
+
+    // ---------- Légende (statique, mêmes catégories partout ; chaque type se coche ou se décoche) ----------
     (function renderLegend() {
       const body = document.getElementById('gfLegendBody');
       const list = document.createElement('div');
       list.className = 'gf-sidebar-list';
       CLASSE_ORDER.forEach(c => {
-        const row = document.createElement('div');
+        const row = document.createElement('label');
         row.className = 'gf-legend-row';
-        row.innerHTML = '<span class="gf-legend-dot" style="background:' + classeColor(c) + '"></span><span class="gf-legend-label">' + classeName(c) + '</span>';
+        row.innerHTML = '<input type="checkbox" checked data-classe="' + c + '">' +
+          '<span class="gf-legend-dot" style="background:' + classeColor(c) + '"></span><span class="gf-legend-label">' + classeName(c) + '</span>';
         list.appendChild(row);
       });
       body.appendChild(list);
@@ -556,6 +573,7 @@
       rows.forEach(row => {
         const [coords, classe, artere, nom] = row;
         if (!showAllStreets && artere !== 1) return;
+        if (hiddenClasses.has(classe)) return;
         shown++;
         const latlngs = coords.map(c => [c[1], c[0]]);
         const base = styleFor(artere);
@@ -639,6 +657,28 @@
 
     document.getElementById('allStreetsToggle').addEventListener('change', function() {
       showAllStreets = this.checked;
+      if (currentData) renderStreets(currentData);
+    });
+
+    const legendBoxes = Array.from(document.querySelectorAll('#gfLegendBody input[data-classe]'));
+    const legendAllBtn = document.getElementById('gfLegendAll');
+    function syncLegendAll() {
+      legendAllBtn.textContent = hiddenClasses.size === legendBoxes.length ? 'Tout afficher' : 'Tout masquer';
+    }
+    legendBoxes.forEach(box => box.addEventListener('change', function() {
+      const c = Number(this.dataset.classe);
+      if (this.checked) hiddenClasses.delete(c); else hiddenClasses.add(c);
+      syncLegendAll();
+      if (currentData) renderStreets(currentData);
+    }));
+    legendAllBtn.addEventListener('click', function() {
+      const showAll = hiddenClasses.size === legendBoxes.length;
+      legendBoxes.forEach(box => {
+        box.checked = showAll;
+        const c = Number(box.dataset.classe);
+        if (showAll) hiddenClasses.delete(c); else hiddenClasses.add(c);
+      });
+      syncLegendAll();
       if (currentData) renderStreets(currentData);
     });
 
