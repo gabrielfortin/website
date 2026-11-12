@@ -610,7 +610,11 @@
     })();
 
     // ---------- Carte ----------
-    const map = L.map('map', { preferCanvas: true });
+    const map = L.map('map', {
+      preferCanvas: true,
+      // Zone de clic élargie autour des rues (en px de chaque côté du trait)
+      renderer: L.canvas({ tolerance: L.Browser.mobile ? 12 : 8 })
+    });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
