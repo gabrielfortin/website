@@ -472,12 +472,12 @@
   /* ---------- Propre à cette carte ---------- */
   :root {
     --su-rouge: #dc2626; --su-vert: #16a34a; --su-orange: #f59e0b; --su-gris: #94a3b8;
-    --su-superieur: #1e293b; --su-collectrice: #64748b; --su-autre: #a8a29e;
+    --su-superieur: #1e293b; --su-collectrice: #64748b; --su-autre: #a8a29e; --su-pieton: #7c3aed;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --su-rouge: #f87171; --su-vert: #4ade80; --su-orange: #fbbf24; --su-gris: #64748b;
-      --su-superieur: #e2e8f0; --su-collectrice: #94a3b8; --su-autre: #78716c;
+      --su-superieur: #e2e8f0; --su-collectrice: #94a3b8; --su-autre: #78716c; --su-pieton: #c4b5fd;
     }
   }
   .su-big { display: flex; align-items: baseline; gap: 10px; margin: 0 4px 6px; }
@@ -552,7 +552,8 @@
         <li><em>Réseau supérieur</em>&nbsp;: collectrices, artères et autoroutes (classes de la Géobase, les mêmes que sur la carte du réseau artériel). Seules les artères (et autoroutes, et les collectrices cochées) comptent comme entrée ou sortie d'un parcours traversant&nbsp;; arriver sur une autre collectrice termine le parcours sans le rendre traversant.</li>
         <li><em>Cellule</em>&nbsp;: îlot délimité par les artères seulement. Les collectrices qu'il contient en font partie, mais un parcours qui arrive sur une collectrice s'y arrête. Dans le panneau, on peut compter certaines collectrices comme des artères (par exemple la rue Rachel).</li>
         <li>Une artère est identifiée par son nom (l'avenue du Mont-Royal Est et Ouest comptent comme la même). Entrer et ressortir par la même artère n'est pas un parcours traversant.</li>
-        <li>Les voies piétonnières, privées ou projetées ne servent pas de passage.</li>
+        <li>Les voies piétonnières, privées ou projetées ne servent pas de passage. Quelques rues locales qui sont en pratique des ruelles (Généreux, De Varennes, Simard, Barrette, La Mennais, Latreille, De Courville, Bureau) sont traitées de la même façon par défaut&nbsp;; on peut les remettre dans le panneau.</li>
+        <li><em>Scénario « Mont-Royal piétonne »</em>&nbsp;: de Saint-Laurent à De Lorimier, l'avenue est retirée du réseau routier (on ne peut ni y rouler ni y tourner, et un parcours ne s'y arrête plus), mais les rues qui la croisent restent reliées au carrefour&nbsp;: on la traverse du nord au sud. Un carrefour avec une artère reste une limite.</li>
         <li>Le calcul couvre tout le réseau de l'île, pour que les cellules à la limite de l'arrondissement soient complètes. Seules les rues du Plateau sont affichées.</li>
       </ul>
       <h3>Limites</h3>
@@ -604,6 +605,21 @@
     <p class="gf-sidebar-note">Rouge&nbsp;: on peut entrer par une artère et ressortir par une autre artère en ne roulant que sur des rues locales. Ressortir sur une collectrice (par exemple une rue tête-bêche qui oblige à y tourner) est acceptable.</p>
 
     <div class="gf-sidebar-divider"></div>
+    <div class="gf-sidebar-header"><h2>Scénario</h2></div>
+    <div class="gf-sidebar-list">
+      <label class="gf-sidebar-item">
+        <input type="checkbox" id="mrPietonToggle">
+        <span class="gf-sidebar-label">Avenue du Mont-Royal piétonne</span>
+      </label>
+    </div>
+    <p class="gf-sidebar-note">De Saint-Laurent à De Lorimier, l'avenue est fermée aux autos (on ne peut ni y rouler ni y tourner), mais on peut encore la traverser du nord au sud aux carrefours.</p>
+
+    <div class="gf-sidebar-divider"></div>
+    <div class="gf-sidebar-header"><h2>Rues locales comptées comme ruelles</h2></div>
+    <p class="gf-sidebar-note">Cochée, la rue est traitée comme une ruelle&nbsp;: elle ne sert pas de passage dans le calcul et n'est pas comptée.</p>
+    <div class="gf-sidebar-list" id="gfRuelles"></div>
+
+    <div class="gf-sidebar-divider"></div>
     <div class="gf-sidebar-header"><h2>Collectrices comptées comme artères</h2></div>
     <p class="gf-sidebar-note">Les artères délimitent les cellules. Une collectrice cochée est traitée comme une artère&nbsp;: elle délimite les cellules et compte comme entrée ou sortie d'un parcours traversant. Le calcul se refait aussitôt.</p>
     <div class="gf-sidebar-list" id="gfCollectrices"></div>
@@ -643,7 +659,8 @@
       UNIQUE: 3,      // 1 = sens unique (SENS_CIR ≠ 0)
       NOM: 4,         // index dans noms (TYP_VOIE + LIE_VOIE + NOM_VOIE), -1 sans nom
       A: 5, B: 6,     // nœuds de départ et d'arrivée (dans le sens de la circulation)
-      PLATEAU: 7      // 1 = tronçon du Plateau (affiché et compté)
+      PLATEAU: 7,     // 1 = tronçon du Plateau (affiché et compté)
+      PIETON: 8       // 1 = avenue du Mont-Royal entre Saint-Laurent et De Lorimier (scénario piéton)
     };
     // Résultats du calcul, ajoutés à chaque rangée par analyser() :
     //   r._s statut (0 sens unique non traversant, 1 sens unique traversant, 2 double sens non
@@ -662,14 +679,23 @@
       gris: { label: "Double sens, sans parcours traversant", color: cssVar('--su-gris'), weight: 2, opacity: 0.8 },
       principale: { label: "Artère principale", color: cssVar('--su-superieur'), weight: 5, opacity: 0.85 },
       secondaire: { label: "Artère secondaire", color: cssVar('--su-superieur'), weight: 4, opacity: 0.75 },
+      ruelle: { label: "Rue locale comptée comme ruelle", color: cssVar('--su-autre'), weight: 2.4, opacity: 0.9, dashArray: '2 4' },
+      pieton: { label: "Mont-Royal piétonne (scénario)", color: cssVar('--su-pieton'), weight: 5, opacity: 0.9, dashArray: '1 7' },
       promue: { label: "Collectrice comptée comme artère", color: cssVar('--su-superieur'), weight: 4, opacity: 0.75, dashArray: '10 4' },
       collectrice: { label: "Collectrice", color: cssVar('--su-collectrice'), weight: 3.2, opacity: 0.8 },
       autre: { label: "Autres voies (piétonnières, privées…)", color: cssVar('--su-autre'), weight: 1.4, opacity: 0.7, dashArray: '2 4' }
     };
-    const LEGEND_ORDER = ['rouge', 'vert', 'orange', 'gris', 'principale', 'secondaire', 'promue', 'collectrice', 'autre'];
+    const LEGEND_ORDER = ['rouge', 'vert', 'orange', 'gris', 'principale', 'secondaire', 'promue', 'collectrice', 'pieton', 'ruelle', 'autre'];
 
     // commeArteres : collectrices (par nom) traitées comme des artères ; aucune par défaut (choix de Gabriel)
-    const state = { hidden: new Set(), focusCell: null, commeArteres: new Set() };
+    // mrPieton : scénario « Mont-Royal piétonne » (tronçons retirés du réseau, traversée nord-sud permise)
+    // ruelles : rues locales traitées comme des ruelles (retirées du calcul) ; par défaut, choix de Gabriel
+    // (mêmes noms que DEFAUT_RUELLES dans le script)
+    const state = { hidden: new Set(), focusCell: null, commeArteres: new Set(), mrPieton: false,
+                    ruelles: new Set(['Rue Généreux', 'Rue De Varennes', 'Rue Simard', 'Rue Barrette',
+                                       'Rue La Mennais', 'Rue Latreille', 'Rue De Courville', 'Avenue Bureau']) };
+    const estPietonne = r => state.mrPieton && r[T.PIETON] === 1;
+    const estRuelle = r => r[T.CLASSE] === 0 && state.ruelles.has(nomDe(r));
     let data = null, noms = [];
 
     function esc(s) {
@@ -686,6 +712,8 @@
     // Catégorie d'un tronçon (couleur de la légende)
     function catOf(r) {
       const c = r[T.CLASSE], s = r._s;
+      if (estPietonne(r)) return 'pieton';
+      if (estRuelle(r)) return 'ruelle';
       if (c === 0) return s === 1 ? 'rouge' : s === 0 ? 'vert' : s === 3 ? 'orange' : 'gris';
       if (c === 7 || c === 8) return 'principale';
       if (c === 6) return 'secondaire';
@@ -710,7 +738,10 @@
       return vus;
     }
     function analyser() {
-      const rows = data.troncons;
+      // Scénario Mont-Royal piétonne : ses tronçons sont retirés du réseau (ni rue, ni porte) ; les rues qui la
+      // croisent restent reliées au carrefour, donc on la traverse du nord au sud
+      // Les rues locales comptées comme ruelles sont retirées aussi (comme les autres voies qui ne servent pas de passage)
+      const rows = data.troncons.filter(r => !estPietonne(r) && !estRuelle(r));
       // Portes (nœuds touchés par une collectrice ou une artère) et artères qui touchent chaque nœud
       const portes = new Set(), arteresAu = new Map();
       for (const r of rows) {
@@ -740,7 +771,7 @@
         if (!groupes.has(g)) groupes.set(g, []);
         groupes.get(g).push(r);
       }
-      for (const r of rows) { r._s = -1; r._c = -1; r._p = []; r._n = 0; }
+      for (const r of data.troncons) { r._s = -1; r._c = -1; r._p = []; r._n = 0; }
       let num = 0;
       for (const tous of groupes.values()) {
         const cell = num++;
@@ -801,14 +832,14 @@
       lines.length = 0;
       layer = L.layerGroup();
       // Ordre de dessin : contexte d'abord, rouges et verts au-dessus
-      const order = { autre: 0, gris: 1, collectrice: 2, promue: 3, secondaire: 3, principale: 4, orange: 5, vert: 6, rouge: 7 };
+      const order = { autre: 0, ruelle: 0, gris: 1, pieton: 2, collectrice: 2, promue: 3, secondaire: 3, principale: 4, orange: 5, vert: 6, rouge: 7 };
       const rows = data.troncons.filter(r => r[T.PLATEAU]).sort((a, b) => order[catOf(a)] - order[catOf(b)]);
       rows.forEach(r => {
         const cat = catOf(r);
         if (state.hidden.has(cat)) return;
         const st = CATS[cat];
         // Cellule en évidence : les autres rues pâlissent, le réseau supérieur reste visible
-        const superieur = ['principale', 'secondaire', 'promue', 'collectrice'].includes(cat);
+        const superieur = ['principale', 'secondaire', 'promue', 'collectrice', 'pieton'].includes(cat);
         const dans = r._c !== -1 && r._c === state.focusCell;   // collectrices de la cellule comprises
         const dim = state.focusCell !== null && !dans && !superieur;
         const line = L.polyline(r[T.COORDS].map(c => [c[1], c[0]]), {
@@ -880,7 +911,7 @@
       let html = '<span class="gf-pop-drag" aria-hidden="true"></span><div class="gf-pop-eyebrow" style="color:' + CATS[cat].color + '">' + esc(CATS[cat].label) + '</div>' +
         '<h3 class="gf-pop-name">' + esc(nom) + '</h3>';
       if (s === -1) {
-        html += '<p class="gf-pop-note">' + (c === 5 && !estArtere(r) ? 'Collectrice : elle fait partie de sa cellule, mais un parcours qui y arrive s\'arrête (c\'est une sortie vers le réseau supérieur).' : c === 5 ? 'Collectrice comptée comme artère (réglage du panneau) : elle délimite les cellules et compte comme entrée ou sortie d\'un parcours traversant.' : c >= 6 && c <= 8 ? 'Artère : elle délimite les cellules.' : 'Voie qui ne sert pas de passage dans l\'analyse.') + '</p>';
+        html += '<p class="gf-pop-note">' + (estRuelle(r) ? 'Rue locale comptée comme une ruelle (réglage du panneau) : elle ne sert pas de passage dans le calcul et n\'est pas comptée.' : estPietonne(r) ? 'Scénario piéton : ce tronçon est fermé aux autos. On peut seulement le traverser du nord au sud aux carrefours.' : c === 5 && !estArtere(r) ? 'Collectrice : elle fait partie de sa cellule, mais un parcours qui y arrive s\'arrête (c\'est une sortie vers le réseau supérieur).' : c === 5 ? 'Collectrice comptée comme artère (réglage du panneau) : elle délimite les cellules et compte comme entrée ou sortie d\'un parcours traversant.' : c >= 6 && c <= 8 ? 'Artère : elle délimite les cellules.' : 'Voie qui ne sert pas de passage dans l\'analyse.') + '</p>';
       } else {
         const paires = r._p, total = r._n;
         if (paires.length) {
@@ -963,7 +994,7 @@
       const total = cells.size, trav = [...cells.values()].filter(c => c.trav).length, sans = total - trav;
       const cnt = { rouge: 0, vert: 0, orange: 0, gris: 0 }, km = { rouge: 0, vert: 0, orange: 0, gris: 0 };
       for (const r of data.troncons) {
-        if (r[T.CLASSE] !== 0 || !r[T.PLATEAU]) continue;
+        if (r[T.CLASSE] !== 0 || !r[T.PLATEAU] || r._s === -1) continue;   // ruelles exclues
         const k = catOf(r); cnt[k]++; km[k] += r._km;
       }
       const uniques = cnt.rouge + cnt.vert;
@@ -1026,6 +1057,26 @@
         box.appendChild(row);
       });
     }
+    function renderRuelles() {
+      const box = document.getElementById('gfRuelles');
+      [...state.ruelles].sort((a, b) => a.localeCompare(b, 'fr')).forEach(nom => {
+        const row = document.createElement('label');
+        row.className = 'gf-sidebar-item';
+        row.innerHTML = '<input type="checkbox" checked><span class="gf-sidebar-label">' + esc(nom) + '</span>';
+        row.querySelector('input').addEventListener('change', function () {
+          if (this.checked) state.ruelles.add(nom); else state.ruelles.delete(nom);
+          map.closePopup(); state.focusCell = null;
+          recalculer();
+        });
+        box.appendChild(row);
+      });
+    }
+
+    document.getElementById('mrPietonToggle').addEventListener('change', function () {
+      state.mrPieton = this.checked;
+      map.closePopup(); state.focusCell = null;
+      recalculer();
+    });
     function recalculer() {
       analyser(); render(); renderStats();
     }
@@ -1038,6 +1089,7 @@
         data = json; noms = json.noms;
         data.troncons.forEach(r => { r._km = lengthKm(r[T.COORDS]); });
         renderCollectrices();
+        renderRuelles();
         recalculer();
         if (layer) {
           let s = 90, w = 180, n = -90, e = -180;

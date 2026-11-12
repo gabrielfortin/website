@@ -71,6 +71,26 @@ le nord ; rue Saint-Urbain : -1, vers le sud).
    1 sens unique traversant (rouge), 2 double sens sans parcours traversant,
    3 double sens traversant (orange pointillé).
 
+7. **Rues locales comptées comme ruelles** (liste du panneau, cochées par
+   défaut, choix de Gabriel) : rue Généreux, rue De Varennes, rue Simard,
+   rue Barrette, rue La Mennais, rue Latreille, rue De Courville, avenue
+   Bureau. Ce sont des rues locales (CLASSE 0) dans la Géobase, mais
+   des ruelles en pratique : retirées du calcul comme les voies qui ne
+   servent pas de passage, et non comptées dans les totaux. Les décocher les
+   remet dans le calcul. Le script s'arrête si un de ces noms n'existe plus
+   au Plateau.
+8. **Scénario « Mont-Royal piétonne »** (case du panneau, décochée par
+   défaut) : les 32 tronçons de l'avenue du Mont-Royal entre le boulevard
+   Saint-Laurent et l'avenue De Lorimier (champ `pieton` de l'export) sont
+   retirés du réseau. On ne peut plus y rouler ni y tourner, et ce ne sont
+   plus des portes : les rues qui la croisent restent reliées au carrefour,
+   donc on la traverse du nord au sud. Un carrefour avec une artère (Saint-
+   Denis, Papineau…) reste une porte. Repérage dans
+   `marquer_mont_royal_pieton()` : milieu du tronçon projeté entre les
+   carrefours Mont-Royal/Saint-Laurent et Mont-Royal/De Lorimier, à moins de
+   40 m de l'axe. Prioritaire sur la case « Avenue du Mont-Royal » des
+   collectrices comptées comme artères.
+
 Indicateur : part des cellules (qui ont au moins une rue locale au Plateau)
 dont aucune rue locale du Plateau n'est de statut 1 ou 3.
 
@@ -90,10 +110,19 @@ un parcours d'artère à artère par des rues locales.
 
 | Réglage | Cellules (sans parcours traversant) | Sens uniques rouges / verts | Double sens traversants / non |
 |---|---|---|---|
-| Aucune collectrice cochée (défaut, `resume.json`) | 64 (34, 53 %) | 286 / 314 | 104 / 97 |
-| Rachel cochée | 75 (33, 44 %) | 382 / 218 | 138 / 63 |
+| **Défaut** : aucune collectrice cochée, 8 ruelles (`resume.json`) | 65 (35, 54 %) | 258 / 337 | 86 / 74 |
+| Défaut + Mont-Royal piétonne (`resume.json`, `mont_royal_pieton`) | 65 (35, 54 %) | 297 / 298 | 89 / 71 |
+| Aucune collectrice, aucune ruelle | 64 (34, 53 %) | 286 / 314 | 104 / 97 |
+| Rachel cochée, aucune ruelle | 75 (33, 44 %) | 382 / 218 | 138 / 63 |
 
-Les deux ont été vérifiés identiques entre le script Python et le navigateur.
+Effet du scénario : les rues locales qui se terminaient sur Mont-Royal (une
+sortie acceptable) continuent de l'autre côté et peuvent mener à une autre
+artère, d'où plus de rouge. Les cellules ne changent pas : Mont-Royal, une
+collectrice, n'en délimitait aucune.
+
+Vérifiés identiques entre le script Python et le navigateur (le 12 novembre
+2026 ; les deux dernières lignes avant l'ajout des ruelles). Retirer les
+ruelles peut couper une cellule en deux : 65 cellules au lieu de 64.
 
 ## Export (`data/reseau.json`)
 
@@ -106,7 +135,7 @@ sur toute l'île, et s'arrête sinon.
 
 ```json
 { "noms": ["Rue de Bordeaux", ...],
-  "troncons": [[ID_TRC, [[lng, lat], ...], CLASSE, sens_unique, nom, noeud_A, noeud_B, plateau], ...] }
+  "troncons": [[ID_TRC, [[lng, lat], ...], CLASSE, sens_unique, nom, noeud_A, noeud_B, plateau, pieton], ...] }
 ```
 
 Constante `T` en tête du script de `index.html`. Le tracé et les nœuds A → B
@@ -148,5 +177,5 @@ script s'arrête sur une géométrie ou un `SENS_CIR` inattendus, ou si l'export
 ne suffit pas au calcul. Comparer `resume.json` avec ce que la page affiche
 (réglage par défaut), mettre à jour le tableau ci-dessus, puis refaire
 `apercu.png`. Le réglage par défaut est écrit à deux endroits :
-`DEFAUT_COMME_ARTERES` dans le script et `state.commeArteres` dans
-`index.html`.
+`DEFAUT_COMME_ARTERES` et `DEFAUT_RUELLES` dans le script, `state.commeArteres`
+et `state.ruelles` dans `index.html`.

@@ -1,5 +1,15 @@
 {
  "donneesMisesAJour": "2026-11-12",
  "versionSource": "2026-11-04",
- "collectricesCommeArteres": []
+ "collectricesCommeArteres": [],
+ "ruelles": [
+  "Avenue Bureau",
+  "Rue Barrette",
+  "Rue De Courville",
+  "Rue De Varennes",
+  "Rue Généreux",
+  "Rue La Mennais",
+  "Rue Latreille",
+  "Rue Simard"
+ ]
 }

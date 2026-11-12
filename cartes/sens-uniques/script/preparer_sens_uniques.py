@@ -42,6 +42,17 @@ Règle (choix de Gabriel, détails dans ../NOTES.md) :
     1 sens unique traversant (rouge), 2 double sens sans parcours
     traversant, 3 double sens traversant.
 
+Rues locales traitées comme des ruelles (DEFAUT_RUELLES, décochables dans la
+  page) : retirées du calcul comme les autres voies qui ne servent pas de
+  passage, et non comptées.
+
+Scénario « Mont-Royal piétonne » (case dans la page, décochée par défaut) :
+  les tronçons de l'avenue du Mont-Royal entre le boulevard Saint-Laurent et
+  l'avenue De Lorimier (champ `pieton` de l'export) sont retirés du réseau.
+  On ne peut plus y rouler ni y tourner, et ce ne sont plus des portes ; les
+  rues qui la croisent restent reliées au carrefour (on la traverse du nord au
+  sud). Un carrefour avec une artère reste une porte.
+
 Export : les cellules délimitées par les artères de CLASSE 6 à 8 seulement
 sont les plus grandes possibles (cocher une collectrice ne peut que les
 découper). On exporte donc les tronçons du Plateau, ceux de ces cellules qui
@@ -73,7 +84,12 @@ LOCALE = 0
 COLLECTRICE = 5
 ARTERES = {6, 7, 8}
 PORTES = {5, 6, 7, 8}
-DEFAUT_COMME_ARTERES = set()   # collectrices traitées comme des artères par défaut (aucune)
+MONT_ROYAL = ("avenue", "Mont-Royal")
+MONT_ROYAL_BOUTS = ("Saint-Laurent", "De Lorimier")   # rues qui bornent le tronçon piéton
+DEFAUT_COMME_ARTERES = set()
+# Rues locales que Gabriel considère comme des ruelles (par défaut, retirées du calcul)
+DEFAUT_RUELLES = {"Rue Généreux", "Rue De Varennes", "Rue Simard", "Rue Barrette",
+                  "Rue La Mennais", "Rue Latreille", "Rue De Courville", "Avenue Bureau"}   # collectrices traitées comme des artères par défaut (aucune)
 MAX_PAIRES = 6
 ARRONDISSEMENT = "le-plateau-mont-royal"
 
@@ -228,6 +244,38 @@ def totaux(troncons, resultat):
     }
 
 
+def marquer_mont_royal_pieton(troncons):
+    """Marque t["pieton"] pour les tronçons de l'avenue du Mont-Royal entre Saint-Laurent et
+    De Lorimier : milieu du tronçon projeté entre les deux carrefours, à moins de 40 m de l'axe."""
+    sur_mr = [t for t in troncons if (t["typ"], t["nom"]) == MONT_ROYAL]
+    noeuds_mr = {n for t in sur_mr for n in (t["a"], t["b"])}
+    bouts = []
+    for nom_bout in MONT_ROYAL_BOUTS:
+        trouves = {n for t in troncons if t["nom"] == nom_bout for n in (t["a"], t["b"]) if n in noeuds_mr}
+        if len(trouves) != 1:
+            sys.exit(f"Carrefour Mont-Royal / {nom_bout} introuvable ou ambigu : {trouves}")
+        bouts.append(trouves.pop())
+    (x0, y0), (x1, y1) = bouts
+    kx = 111320 * 0.70   # mètres par degré de longitude vers 45,5° de latitude (cos ≈ 0,70)
+    ky = 110574
+    ax, ay = (x1 - x0) * kx, (y1 - y0) * ky
+    l2 = ax * ax + ay * ay
+    for t in troncons:
+        t["pieton"] = False
+    for t in sur_mr:
+        mx = (t["coords"][0][0] + t["coords"][-1][0]) / 2
+        my = (t["coords"][0][1] + t["coords"][-1][1]) / 2
+        px, py = (mx - x0) * kx, (my - y0) * ky
+        u = (px * ax + py * ay) / l2
+        dist = abs(px * ay - py * ax) / l2 ** 0.5
+        if 0 <= u <= 1 and dist < 40:
+            t["pieton"] = True
+    n = sum(t["pieton"] for t in troncons)
+    if not n:
+        sys.exit("Aucun tronçon de Mont-Royal marqué piéton")
+    return n
+
+
 def main():
     if len(sys.argv) != 3:
         sys.exit(__doc__)
@@ -245,13 +293,13 @@ def main():
         arrs = {slugify(a) for a in (p["ARR_GCH"], p["ARR_DRT"]) if a and a != "N/A"}
         troncons.append({
             "id": p["ID_TRC"], "classe": p["CLASSE"], "sens": p["SENS_CIR"],
-            "voie": nom_voie(p), "coords": coords,
+            "voie": nom_voie(p), "coords": coords, "typ": p["TYP_VOIE"], "nom": p["NOM_VOIE"],
             "a": cle_noeud(coords[0]), "b": cle_noeud(coords[-1]),
             "plateau": ARRONDISSEMENT in arrs,
         })
     if not any(t["plateau"] for t in troncons):
         sys.exit(f"Aucun tronçon pour {ARRONDISSEMENT} : vérifier ARR_GCH / ARR_DRT")
-    print(f"{len(troncons)} tronçons", file=sys.stderr)
+    print(f"{len(troncons)} tronçons ; {marquer_mont_royal_pieton(troncons)} tronçons de Mont-Royal piétonne", file=sys.stderr)
 
     # Tronçons à exporter
     garder = {i for i, t in enumerate(troncons) if t["plateau"]}
@@ -264,11 +312,23 @@ def main():
             garder.add(i)
     sous_ensemble = [troncons[i] for i in sorted(garder)]
 
-    # Référence : réglage par défaut, calculé sur le sous-ensemble exporté ET sur toute l'île
-    ref = totaux(sous_ensemble, analyser(sous_ensemble, DEFAUT_COMME_ARTERES))
-    ref_ile = totaux(troncons, analyser(troncons, DEFAUT_COMME_ARTERES))
-    if ref != ref_ile:
-        sys.exit(f"L'export ne suffit pas au calcul : {ref} ≠ {ref_ile}")
+    for nom in DEFAUT_RUELLES:
+        if not any(t["voie"] == nom and t["classe"] == LOCALE and t["plateau"] for t in troncons):
+            sys.exit(f"Ruelle par défaut introuvable au Plateau : {nom}")
+
+    def calcul(liste, pieton):
+        # Réglage par défaut : ruelles retirées, Mont-Royal piétonne si demandé
+        garde = [t for t in liste if not (t["classe"] == LOCALE and t["voie"] in DEFAUT_RUELLES)
+                 and not (pieton and t["pieton"])]
+        return totaux(garde, analyser(garde, DEFAUT_COMME_ARTERES))
+
+    # Références, calculées sur le sous-ensemble exporté ET sur toute l'île
+    ref = calcul(sous_ensemble, False)
+    if ref != calcul(troncons, False):
+        sys.exit("L'export ne suffit pas au calcul (réglage par défaut)")
+    ref_pieton = calcul(sous_ensemble, True)
+    if ref_pieton != calcul(troncons, True):
+        sys.exit("L'export ne suffit pas au calcul du scénario Mont-Royal piétonne")
 
     noms, ids_noeuds = {}, {}
 
@@ -288,7 +348,7 @@ def main():
         rangees.append([
             t["id"], [[round(c[0], 6), round(c[1], 6)] for c in coords], t["classe"],
             1 if t["sens"] != 0 else 0, nom_idx(t["voie"]),
-            noeud_idx(a), noeud_idx(b), 1 if t["plateau"] else 0,
+            noeud_idx(a), noeud_idx(b), 1 if t["plateau"] else 0, 1 if t["pieton"] else 0,
         ])
     table = [None] * len(noms)
     for nom, j in noms.items():
@@ -298,14 +358,18 @@ def main():
     (SORTIE / "troncons.json").unlink(missing_ok=True)   # ancien format
     with open(SORTIE / "reseau.json", "w", encoding="utf-8") as f:
         json.dump({"noms": table, "troncons": rangees}, f, ensure_ascii=False, separators=(",", ":"))
-    resume = {"reglage_par_defaut": sorted(DEFAUT_COMME_ARTERES), "troncons_exportes": len(rangees),
-              "troncons_plateau": sum(1 for t in sous_ensemble if t["plateau"]), **ref}
+    resume = {"reglage_par_defaut": {"collectrices_comme_arteres": sorted(DEFAUT_COMME_ARTERES),
+                                     "ruelles": sorted(DEFAUT_RUELLES)},
+              "troncons_exportes": len(rangees),
+              "troncons_plateau": sum(1 for t in sous_ensemble if t["plateau"]), **ref,
+              "mont_royal_pieton": {"troncons_retires": sum(1 for t in sous_ensemble if t["pieton"]), **ref_pieton}}
     with open(SORTIE / "resume.json", "w", encoding="utf-8") as f:
         json.dump(resume, f, ensure_ascii=False, indent=1)
     with open(SORTIE / "meta.json", "w", encoding="utf-8") as f:
         json.dump({"donneesMisesAJour": datetime.date.today().isoformat(),
                    "versionSource": version_source,
-                   "collectricesCommeArteres": sorted(DEFAUT_COMME_ARTERES)}, f, ensure_ascii=False, indent=1)
+                   "collectricesCommeArteres": sorted(DEFAUT_COMME_ARTERES),
+                   "ruelles": sorted(DEFAUT_RUELLES)}, f, ensure_ascii=False, indent=1)
     json.dump(resume, sys.stderr, ensure_ascii=False, indent=1)
     print(file=sys.stderr)
 
