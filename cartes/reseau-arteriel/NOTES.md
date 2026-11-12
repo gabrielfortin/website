@@ -76,6 +76,21 @@ fichiers.
   les tronçons sur un `<canvas>` plutôt qu'en SVG (beaucoup plus rapide avec
   plusieurs milliers de segments).
 
+### Filtres de la légende et mode « une seule rue » (novembre 2026)
+
+- Chaque type de voie de la légende a une case à cocher (`hiddenClasses`) ;
+  « Tout masquer / Tout afficher » coche ou décoche tout. Les filtres restent
+  actifs quand on change d'arrondissement.
+- Le popup d'une rue offre « Voir seulement cette rue » : la carte ne garde
+  que les tronçons qui portent **le même nom** dans l'arrondissement affiché
+  (un seul tronçon si la voie n'a pas de nom), sans tenir compte des filtres,
+  pour voir la rue au complet. Une étiquette donne le nom en gros et le ou les
+  types de voie : à droite du tracé sur écran large, sous le tracé sur écran
+  étroit (< 600 px de carte). On revient avec le bouton « Afficher toutes les
+  rues de nouveau » ou Échap, qui remet la vue d'avant ; changer
+  d'arrondissement ou toucher un filtre en sort aussi. Deux rues distinctes
+  qui portent le même nom dans un arrondissement seraient affichées ensemble.
+
 ### Limite connue
 
 En mode "Tous les arrondissements", les tronçons limitrophes entre deux

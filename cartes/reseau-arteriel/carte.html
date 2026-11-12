@@ -372,6 +372,66 @@
   .gf-pop-row .k { color: var(--ink-500); }
   .gf-pop-row .v { font-weight: 600; color: var(--ink-900); display: flex; align-items: center; gap: 6px; }
   .gf-pop-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .gf-pop-focus {
+    display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%;
+    margin-top: 12px; padding: 9px 14px; border: none; border-radius: 999px; cursor: pointer;
+    font: 600 .8rem/1.2 'Inter', sans-serif; color: #fff;
+    background: linear-gradient(140deg, var(--brand), var(--brand-dark));
+    box-shadow: 0 6px 16px -6px rgba(15,122,55,.6), inset 0 1px 0 rgba(255,255,255,.35);
+    transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+  }
+  .gf-pop-focus:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -6px rgba(15,122,55,.7), inset 0 1px 0 rgba(255,255,255,.4); }
+  .gf-pop-focus:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .gf-pop-focus svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  /* ---------- Mode « une seule rue » : étiquette à côté du tracé + bouton pour revenir ---------- */
+  .gf-street-label-wrap { background: none; border: none; }
+  .gf-street-label {
+    position: relative; transform: translate(16px, -50%);
+    width: max-content; max-width: min(300px, 55vw);
+    padding: 12px 16px 11px; border-radius: var(--radius-md);
+    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow), var(--shadow-soft);
+    pointer-events: none;
+  }
+  .gf-street-label::before {
+    content: ''; position: absolute; left: -7px; top: 50%; width: 12px; height: 12px;
+    transform: translateY(-50%) rotate(45deg);
+    background: var(--glass-strong); border-left: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
+  }
+  /* Écran étroit : sous le tracé, centrée (à droite, il ne resterait presque plus de place pour la rue) */
+  .gf-street-label--below { transform: translate(-50%, 16px); max-width: calc(100vw - 40px); text-align: center; }
+  .gf-street-label--below::before { left: 50%; top: -7px; transform: translateX(-50%) rotate(135deg); }
+  .gf-street-label--below .gf-street-label-type { justify-content: center; }
+  .gf-street-label-name {
+    font-family: 'Poppins', 'Inter', sans-serif; font-weight: 700; font-size: 1.55rem;
+    line-height: 1.1; letter-spacing: -0.015em; color: var(--ink-900);
+  }
+  .gf-street-label-type {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-top: 6px;
+    font-size: .82rem; font-weight: 600; color: var(--ink-500);
+  }
+  .gf-street-label-type span { display: inline-flex; align-items: center; gap: 6px; }
+  @media (max-width: 760px) {
+    .gf-street-label { padding: 10px 13px 9px; }
+    .gf-street-label-name { font-size: 1.2rem; }
+    .gf-street-label-type { font-size: .76rem; }
+  }
+  .gf-focus-exit {
+    position: fixed; top: calc(var(--gap) * 2 + 70px); left: 50%; transform: translateX(-50%);
+    z-index: 900; display: none; align-items: center; gap: 8px;
+    padding: 9px 16px; border-radius: 999px; cursor: pointer;
+    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);
+    font: 600 .8rem/1.2 'Inter', sans-serif; color: var(--ink-900);
+    transition: box-shadow .18s var(--ease);
+  }
+  .gf-focus-exit.show { display: flex; }
+  .gf-focus-exit:hover { box-shadow: var(--shadow-pop); }
+  .gf-focus-exit:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  @media (max-width: 760px) {
+    .gf-focus-exit { top: calc(20px + var(--gf-header-h, 60px)); left: auto; right: 10px; transform: none; }
+  }
 </style>
 <link rel="stylesheet" href="../carte-sombre.css">
 <script type="application/ld+json">
@@ -464,6 +524,8 @@
     <p class="gf-legend-count" id="gfSegmentCount"></p>
   </aside>
   <div class="gf-sidebar-scrim" id="gfSidebarScrim"></div>
+
+  <button type="button" class="gf-focus-exit" id="gfFocusExit"><span aria-hidden="true">✕</span><span>Afficher toutes les rues de nouveau</span></button>
 
   <div class="gf-loading" id="gfLoading"><span class="gf-spinner"></span><span>Chargement…</span></div>
 
@@ -566,40 +628,142 @@
         : { weight: 1.3, opacity: 0.55 };
     }
 
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+    function setCount(n) {
+      document.getElementById('gfSegmentCount').textContent = n.toLocaleString('fr-CA') + ' tronçon' + (n > 1 ? 's' : '') + ' affiché' + (n > 1 ? 's' : '');
+    }
+
+    // Un tronçon cliquable ; « style » remplace le style de base (mode une seule rue)
+    function makeLine(row, style) {
+      const [coords, classe, artere, nom] = row;
+      const latlngs = coords.map(c => [c[1], c[0]]);
+      const line = L.polyline(latlngs, Object.assign({ color: classeColor(classe) }, style || styleFor(artere)));
+      line.on('click', function(e) {
+        const headerEl = document.querySelector('.gf-header');
+        const topPad = (headerEl ? headerEl.offsetHeight : 76) + 16;
+        const box = document.createElement('div');
+        box.innerHTML =
+          '<div class="gf-pop-eyebrow">' + (artere === 1 ? 'Réseau artériel' : 'Hors réseau artériel') + '</div>' +
+          '<h3 class="gf-pop-name">' + (nom ? esc(nom) : 'Voie sans nom') + '</h3>' +
+          '<div class="gf-pop-row"><span class="k">Classification</span><span class="v"><span class="gf-pop-dot" style="background:' + classeColor(classe) + '"></span>' + classeName(classe) + '</span></div>' +
+          '<div class="gf-pop-row"><span class="k">Réseau artériel admin.</span><span class="v">' + (artere === 1 ? 'Oui' : 'Non') + '</span></div>';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'gf-pop-focus';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>' +
+          (nom ? 'Voir seulement cette rue' : 'Voir seulement ce tronçon');
+        btn.addEventListener('click', function() { map.closePopup(); focusStreet(row); });
+        box.appendChild(btn);
+        line.bindPopup(box, {
+          maxWidth: 300,
+          autoPan: true,
+          autoPanPaddingTopLeft: [24, topPad],
+          autoPanPaddingBottomRight: [24, 24]
+        }).openPopup(e.latlng);
+      });
+      return line;
+    }
+
     function renderStreets(rows) {
+      clearFocusUi();
       if (currentLayer) { map.removeLayer(currentLayer); currentLayer = null; }
       const group = L.layerGroup();
       let shown = 0;
       rows.forEach(row => {
-        const [coords, classe, artere, nom] = row;
+        const [, classe, artere] = row;
         if (!showAllStreets && artere !== 1) return;
         if (hiddenClasses.has(classe)) return;
         shown++;
-        const latlngs = coords.map(c => [c[1], c[0]]);
-        const base = styleFor(artere);
-        const line = L.polyline(latlngs, Object.assign({ color: classeColor(classe) }, base));
-        line.on('click', function(e) {
-          const headerEl = document.querySelector('.gf-header');
-          const topPad = (headerEl ? headerEl.offsetHeight : 76) + 16;
-          const html =
-            '<div class="gf-pop-eyebrow">' + (artere === 1 ? 'Réseau artériel' : 'Hors réseau artériel') + '</div>' +
-            '<h3 class="gf-pop-name">' + (nom || 'Voie sans nom') + '</h3>' +
-            '<div class="gf-pop-row"><span class="k">Classification</span><span class="v"><span class="gf-pop-dot" style="background:' + classeColor(classe) + '"></span>' + classeName(classe) + '</span></div>' +
-            '<div class="gf-pop-row"><span class="k">Réseau artériel admin.</span><span class="v">' + (artere === 1 ? 'Oui' : 'Non') + '</span></div>';
-          line.bindPopup(html, {
-            maxWidth: 300,
-            autoPan: true,
-            autoPanPaddingTopLeft: [24, topPad],
-            autoPanPaddingBottomRight: [24, 24]
-          }).openPopup(e.latlng);
-        });
-        group.addLayer(line);
+        group.addLayer(makeLine(row));
       });
       group.addTo(map);
       currentLayer = group;
-      document.getElementById('gfSegmentCount').textContent = shown.toLocaleString('fr-CA') + ' tronçon' + (shown > 1 ? 's' : '') + ' affiché' + (shown > 1 ? 's' : '');
+      setCount(shown);
       return group;
     }
+
+    // ---------- Mode « une seule rue » ----------
+    // Tous les tronçons portant le même nom dans l'arrondissement affiché, sans tenir compte
+    // des filtres (légende, « Afficher toutes les rues »), pour voir la rue au complet.
+    let focusLabel = null;
+    let focusPrevView = null;
+    const focusExitBtn = document.getElementById('gfFocusExit');
+
+    function clearFocusUi() {
+      if (focusLabel) { map.removeLayer(focusLabel); focusLabel = null; }
+      focusExitBtn.classList.remove('show');
+    }
+
+    function focusStreet(row) {
+      const nom = row[3];
+      const rows = nom ? currentData.filter(r => r[3] === nom) : [row];
+      if (!focusLabel) focusPrevView = { center: map.getCenter(), zoom: map.getZoom() };
+      clearFocusUi();
+      if (currentLayer) { map.removeLayer(currentLayer); currentLayer = null; }
+      const group = L.featureGroup();
+      rows.forEach(r => group.addLayer(makeLine(r, { weight: 5, opacity: 1 })));
+      group.addTo(map);
+      currentLayer = group;
+      setCount(rows.length);
+
+      // Types présents sur la rue, dans l'ordre de la légende
+      const classes = CLASSE_ORDER.filter(c => rows.some(r => r[1] === c));
+      const typeHtml = classes.map(c =>
+        '<span><span class="gf-pop-dot" style="background:' + classeColor(c) + '"></span>' + classeName(c) + '</span>').join('');
+
+      // Point d'ancrage. Écran large : à la mi-hauteur de la rue, sur son bord est (étiquette à droite).
+      // Écran étroit : sous la rue, centrée sur elle (donc au centre de l'écran après le cadrage).
+      const bounds = group.getBounds();
+      const below = map.getSize().x < 600;
+      let anchor = null;
+      if (below) {
+        anchor = [bounds.getSouth(), bounds.getCenter().lng];
+      } else {
+        const midLat = bounds.getCenter().lat;
+        const tol = Math.max((bounds.getNorth() - bounds.getSouth()) * 0.1, 1e-5);
+        let bestDist = Infinity;
+        rows.forEach(r => r[0].forEach(([lng, lat]) => {
+          const d = Math.abs(lat - midLat);
+          if (d < bestDist) bestDist = d;
+        }));
+        rows.forEach(r => r[0].forEach(([lng, lat]) => {
+          if (Math.abs(lat - midLat) <= bestDist + tol && (!anchor || lng > anchor[1])) anchor = [lat, lng];
+        }));
+      }
+
+      focusLabel = L.marker(anchor, {
+        interactive: false, keyboard: false,
+        icon: L.divIcon({
+          className: 'gf-street-label-wrap', iconSize: null, iconAnchor: [0, 0],
+          html: '<div class="gf-street-label' + (below ? ' gf-street-label--below' : '') + '"><div class="gf-street-label-name">' + (nom ? esc(nom) : 'Voie sans nom') + '</div>' +
+                '<div class="gf-street-label-type">' + typeHtml + '</div></div>'
+        })
+      }).addTo(map);
+      focusExitBtn.classList.add('show');
+
+      // Cadrer la rue en laissant la place à l'étiquette, à l'en-tête et au panneau latéral
+      const labelEl = focusLabel.getElement().firstChild;
+      const headerH = document.querySelector('.gf-header').offsetHeight;
+      const sidebarOpen = !isMobile() && !document.body.classList.contains('gf-sidebar-collapsed');
+      const left = sidebarOpen ? sidebar.offsetWidth + 40 : 30;
+      map.fitBounds(bounds, {
+        paddingTopLeft: [left, headerH + 80],
+        paddingBottomRight: below ? [30, labelEl.offsetHeight + 70] : [labelEl.offsetWidth + 40, 50],
+        maxZoom: 17
+      });
+    }
+
+    function exitFocus() {
+      if (!focusLabel || !currentData) return;
+      renderStreets(currentData);
+      if (focusPrevView) map.setView(focusPrevView.center, focusPrevView.zoom);
+    }
+    focusExitBtn.addEventListener('click', exitFocus);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !document.getElementById('gfInfoOverlay').classList.contains('open')) exitFocus();
+    }, true);
 
     function showResult(rows, fit) {
       const group = renderStreets(rows);
