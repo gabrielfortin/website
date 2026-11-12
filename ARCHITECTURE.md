@@ -66,15 +66,16 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 1. **Avant / Après** → https://avant-apres.ca
 2. **Carte accessibilité universelle** — encore grisée, non cliquable (`<div class="carte-item is-disabled">`, pas un `<a>`), alors que le projet `carte-au` est en ligne sur https://montrealaccessible.ca (novembre 2026 : à relier). Icône : `img/carte-au.svg`.
 3. **Réseau Artériel de Montréal** → `./reseau-arteriel/carte.html`
-4. **Pistes cyclables Plateau** → https://pistes.gabfortin.com
-5. **Résultats Élections 2025** → `./elections-2025/ParSectionDeVote.html`
-6. **Modes Rapides et Fréquents**
-7. **Stationnement Plateau** → https://parking.gabfortin.com
+4. **Collisions et réseau artériel** → `./collisions-reseau-arteriel/` (réutilise les tronçons de `reseau-arteriel/data/` ; méthode dans son `NOTES.md`)
+5. **Pistes cyclables Plateau** → https://pistes.gabfortin.com
+6. **Résultats Élections 2025** → `./elections-2025/ParSectionDeVote.html`
+7. **Modes Rapides et Fréquents**
+8. **Stationnement Plateau** → https://parking.gabfortin.com
 
 Pour ajouter une carte « à venir » (grisée, non cliquable) : utiliser un `<div class="carte-item is-disabled" aria-disabled="true">` au lieu d'un `<a>`, et remplacer la flèche « Explorer la carte » par `<span class="carte-arrow">Bientôt disponible</span>`. Le style `.is-disabled` (opacité réduite, `grayscale`, pas de hover) est défini dans le `<style>` de `cartes/index.html`.
 
 
-**Mode sombre des cartes verre** : `cartes/reseau-arteriel/carte.html`, `cartes/modes-rapides-et-frequents/map.html` et les deux cartes `cartes/elections-2025/Par*.html` chargent `cartes/carte-sombre.css` **après** leur `<style>`. Cette feuille ne contient que les règles sombres (jetons du dashboard verre, tuiles inversées, textes de marque, popups) ; le mode clair reste dans chaque page. Une nouvelle carte de `cartes/` doit la relier aussi, et toute couleur claire écrite en dur dans une carte doit y être surchargée. Recette : `~/Developer/MAP-DESIGN-SYSTEM.md`, section « Mode sombre ».
+**Mode sombre des cartes verre** : `cartes/reseau-arteriel/carte.html`, `cartes/collisions-reseau-arteriel/index.html`, `cartes/modes-rapides-et-frequents/map.html` et les deux cartes `cartes/elections-2025/Par*.html` chargent `cartes/carte-sombre.css` **après** leur `<style>`. Cette feuille ne contient que les règles sombres (jetons du dashboard verre, tuiles inversées, textes de marque, popups) ; le mode clair reste dans chaque page. Une nouvelle carte de `cartes/` doit la relier aussi, et toute couleur claire écrite en dur dans une carte doit y être surchargée. Recette : `~/Developer/MAP-DESIGN-SYSTEM.md`, section « Mode sombre ».
 #### Données (`/donnees/`)
 
 1. **Compteurs Vélo Montréal** → https://compteurvelo.com

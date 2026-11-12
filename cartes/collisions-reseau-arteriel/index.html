@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="../../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="../../favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../../favicon-192.png">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#eef1ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1310" media="(prefers-color-scheme: dark)">
+<title>Collisions et réseau artériel de Montréal — Gabriel Fortin</title>
+<meta name="description" content="Carte des collisions routières de Montréal (2012-2021) sur le réseau artériel : part des collisions sur les artères, les collectrices et les rues locales, par arrondissement.">
+<link rel="canonical" href="https://gabfortin.com/cartes/collisions-reseau-arteriel/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gabriel Fortin">
+<meta property="og:title" content="Collisions et réseau artériel de Montréal">
+<meta property="og:description" content="Carte des collisions routières de Montréal (2012-2021) sur le réseau artériel : part des collisions sur les artères, les collectrices et les rues locales, par arrondissement.">
+<meta property="og:url" content="https://gabfortin.com/cartes/collisions-reseau-arteriel/">
+<meta property="og:image" content="https://gabfortin.com/cartes/collisions-reseau-arteriel/apercu.png">
+<meta property="og:locale" content="fr_CA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Collisions et réseau artériel de Montréal">
+<meta name="twitter:description" content="Carte des collisions routières de Montréal (2012-2021) sur le réseau artériel : part des collisions sur les artères, les collectrices et les rues locales, par arrondissement.">
+<meta name="twitter:image" content="https://gabfortin.com/cartes/collisions-reseau-arteriel/apercu.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  /* Gabarit : ../reseau-arteriel/carte.html (même système « verre », même carte de base) */
+  :root {
+    --brand: #16a34a;
+    --brand-dark: #0f7a37;
+    --brand-light: #4ade80;
+    --ink-900: #0b1120;
+    --ink-700: #33413a;
+    --ink-500: #5b6b62;
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 9px;
+    --glass: rgba(255, 255, 255, 0.6);
+    --glass-strong: rgba(255, 255, 255, 0.82);
+    --glass-border: rgba(255, 255, 255, 0.55);
+    --glass-shadow: 0 8px 32px -12px rgba(15, 23, 42, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    --glass-blur: blur(20px) saturate(180%);
+    --shadow-soft: 0 10px 30px -12px rgba(11, 17, 32, 0.25);
+    --shadow-pop: 0 20px 50px -18px rgba(11, 17, 32, 0.35);
+    --ease: cubic-bezier(.16, .84, .44, 1);
+    --gap: 16px;
+    --sidebar-w: 300px;
+    --hairline: rgba(11, 17, 32, 0.08);
+    --track: rgba(11, 17, 32, 0.08);
+  }
+
+  html, body {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--ink-900);
+  }
+  #map { position: absolute; inset: 0; background: #eef1ea; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  /* ---------- Header ---------- */
+  .gf-header {
+    position: fixed;
+    top: var(--gap); left: var(--gap); right: var(--gap);
+    z-index: 1000;
+    display: flex; align-items: center; flex-wrap: wrap; gap: 14px;
+    padding: 10px 18px;
+    border-radius: var(--radius-lg);
+    background: var(--glass-strong);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+  .gf-sidebar-toggle {
+    position: fixed; z-index: 960;
+    top: calc(var(--gap) * 2 + 70px); left: calc(var(--gap) + var(--sidebar-w) - 44px);
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid var(--glass-border); background: var(--glass-strong);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    color: var(--ink-900); cursor: pointer;
+    transition: top .3s var(--ease), left .3s var(--ease), width .3s var(--ease), height .3s var(--ease),
+                box-shadow .3s var(--ease), background .18s var(--ease), transform .18s var(--ease);
+  }
+  .gf-sidebar-toggle:hover { background: var(--surface, #fff); transform: translateY(-1px); }
+  .gf-sidebar-toggle svg { width: 18px; height: 18px; }
+  @media (min-width: 761px) {
+    body.gf-sidebar-collapsed .gf-sidebar-toggle {
+      top: calc(var(--gap) * 2 + 60px); left: var(--gap);
+      width: 42px; height: 42px; box-shadow: var(--glass-shadow);
+    }
+  }
+  @media (max-width: 760px) {
+    .gf-sidebar-toggle {
+      top: calc(20px + var(--gf-header-h, 60px)); left: 10px;
+      width: 38px; height: 38px; box-shadow: var(--glass-shadow);
+    }
+    body:has(.gf-sidebar.open) .gf-sidebar-toggle {
+      z-index: 1460; top: calc(var(--gap) + 10px); left: calc(var(--gap) + min(86vw, 330px) - 44px);
+      width: 34px; height: 34px; box-shadow: none;
+    }
+  }
+  .gf-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .gf-brand-mark {
+    width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0;
+    background: linear-gradient(140deg, var(--brand-light), var(--brand-dark));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 16px -4px rgba(15,122,55,.55), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .gf-brand-mark svg { width: 27px; height: 27px; }
+  .gf-brand-text { line-height: 1.15; min-width: 0; }
+  .gf-brand-word {
+    font-family: 'Poppins', 'Inter', sans-serif; font-weight: 700; font-size: 1rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .gf-brand-word span { color: var(--brand-dark); }
+  .gf-brand-sub { font-size: .72rem; color: var(--ink-500); font-weight: 500; white-space: nowrap; }
+  .gf-brand-sub a { color: var(--brand-dark); font-weight: 700; text-decoration: none; }
+  .gf-brand-sub a:hover { text-decoration: underline; }
+  .gf-header-spacer { flex: 1; }
+  .gf-back {
+    font-size: .78rem; font-weight: 600; color: var(--ink-700); text-decoration: none;
+    white-space: nowrap; padding: 7px 11px; border-radius: 999px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    transition: background .18s var(--ease), transform .18s var(--ease);
+  }
+  .gf-back:hover { background: var(--glass-strong); transform: translateY(-1px); }
+  .gf-info-btn {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    border: none; background: linear-gradient(140deg, var(--brand-light), var(--brand-dark));
+    color: #fff; cursor: pointer;
+    box-shadow: 0 4px 14px -4px rgba(15, 122, 55, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .gf-info-btn svg { width: 16px; height: 16px; position: relative; z-index: 1; }
+  .gf-info-btn::before {
+    content: ''; position: absolute; inset: -5px; border-radius: 50%;
+    border: 2px solid var(--brand); opacity: .4;
+    animation: gf-info-pulse 2.6s ease-out infinite; pointer-events: none;
+  }
+  .gf-info-btn:hover {
+    box-shadow: 0 8px 22px -4px rgba(15, 122, 55, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px) scale(1.1);
+  }
+  .gf-info-btn:active { transform: scale(0.94); }
+  @keyframes gf-info-pulse {
+    0% { transform: scale(0.6); opacity: 0.45; }
+    80% { transform: scale(1.7); opacity: 0; }
+    100% { transform: scale(1.7); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .gf-info-btn::before { animation: none; } }
+  .gf-info-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(11, 17, 32, 0.45);
+    backdrop-filter: blur(8px) saturate(140%); -webkit-backdrop-filter: blur(8px) saturate(140%);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s var(--ease);
+  }
+  .gf-info-overlay.open { opacity: 1; pointer-events: auto; }
+  .gf-info-panel {
+    position: relative; width: min(480px, 100%); max-height: min(84vh, 700px); overflow-y: auto;
+    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border); border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow), var(--shadow-pop);
+    padding: 30px 26px 26px;
+    transform: scale(0.94) translateY(8px); opacity: 0;
+    transition: transform .28s var(--ease), opacity .28s var(--ease);
+  }
+  .gf-info-overlay.open .gf-info-panel { transform: scale(1) translateY(0); opacity: 1; }
+  .gf-info-panel h2 {
+    margin: 0 0 12px; font-size: 1.25rem; letter-spacing: -0.01em;
+    font-family: 'Poppins', 'Inter', sans-serif; font-weight: 700; color: var(--ink-900); padding-right: 28px;
+  }
+  .gf-info-panel h3 { margin: 18px 0 8px; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-500); }
+  .gf-info-panel p, .gf-info-panel li { margin: 0 0 12px; font-size: .86rem; line-height: 1.6; color: var(--ink-700); }
+  .gf-info-panel ul { margin: 0 0 12px; padding-left: 18px; }
+  .gf-info-panel li { margin-bottom: 6px; }
+  .gf-info-panel a { color: var(--brand-dark); font-weight: 600; text-decoration: none; }
+  .gf-info-panel a:hover { text-decoration: underline; }
+  .gf-info-panel strong { color: var(--brand-dark); }
+  .gf-info-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid var(--glass-border); background: var(--glass);
+    color: var(--ink-900); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .18s var(--ease), transform .18s var(--ease);
+  }
+  .gf-info-close:hover { background: var(--glass-strong); transform: scale(1.08); }
+  .gf-person {
+    display: flex; align-items: center; gap: 12px; padding: 10px; margin: 6px 0 12px;
+    border-radius: var(--radius-md); text-decoration: none; color: inherit;
+    border-top: 1px solid var(--hairline);
+    transition: background .18s var(--ease), transform .18s var(--ease);
+  }
+  .gf-info-panel a.gf-person:hover { background: rgba(255,255,255,.55); transform: translateX(2px); text-decoration: none; }
+  .gf-person img {
+    width: 46px; height: 46px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    border: 2px solid #fff; box-shadow: 0 2px 8px rgba(11, 17, 32, 0.22);
+  }
+  .gf-person-name { font-weight: 700; font-size: .9rem; color: var(--ink-900); }
+  .gf-person-role { font-size: .76rem; color: var(--ink-500); font-weight: 500; }
+  .gf-info-legal { font-size: .78rem !important; }
+  @media (max-width: 760px) {
+    .gf-info-btn { width: 28px; height: 28px; }
+    .gf-info-btn svg { width: 14px; height: 14px; }
+  }
+
+  .arrond-control {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .82rem; font-weight: 500; color: var(--ink-700);
+  }
+  .arrond-control select, .gf-years select {
+    appearance: none; font-family: inherit; font-size: .82rem; font-weight: 500; color: var(--ink-900);
+    background: var(--glass); border: 1px solid var(--glass-border); border-radius: 999px;
+    padding: 7px 16px; cursor: pointer; max-width: 42vw; box-sizing: border-box;
+    box-shadow: var(--shadow-soft);
+    transition: border-color .18s var(--ease), transform .18s var(--ease);
+  }
+  .arrond-control select:hover, .gf-years select:hover { border-color: var(--brand); transform: translateY(-1px); }
+  .arrond-control select:focus-visible, .gf-years select:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+  @media (max-width: 760px) {
+    .gf-header { top: 10px; left: 10px; right: 10px; padding: 10px 14px; gap: 8px 10px; }
+    .gf-brand { flex: 1 1 0; min-width: 0; }
+    .gf-brand-word { font-size: .92rem; }
+    .gf-header-spacer { display: none; }
+    .arrond-control { order: 10; flex: 1 1 100%; }
+    .arrond-control select { flex: 1 1 0; width: 0; min-width: 0; max-width: none; }
+  }
+
+  /* ---------- Sidebar ---------- */
+  .gf-sidebar {
+    position: fixed;
+    top: calc(var(--gap) * 2 + 60px); left: var(--gap); bottom: var(--gap);
+    width: var(--sidebar-w);
+    border-radius: var(--radius-lg);
+    background: var(--glass);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    z-index: 950;
+    display: flex; flex-direction: column; overflow-y: auto;
+    transition: opacity .3s var(--ease), transform .3s var(--ease);
+  }
+  @media (min-width: 761px) {
+    body.gf-sidebar-collapsed .gf-sidebar {
+      opacity: 0; pointer-events: none; transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  .gf-sidebar-header {
+    display: flex; align-items: center; justify-content: space-between; padding: 18px 18px 8px;
+  }
+  .gf-sidebar-header h2 {
+    margin: 0; font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--ink-500);
+  }
+  .gf-sidebar-list { display: flex; flex-direction: column; padding: 4px 10px 10px; gap: 3px; }
+  .gf-sidebar-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 8px;
+    border-radius: var(--radius-sm); cursor: pointer; font-size: .85rem; font-weight: 500;
+    transition: background .18s var(--ease), transform .18s var(--ease);
+  }
+  .gf-sidebar-item:hover { background: rgba(255,255,255,.55); transform: translateX(2px); }
+  .gf-sidebar-item input[type="checkbox"], .gf-legend-row input[type="checkbox"] {
+    width: 15px; height: 15px; margin: 0; accent-color: var(--brand-dark); cursor: pointer; flex-shrink: 0;
+  }
+  .gf-sidebar-label { flex: 1; color: var(--ink-900); }
+  .gf-sidebar-note { margin: 0; padding: 0 18px 14px; font-size: .74rem; color: var(--ink-500); line-height: 1.5; }
+  .gf-sidebar-divider { height: 1px; background: var(--glass-border); margin: 2px 14px 4px; flex-shrink: 0; }
+
+  /* Bloc statistique */
+  .gf-stats { padding: 0 14px 6px; }
+  .gf-stats-total { margin: 0 4px 10px; font-size: .78rem; color: var(--ink-700); line-height: 1.45; }
+  .gf-stats-total b { color: var(--ink-900); }
+  .gf-bar {
+    display: flex; height: 12px; border-radius: 999px; overflow: hidden; margin: 0 4px 12px;
+    background: var(--track);
+  }
+  .gf-bar span { display: block; height: 100%; transition: width .35s var(--ease); }
+  .gf-stat-row {
+    display: grid; grid-template-columns: 12px 1fr auto; align-items: baseline; column-gap: 10px;
+    padding: 7px 4px; border-bottom: 1px solid var(--hairline);
+  }
+  .gf-stat-row:last-of-type { border-bottom: none; }
+  .gf-stat-row .gf-legend-dot { align-self: center; }
+  .gf-stat-label { font-size: .85rem; font-weight: 600; color: var(--ink-900); line-height: 1.25; }
+  .gf-stat-label small { display: block; font-size: .72rem; font-weight: 500; color: var(--ink-500); }
+  .gf-stat-pct {
+    font-family: 'Poppins', 'Inter', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--ink-900);
+    font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap;
+  }
+  .gf-stat-sub { grid-column: 2 / 4; font-size: .72rem; color: var(--ink-500); margin-top: 2px; }
+  .gf-stat-row.is-detail { padding: 2px 4px 6px 26px; border-bottom: none; grid-template-columns: 1fr auto; }
+  .gf-stat-row.is-detail .gf-stat-label { font-size: .76rem; font-weight: 500; color: var(--ink-700); }
+  .gf-stat-row.is-detail .gf-stat-pct { font-size: .8rem; font-family: 'Inter', sans-serif; font-weight: 600; color: var(--ink-700); }
+  .gf-stat-raa {
+    margin: 10px 4px 4px; padding: 9px 11px; border-radius: var(--radius-sm);
+    background: rgba(22,163,74,.08); font-size: .76rem; color: var(--ink-700); line-height: 1.45;
+  }
+  .gf-stat-raa b { color: var(--ink-900); }
+  .gf-stats-excl { margin: 8px 4px 4px; font-size: .72rem; color: var(--ink-500); line-height: 1.5; }
+
+  /* Filtres */
+  .gf-filter { padding: 0 14px 10px; }
+  .gf-years { display: flex; align-items: center; gap: 8px; padding: 4px 4px 10px; font-size: .82rem; color: var(--ink-700); }
+  .gf-years select { padding: 6px 12px; }
+
+  .gf-legend { padding: 0 14px 6px; }
+  .gf-legend-row {
+    display: flex; align-items: center; gap: 10px; padding: 6px 4px;
+    border-radius: var(--radius-sm); cursor: pointer;
+    transition: background .18s var(--ease);
+  }
+  .gf-legend-row:hover { background: rgba(255,255,255,.55); }
+  .gf-legend-row:has(input:not(:checked)) .gf-legend-dot,
+  .gf-legend-row:has(input:not(:checked)) .gf-legend-label,
+  .gf-legend-row:has(input:not(:checked)) .gf-sev { opacity: .4; }
+  .gf-legend-row:has(input:focus-visible), .gf-sidebar-item:has(input:focus-visible) { outline: 2px solid var(--brand); outline-offset: 1px; }
+  .gf-legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .gf-legend-label { flex: 1; font-size: .82rem; color: var(--ink-900); font-weight: 500; }
+  .gf-legend-count { font-size: .72rem; color: var(--ink-500); font-variant-numeric: tabular-nums; }
+  .gf-sev-box { width: 16px; display: flex; justify-content: center; flex-shrink: 0; }
+  .gf-sev { border-radius: 50%; background: var(--dot); box-shadow: 0 0 0 1.5px var(--dot-halo); }
+  .gf-legend-all {
+    font: inherit; font-size: .72rem; font-weight: 600; color: var(--brand-dark);
+    background: none; border: none; padding: 2px 4px; cursor: pointer; border-radius: 6px;
+  }
+  .gf-legend-all:hover { text-decoration: underline; }
+
+  :root { --dot: rgba(17, 24, 39, 0.85); --dot-halo: rgba(255, 255, 255, 0.9); }
+
+  .gf-sidebar-scrim {
+    position: fixed; inset: 0; z-index: 940; background: rgba(11,17,32,.35);
+    backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+    opacity: 0; pointer-events: none; transition: opacity .3s var(--ease);
+  }
+
+  @media (max-width: 760px) {
+    .gf-sidebar {
+      width: min(86vw, 330px); z-index: 1450;
+      box-shadow: var(--glass-shadow), var(--shadow-pop);
+      transform: translateX(calc(-100% - var(--gap)));
+      transition: transform .3s var(--ease);
+      top: var(--gap); bottom: var(--gap);
+    }
+    .gf-sidebar.open { transform: translateX(0); }
+    .gf-sidebar-scrim.open { opacity: 1; pointer-events: auto; z-index: 1440; }
+  }
+
+  /* Résumé mobile (le panneau est fermé par défaut sur téléphone) */
+  .gf-summary {
+    display: none; position: fixed; left: 10px; right: 10px; bottom: 44px; z-index: 900;
+    padding: 10px 14px; border-radius: var(--radius-md); cursor: pointer; text-align: left;
+    font: inherit; color: var(--ink-900);
+    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);
+  }
+  .gf-summary-title { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); margin-bottom: 6px; }
+  .gf-summary-row { display: flex; gap: 8px; justify-content: space-between; }
+  .gf-summary-item { display: flex; flex-direction: column; min-width: 0; }
+  .gf-summary-item b { font-family: 'Poppins', 'Inter', sans-serif; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+  .gf-summary-item span { font-size: .7rem; color: var(--ink-500); font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .gf-summary-item i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  @media (max-width: 760px) {
+    .gf-summary { display: block; }
+    body:has(.gf-sidebar.open) .gf-summary { display: none; }
+  }
+
+  /* ---------- Loading indicator ---------- */
+  .gf-loading {
+    position: fixed; top: calc(var(--gap) * 2 + 70px); left: 50%; transform: translateX(-50%);
+    z-index: 900; display: none; align-items: center; gap: 10px;
+    padding: 9px 18px; border-radius: 999px;
+    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);
+    font-size: .8rem; font-weight: 600; color: var(--ink-700);
+  }
+  .gf-loading.show { display: flex; }
+  .gf-spinner {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid rgba(15,122,55,.25); border-top-color: var(--brand-dark);
+    animation: gf-spin .7s linear infinite;
+  }
+  @keyframes gf-spin { to { transform: rotate(360deg); } }
+  @media (max-width: 760px) { .gf-loading { top: calc(20px + var(--gf-header-h, 60px)); } }
+
+  /* ---------- Credits badge ---------- */
+  .watermark {
+    position: fixed; left: var(--gap); bottom: var(--gap); z-index: 1000;
+    display: flex; align-items: center;
+    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border); border-radius: 999px;
+    padding: 6px 14px 6px 14px; box-shadow: var(--glass-shadow);
+    font: 600 .68rem/1.2 'Inter', sans-serif; color: var(--ink-700);
+    transition: left .3s var(--ease), box-shadow .18s var(--ease);
+  }
+  .watermark:hover { box-shadow: var(--shadow-pop); }
+  .watermark a { color: var(--brand-dark); text-decoration: none; font-weight: 700; }
+  .watermark a:hover { text-decoration: underline; }
+  @media (min-width: 761px) {
+    .watermark { left: calc(var(--sidebar-w) + var(--gap) * 2 + 14px); }
+    body.gf-sidebar-collapsed .watermark { left: 14px; }
+  }
+  @media (max-width: 760px) { .watermark { left: 10px; bottom: 10px; } }
+
+  /* ---------- Leaflet overrides ---------- */
+  .leaflet-control-zoom {
+    border: 1px solid var(--glass-border) !important; border-radius: var(--radius-sm) !important;
+    background: var(--glass-strong) !important; backdrop-filter: var(--glass-blur) !important; -webkit-backdrop-filter: var(--glass-blur) !important;
+    box-shadow: var(--glass-shadow) !important; overflow: hidden;
+  }
+  .leaflet-control-zoom a { background: transparent !important; color: var(--ink-900) !important; border-bottom: 1px solid var(--glass-border) !important; }
+  .leaflet-control-zoom a:last-child { border-bottom: none !important; }
+  .leaflet-control-zoom a:hover { background: rgba(255,255,255,.5) !important; }
+  .leaflet-control-attribution {
+    font-size: 10px !important; background: rgba(255,255,255,.7) !important;
+    backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important;
+    border-radius: var(--radius-sm) 0 0 0 !important;
+  }
+  .gf-points-canvas { pointer-events: none; }
+  /* Mobile : zoom au doigt, et le résumé occupe le bas de l'écran */
+  @media (max-width: 760px) { .leaflet-control-zoom { display: none; } }
+
+  /* ---------- Popup ---------- */
+  .leaflet-popup-content-wrapper {
+    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border); border-radius: 16px; color: var(--ink-900);
+    box-shadow: 0 20px 50px -20px rgba(11,17,32,.4);
+  }
+  .leaflet-popup-tip { background: var(--glass-strong); }
+  .leaflet-popup-content { margin: 16px 18px; width: min(270px, calc(100vw - 72px)) !important; font-family: 'Inter', sans-serif; }
+  .leaflet-popup-close-button { color: var(--ink-500) !important; }
+  .gf-pop-eyebrow {
+    display: inline-flex; align-items: center; gap: 6px; font-size: .7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--brand-dark);
+    background: rgba(22,163,74,.1); padding: 5px 11px; border-radius: 999px; margin-bottom: 10px;
+  }
+  .gf-pop-name { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; font-family: 'Poppins','Inter',sans-serif; }
+  .gf-pop-name small { display: block; font-family: 'Inter', sans-serif; font-size: .78rem; font-weight: 500; color: var(--ink-500); letter-spacing: 0; margin-top: 2px; }
+  .gf-pop-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 7px 0; border-bottom: 1px solid rgba(11,17,32,.06); font-size: .8rem;
+  }
+  .gf-pop-row:last-child { border-bottom: none; }
+  .gf-pop-row .k { color: var(--ink-500); flex-shrink: 0; }
+  .gf-pop-row .v { font-weight: 600; color: var(--ink-900); display: flex; align-items: center; gap: 6px; text-align: right; }
+  .gf-pop-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .gf-pop-note { margin: 8px 0 0; font-size: .72rem; line-height: 1.45; color: var(--ink-500); }
+
+  /* Mode sombre propre à cette carte (le reste vient de ../carte-sombre.css, lié après) */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --hairline: rgba(255, 255, 255, 0.08);
+      --track: rgba(255, 255, 255, 0.08);
+      --dot: rgba(241, 245, 249, 0.9);
+      --dot-halo: rgba(11, 19, 16, 0.9);
+    }
+    :root:not([data-theme="light"]) .gf-info-panel a.gf-person:hover { background: var(--surface-hover); }
+    :root:not([data-theme="light"]) .gf-stat-raa { background: rgba(74, 222, 128, 0.1); }
+    :root:not([data-theme="light"]) .gf-info-panel strong,
+    :root:not([data-theme="light"]) .gf-info-panel a { color: var(--brand-ink); }
+    :root:not([data-theme="light"]) .gf-person img { border-color: rgba(255, 255, 255, 0.2); }
+  }
+</style>
+<link rel="stylesheet" href="../carte-sombre.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Map",
+  "name": "Collisions et réseau artériel de Montréal",
+  "description": "Carte des collisions routières de Montréal (2012-2021) sur le réseau artériel : part des collisions sur les artères, les collectrices et les rues locales, par arrondissement.",
+  "url": "https://gabfortin.com/cartes/collisions-reseau-arteriel/",
+  "image": "https://gabfortin.com/cartes/collisions-reseau-arteriel/apercu.png",
+  "inLanguage": "fr-CA",
+  "spatialCoverage": { "@type": "Place", "name": "Montréal, Québec" },
+  "author": { "@type": "Person", "@id": "https://gabfortin.com/#gabriel-fortin", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
+  "creator": { "@type": "Person", "@id": "https://gabfortin.com/#gabriel-fortin", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
+  "isBasedOn": ["https://donnees.montreal.ca/dataset/collisions-routieres", "https://donnees.montreal.ca/dataset/reseau-arteriel-administratif"]
+}
+</script>
+<link rel="alternate" type="application/rss+xml" title="Blogue — Gabriel Fortin" href="https://gabfortin.com/articles/feed.xml">
+<!-- Statistiques de visite : GoatCounter (open source, sans cookies, aucune donnée personnelle) -->
+<script data-goatcounter="https://gabfortin.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div class="gf-header">
+    <a class="gf-back" href="../index.html" aria-label="Toutes les cartes" title="Toutes les cartes"><span aria-hidden="true">←</span></a>
+    <div class="gf-brand">
+      <div class="gf-brand-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="0.7" y="0.7" width="22.6" height="22.6" rx="8" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/><path d="M9 0.5v23M15 0.5v23M0.5 9h23M0.5 15h23" stroke="#fff" stroke-opacity=".5" stroke-width="0.9" stroke-linecap="round"/><path d="M12 0.15v23.7M0.15 12h23.7" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="3.6" fill="#fff"/></svg></div>
+      <div class="gf-brand-text">
+        <div class="gf-brand-word">Collisions <span>et réseau artériel</span></div>
+        <div class="gf-brand-sub">Montréal — <a href="https://gabfortin.com" target="_blank" rel="noopener">Gabriel Fortin</a></div>
+      </div>
+    </div>
+    <div class="arrond-control">
+      <select id="arrondSelect" aria-label="Choisir un arrondissement"></select>
+    </div>
+    <div class="gf-header-spacer"></div>
+    <button class="gf-info-btn" id="gfInfoBtn" aria-label="À propos de cette carte" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="12" cy="7.6" r="1.4" fill="currentColor"/>
+        <path d="M12 11v6.2" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="gf-info-overlay" id="gfInfoOverlay" role="dialog" aria-modal="true" aria-labelledby="gfInfoTitle">
+    <div class="gf-info-panel">
+      <button class="gf-info-close" id="gfInfoClose" aria-label="Fermer">✕</button>
+      <h2 id="gfInfoTitle">À propos de cette carte</h2>
+      <p>Cette carte superpose les collisions routières déclarées à Montréal de <span class="js-periode">2012 à 2021</span> au réseau artériel administratif de la Ville, et calcule la part des collisions survenues sur les artères, les collectrices et les rues locales, pour chaque arrondissement ou pour toute la ville.</p>
+
+      <h3>Méthode</h3>
+      <ul>
+        <li>Seules les collisions de la Ville de Montréal sont retenues (pas celles des villes liées, que le réseau artériel ne couvre pas).</li>
+        <li>Chaque collision est rattachée au tronçon de rue le plus proche. Si un tronçon à 30 m ou moins porte le nom de la rue inscrite au rapport de collision, il est préféré : à une intersection, la collision va donc à la rue nommée dans le rapport, pas à la rue transversale.</li>
+        <li>Le type de voie est la classe du tronçon dans le réseau artériel administratif. « Artères » regroupe les artères principales et secondaires.</li>
+        <li>Sont hors du calcul : les collisions que la Ville a <em>détachées du réseau routier</em> (stationnement, ruelle, terrain privé, etc.), celles sans tronçon à 60 m ou moins, et celles à <em>précision nulle</em> (placées au centre du poste de quartier, non cartographiées).</li>
+        <li>La Ville exclut de la géolocalisation les collisions survenues sur le réseau autoroutier : la part des autoroutes est donc presque nulle et ne reflète pas la réalité.</li>
+        <li>Le filtre « Victimes » garde les collisions avec au moins un piéton, un cycliste ou un motocycliste blessé ou tué, selon les champs de la source. La source ne distingue pas les autres victimes (conducteurs et passagers des autres véhicules).</li>
+        <li>Une collision sur une rue qui sépare deux arrondissements compte dans les deux. Elle n'est comptée qu'une fois pour « Tous les arrondissements ».</li>
+        <li>La part des kilomètres de rues de chaque type est donnée à titre de comparaison.</li>
+      </ul>
+      <p>La géolocalisation des collisions a été faite par la Ville, de façon automatisée. Des erreurs de localisation sont possibles, selon la mise en garde de la Ville.</p>
+
+      <h3>Données</h3>
+      <p><a href="https://donnees.montreal.ca/dataset/collisions-routieres" target="_blank" rel="noopener">Collisions routières</a> (SPVM, à partir des rapports de la SAAQ) et <a href="https://donnees.montreal.ca/dataset/reseau-arteriel-administratif" target="_blank" rel="noopener">Réseau artériel administratif</a>, données ouvertes de la Ville de Montréal (CC BY 4.0).
+        <span id="donnees-maj" hidden>Version des collisions publiée par la Ville le <time id="donnees-source-date"></time> ; données préparées pour cette carte le <time id="donnees-maj-date"></time>.</span></p>
+      <p><strong>Initiative indépendante</strong>&nbsp;: cette carte n'est ni produite ni approuvée par la Ville de Montréal ni par l'arrondissement du Plateau-Mont-Royal.</p>
+
+      <a class="gf-person" href="https://gabfortin.com" target="_blank" rel="noopener">
+        <img src="../../img/Gabriel%20Fortin.webp" alt="">
+        <div>
+          <div class="gf-person-name">Développé par Gabriel Fortin</div>
+          <div class="gf-person-role">Conseiller d'arrondissement, Plateau-Mont-Royal<span class="sr-only"> (site de Gabriel Fortin, s'ouvre dans un nouvel onglet)</span></div>
+        </div>
+      </a>
+      <p class="gf-info-legal"><a href="../../confidentialite/index.html">Politique de confidentialité</a></p>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById('gfInfoBtn');
+      var overlay = document.getElementById('gfInfoOverlay');
+      var closeBtn = document.getElementById('gfInfoClose');
+      function openInfo() { overlay.classList.add('open'); }
+      function closeInfo() { overlay.classList.remove('open'); }
+      btn.addEventListener('click', openInfo);
+      closeBtn.addEventListener('click', closeInfo);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) closeInfo(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeInfo(); });
+    })();
+  </script>
+
+  <button class="gf-sidebar-toggle" id="gfSidebarToggle" aria-label="Statistiques, filtres et légende" aria-expanded="true" aria-controls="gfSidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+  </button>
+
+  <aside class="gf-sidebar" id="gfSidebar" aria-label="Statistiques, filtres et légende">
+    <div class="gf-sidebar-header"><h2>Où ont lieu les collisions&nbsp;?</h2></div>
+    <div class="gf-stats" id="gfStats" aria-live="polite">
+      <p class="gf-stats-total">Chargement…</p>
+    </div>
+
+    <div class="gf-sidebar-divider"></div>
+    <div class="gf-sidebar-header"><h2>Filtres</h2></div>
+    <div class="gf-filter">
+      <div class="gf-years">
+        <label for="yearFrom">De</label><select id="yearFrom"></select>
+        <label for="yearTo">à</label><select id="yearTo"></select>
+      </div>
+      <div class="gf-years">
+        <label for="victimeSelect">Victimes</label>
+        <select id="victimeSelect">
+          <option value="tous">Tous types</option>
+          <option value="pieton">Piétons</option>
+          <option value="velo">Cyclistes</option>
+          <option value="moto">Motocyclistes</option>
+        </select>
+      </div>
+      <div id="gfSevList"></div>
+    </div>
+
+    <div class="gf-sidebar-divider"></div>
+    <div class="gf-sidebar-header"><h2>Calques</h2></div>
+    <div class="gf-sidebar-list">
+      <label class="gf-sidebar-item">
+        <input type="checkbox" id="collisionsToggle" checked>
+        <span class="gf-sidebar-label">Afficher les collisions</span>
+      </label>
+      <label class="gf-sidebar-item">
+        <input type="checkbox" id="allStreetsToggle" checked>
+        <span class="gf-sidebar-label">Afficher toutes les rues</span>
+      </label>
+    </div>
+    <p class="gf-sidebar-note">Décochée, la carte ne montre que les rues du réseau artériel administratif. Les filtres de rues ci-dessous ne changent que l'affichage, pas les pourcentages.</p>
+
+    <div class="gf-legend">
+      <div class="gf-sidebar-header" style="padding: 4px 4px 6px;"><h2>Rues</h2><button type="button" class="gf-legend-all" id="gfLegendAll">Tout masquer</button></div>
+      <div id="gfLegendBody"></div>
+    </div>
+  </aside>
+  <div class="gf-sidebar-scrim" id="gfSidebarScrim"></div>
+
+  <button type="button" class="gf-summary" id="gfSummary" aria-controls="gfSidebar">
+    <div class="gf-summary-title" id="gfSummaryTitle">Part des collisions</div>
+    <div class="gf-summary-row" id="gfSummaryRow"></div>
+  </button>
+
+  <div class="gf-loading" id="gfLoading"><span class="gf-spinner"></span><span>Chargement…</span></div>
+
+  <div class="watermark">
+    <span>Gabriel Fortin · <a href="https://donnees.montreal.ca/dataset/collisions-routieres" target="_blank" rel="noopener">Données ouvertes, Ville de Montréal</a></span>
+  </div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+  <script>
+    // Tronçons : ../reseau-arteriel/data/<slug>.json, [[[lng, lat], ...], classe, artere, nom]
+    const TRONCONS_URL = '../reseau-arteriel/data/';
+    // Collisions : data/<slug>.json = { noms: [...], collisions: [rangée, ...] }, écrit par
+    // script/preparer_collisions.py. Position de chaque champ dans une rangée :
+    const COL = {
+      NUM: 0,        // numéro de NO_SEQ_COLL (« SPVM _ AAAA _ numéro »)
+      LNG: 1, LAT: 2,
+      DATE: 3,       // DT_ACCDN
+      GRAV: 4,       // index dans meta.gravites (0 = Mortel … 4 = Dommages matériels inférieurs au seuil)
+      CAT: 5,        // classe du tronçon retenu (0-9), -1 = détachée du réseau, -3 = aucun tronçon à 60 m
+      ARTERE: 6,     // ARTERE du tronçon retenu
+      METHODE: 7,    // 1 = tronçon du même nom que RUE_ACCDN, 0 = tronçon le plus proche
+      MORTS: 8, BG: 9, BL: 10,   // NB_MORTS, NB_BLESSES_GRAVES, NB_BLESSES_LEGERS
+      PIETON: 11, VELO: 12,      // NB_VICTIMES_PIETON, NB_VICTIMES_VELO
+      RUE: 13, PRES: 14,         // RUE_ACCDN, ACCDN_PRES_DE (index dans noms, -1 = vide)
+      TRONCON: 15,               // nom du tronçon retenu (index dans noms)
+      DIST: 16,                  // distance au tronçon, en mètres
+      MOTO: 17                   // NB_VICTIMES_MOTO
+    };
+    // Filtre « Victimes » : collisions avec au moins une victime de ce type (champs de la source)
+    const VICTIMES = {
+      pieton: { phrase: "au moins un piéton victime", champ: COL.PIETON },
+      velo: { phrase: "au moins un cycliste victime", champ: COL.VELO },
+      moto: { phrase: "au moins un motocycliste victime", champ: COL.MOTO }
+    };
+    const DETACHEE = -1, NON_RATTACHEE = -3;
+
+    const MANIFEST = [
+      {"name": "Ahuntsic-Cartierville", "slug": "ahuntsic-cartierville"},
+      {"name": "Anjou", "slug": "anjou"},
+      {"name": "Côte-des-Neiges–Notre-Dame-de-Grâce", "slug": "cote-des-neiges-notre-dame-de-grace"},
+      {"name": "L'Île-Bizard–Sainte-Geneviève", "slug": "l-ile-bizard-sainte-genevieve"},
+      {"name": "Lachine", "slug": "lachine"},
+      {"name": "LaSalle", "slug": "lasalle"},
+      {"name": "Le Plateau-Mont-Royal", "slug": "le-plateau-mont-royal"},
+      {"name": "Le Sud-Ouest", "slug": "le-sud-ouest"},
+      {"name": "Mercier–Hochelaga-Maisonneuve", "slug": "mercier-hochelaga-maisonneuve"},
+      {"name": "Montréal-Nord", "slug": "montreal-nord"},
+      {"name": "Outremont", "slug": "outremont"},
+      {"name": "Pierrefonds-Roxboro", "slug": "pierrefonds-roxboro"},
+      {"name": "Rivière-des-Prairies–Pointe-aux-Trembles", "slug": "riviere-des-prairies-pointe-aux-trembles"},
+      {"name": "Rosemont–La Petite-Patrie", "slug": "rosemont-la-petite-patrie"},
+      {"name": "Saint-Laurent", "slug": "saint-laurent"},
+      {"name": "Saint-Léonard", "slug": "saint-leonard"},
+      {"name": "Verdun", "slug": "verdun"},
+      {"name": "Ville-Marie", "slug": "ville-marie"},
+      {"name": "Villeray–Saint-Michel–Parc-Extension", "slug": "villeray-saint-michel-parc-extension"}
+    ];
+    const DEFAULT_SLUG = "le-plateau-mont-royal";
+    const DARK = matchMedia("(prefers-color-scheme: dark)").matches;
+
+    // Mêmes libellés et couleurs que ../reseau-arteriel/carte.html
+    const CLASSE_NAMES = {
+      0: "Rue locale", 1: "Voie piétonnière", 2: "Place d'affaires", 3: "Quai", 4: "Voie privée",
+      5: "Collectrice", 6: "Artère secondaire", 7: "Artère principale", 8: "Autoroute", 9: "Rue projetée"
+    };
+    const CLASSE_COLORS = {
+      0: "#94a3b8", 1: "#14b8a6", 2: "#eab308", 3: "#0ea5e9", 4: "#a78bfa",
+      5: "#3b82f6", 6: "#f97316", 7: "#ef4444",
+      8: DARK ? "#e2e8f0" : "#1e293b",
+      9: "#ec4899"
+    };
+    const CLASSE_ORDER = [7, 8, 6, 5, 2, 3, 1, 4, 9, 0];
+    function classeColor(c) { return CLASSE_COLORS[c] || "#999999"; }
+    function classeName(c) { return CLASSE_NAMES[c] || ("Classe " + c); }
+
+    // Regroupements des classes pour les pourcentages (choix éditorial, expliqué dans la modale)
+    const GROUPES = [
+      { label: "Artères", sub: "principales et secondaires", classes: [7, 6], color: CLASSE_COLORS[7], court: "Artères",
+        detail: { 7: "dont artères principales", 6: "dont artères secondaires" } },
+      { label: "Collectrices", classes: [5], color: CLASSE_COLORS[5], court: "Collectrices" },
+      { label: "Rues locales", classes: [0], color: CLASSE_COLORS[0], court: "Locales" },
+      { label: "Autoroutes", sub: "collisions du réseau autoroutier exclues par la Ville", classes: [8], color: CLASSE_COLORS[8] },
+      { label: "Autres voies", sub: "piétonnières, privées, quais, places d'affaires, projetées", classes: [1, 2, 3, 4, 9], color: CLASSE_COLORS[4] }
+    ];
+
+    let GRAVITES = ["Mortel", "Grave", "Léger", "Dommages matériels seulement", "Dommages matériels inférieurs au seuil de rapportage"];
+    let YEAR_MIN = 2012, YEAR_MAX = 2021;
+    // Taille des points selon la gravité (px, au zoom 15)
+    const SEV_RADIUS = [6, 5, 3.6, 2.6, 2.6];
+
+    // ---------- Utilitaires ----------
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+    const nf = new Intl.NumberFormat('fr-CA');
+    const pf = new Intl.NumberFormat('fr-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    function pct(n, total) { return total ? pf.format(n / total * 100) + ' %' : '–'; }
+    function frDate(iso) {
+      const [a, m, j] = iso.split('-').map(Number);
+      return new Date(a, m - 1, j).toLocaleDateString('fr-CA', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    // ---------- État ----------
+    const state = {
+      slug: DEFAULT_SLUG,
+      streets: null,          // rangées de tronçons
+      collisions: [],         // objets { r, noms, x0, y0, an, k }, triés du moins grave au plus grave
+      // Par défaut : collisions avec victimes seulement (les deux catégories « Dommages matériels » décochées)
+      sev: new Set([0, 1, 2]),
+      victime: 'tous',        // 'tous' ou une clé de VICTIMES
+      yearFrom: YEAR_MIN, yearTo: YEAR_MAX,
+      showCollisions: true,
+      showAllStreets: true,
+      hiddenClasses: new Set()
+    };
+    let resume = null;
+    const streetCache = new Map();
+    const colCache = new Map();
+
+    // ---------- Carte ----------
+    const map = L.map('map', { preferCanvas: true, zoomControl: false, zoomSnap: 0.5 });
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    map.setView([45.52, -73.58], 13);
+    map.createPane('collisions').style.zIndex = 450;
+
+    // ---------- Calque de points (canevas maison : des dizaines de milliers de points restent fluides) ----------
+    const PointsLayer = L.Layer.extend({
+      onAdd: function (m) {
+        this._canvas = L.DomUtil.create('canvas', 'gf-points-canvas leaflet-zoom-hide');
+        m.getPane('collisions').appendChild(this._canvas);
+        m.on('moveend zoomend resize viewreset', this.redraw, this);
+        this.redraw();
+      },
+      onRemove: function (m) {
+        m.off('moveend zoomend resize viewreset', this.redraw, this);
+        L.DomUtil.remove(this._canvas);
+      },
+      redraw: function () {
+        if (!this._map) return;
+        const m = this._map, size = m.getSize(), dpr = window.devicePixelRatio || 1;
+        const c = this._canvas;
+        c.width = size.x * dpr; c.height = size.y * dpr;
+        c.style.width = size.x + 'px'; c.style.height = size.y + 'px';
+        L.DomUtil.setPosition(c, m.containerPointToLayerPoint([0, 0]));
+        const ctx = c.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, size.x, size.y);
+        if (!state.showCollisions) return;
+        const z = m.getZoom(), scale = 256 * Math.pow(2, z) / 256;
+        const origin = m.getPixelBounds().min;
+        // Petits points et plus transparents de loin, sinon ils cachent les rues
+        const f = z >= 17 ? 1.25 : z >= 16 ? 1 : z >= 15 ? 0.85 : z >= 14 ? 0.65 : z >= 13 ? 0.5 : 0.4;
+        const far = z < 14.5;
+        const fill = DARK ? 'rgba(241, 245, 249, ALPHA)' : 'rgba(17, 24, 39, ALPHA)';
+        const halo = DARK ? 'rgba(11, 19, 16, 0.9)' : 'rgba(255, 255, 255, 0.9)';
+        const alphas = far ? [1, 0.95, 0.6, 0.3, 0.3] : [1, 0.95, 0.8, 0.55, 0.55];
+        let curG = -1;
+        for (const o of state.collisions) {
+          if (!visible(o)) continue;
+          const x = o.x0 * scale - origin.x, y = o.y0 * scale - origin.y;
+          if (x < -10 || y < -10 || x > size.x + 10 || y > size.y + 10) continue;
+          const g = o.r[COL.GRAV];
+          if (g !== curG) {
+            curG = g;
+            ctx.fillStyle = fill.replace('ALPHA', alphas[g]);
+            ctx.strokeStyle = halo;
+            ctx.lineWidth = g <= 1 ? 1.5 : 0.8;
+            ctx.globalAlpha = 1;
+          }
+          const r = SEV_RADIUS[g] * f;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, 6.2832);
+          ctx.fill();
+          if (g <= 1 || (g === 2 && !far)) ctx.stroke();
+        }
+      },
+      // Collision visible la plus proche d'un point de l'écran (en px), ou null
+      nearest: function (containerPoint, tol) {
+        if (!state.showCollisions) return null;
+        const m = this._map, z = m.getZoom(), scale = Math.pow(2, z);
+        const origin = m.getPixelBounds().min;
+        let best = null, bestD = Infinity;
+        for (const o of state.collisions) {
+          if (!visible(o)) continue;
+          const dx = o.x0 * scale - origin.x - containerPoint.x, dy = o.y0 * scale - origin.y - containerPoint.y;
+          const d = dx * dx + dy * dy;
+          if (d < bestD || (d === bestD && best && o.r[COL.GRAV] < best.r[COL.GRAV])) { bestD = d; best = o; }
+        }
+        return best && bestD <= tol * tol ? best : null;
+      }
+    });
+    const points = new PointsLayer().addTo(map);
+
+    function visibleSaufGravite(o) {
+      return o.an >= state.yearFrom && o.an <= state.yearTo &&
+        (state.victime === 'tous' || o.r[VICTIMES[state.victime].champ] > 0);
+    }
+    function visible(o) {
+      return state.sev.has(o.r[COL.GRAV]) && visibleSaufGravite(o);
+    }
+
+    // ---------- Rues ----------
+    let streetLayer = null;
+    function styleFor(artere) {
+      return artere === 1 ? { weight: 3, opacity: 0.85 } : { weight: 1.5, opacity: 0.6 };
+    }
+    function renderStreets() {
+      if (streetLayer) { map.removeLayer(streetLayer); streetLayer = null; }
+      if (!state.streets) return;
+      const group = L.layerGroup();
+      state.streets.forEach(row => {
+        const [coords, classe, artere, nom] = row;
+        if (!state.showAllStreets && artere !== 1) return;
+        if (state.hiddenClasses.has(classe)) return;
+        const line = L.polyline(coords.map(c => [c[1], c[0]]), Object.assign({ color: classeColor(classe) }, styleFor(artere)));
+        line.on('click', function (e) {
+          // Une collision sous le curseur l'emporte sur la rue
+          const hit = points.nearest(e.containerPoint, 9);
+          e.originalEvent._gfHandled = true;
+          if (hit) { openCollisionPopup(hit); return; }
+          openPopup(e.latlng,
+            '<div class="gf-pop-eyebrow">' + (artere === 1 ? 'Réseau artériel' : 'Hors réseau artériel') + '</div>' +
+            '<h3 class="gf-pop-name">' + (nom ? esc(nom) : 'Voie sans nom') + '</h3>' +
+            '<div class="gf-pop-row"><span class="k">Classification</span><span class="v"><span class="gf-pop-dot" style="background:' + classeColor(classe) + '"></span>' + classeName(classe) + '</span></div>' +
+            '<div class="gf-pop-row"><span class="k">Réseau artériel admin.</span><span class="v">' + (artere === 1 ? 'Oui' : 'Non') + '</span></div>');
+        });
+        group.addLayer(line);
+      });
+      group.addTo(map);
+      streetLayer = group;
+    }
+
+    // ---------- Popups ----------
+    function openPopup(latlng, html) {
+      const headerEl = document.querySelector('.gf-header');
+      const topPad = (headerEl ? headerEl.offsetHeight : 76) + 16;
+      L.popup({ maxWidth: 300, autoPan: true, autoPanPaddingTopLeft: [24, topPad], autoPanPaddingBottomRight: [24, 24] })
+        .setLatLng(latlng).setContent(html).openOn(map);
+    }
+    function nom(o, champ) {
+      const i = o.r[champ];
+      return i >= 0 ? o.noms[i] : null;
+    }
+    function openCollisionPopup(o) {
+      const r = o.r;
+      const rue = nom(o, COL.RUE), pres = nom(o, COL.PRES);
+      const titre = rue ? esc(rue) : 'Rue non précisée';
+      const victimes = [];
+      if (r[COL.MORTS]) victimes.push(r[COL.MORTS] + (r[COL.MORTS] > 1 ? ' morts' : ' mort'));
+      if (r[COL.BG]) victimes.push(r[COL.BG] + ' blessé' + (r[COL.BG] > 1 ? 's' : '') + ' grave' + (r[COL.BG] > 1 ? 's' : ''));
+      if (r[COL.BL]) victimes.push(r[COL.BL] + ' blessé' + (r[COL.BL] > 1 ? 's' : '') + ' léger' + (r[COL.BL] > 1 ? 's' : ''));
+      let rattachement;
+      const cat = r[COL.CAT];
+      if (cat === DETACHEE) {
+        rattachement = '<div class="gf-pop-row"><span class="k">Rattachement</span><span class="v">Détachée du réseau routier</span></div>' +
+          '<p class="gf-pop-note">La Ville a détaché cette collision du réseau routier (stationnement, ruelle, terrain privé, etc.) : elle n\'entre pas dans les pourcentages.</p>';
+      } else if (cat === NON_RATTACHEE) {
+        rattachement = '<div class="gf-pop-row"><span class="k">Rattachement</span><span class="v">Aucun tronçon à 60 m</span></div>' +
+          '<p class="gf-pop-note">Aucune rue du réseau artériel administratif à 60 m ou moins : hors des pourcentages.</p>';
+      } else {
+        const t = nom(o, COL.TRONCON);
+        rattachement =
+          '<div class="gf-pop-row"><span class="k">Type de voie</span><span class="v"><span class="gf-pop-dot" style="background:' + classeColor(cat) + '"></span>' + classeName(cat) + '</span></div>' +
+          '<div class="gf-pop-row"><span class="k">Tronçon retenu</span><span class="v">' + (t ? esc(t) : 'Voie sans nom') + ' · ' + pf.format(r[COL.DIST]) + ' m</span></div>' +
+          '<p class="gf-pop-note">' + (r[COL.METHODE] === 1
+            ? 'Tronçon qui porte le nom de la rue du rapport.'
+            : 'Tronçon le plus proche (aucun tronçon à 30 m ne porte le nom de la rue du rapport).') + '</p>';
+      }
+      openPopup([r[COL.LAT], r[COL.LNG]],
+        '<div class="gf-pop-eyebrow">' + esc(GRAVITES[r[COL.GRAV]]) + '</div>' +
+        '<h3 class="gf-pop-name">' + titre + (pres ? '<small>Près de : ' + esc(pres) + '</small>' : '') + '</h3>' +
+        '<div class="gf-pop-row"><span class="k">Date</span><span class="v">' + frDate(r[COL.DATE]) + '</span></div>' +
+        '<div class="gf-pop-row"><span class="k">Victimes</span><span class="v">' + (victimes.length ? victimes.join(', ') : 'Aucune') + '</span></div>' +
+        (r[COL.PIETON] ? '<div class="gf-pop-row"><span class="k">Piétons victimes</span><span class="v">' + r[COL.PIETON] + '</span></div>' : '') +
+        (r[COL.VELO] ? '<div class="gf-pop-row"><span class="k">Cyclistes victimes</span><span class="v">' + r[COL.VELO] + '</span></div>' : '') +
+        (r[COL.MOTO] ? '<div class="gf-pop-row"><span class="k">Motocyclistes victimes</span><span class="v">' + r[COL.MOTO] + '</span></div>' : '') +
+        rattachement +
+        '<div class="gf-pop-row"><span class="k">No de collision</span><span class="v">SPVM _ ' + o.an + ' _ ' + r[COL.NUM] + '</span></div>');
+    }
+    map.on('click', function (e) {
+      if (e.originalEvent && e.originalEvent._gfHandled) return;
+      const hit = points.nearest(e.containerPoint, 9);
+      if (hit) openCollisionPopup(hit);
+    });
+
+    // ---------- Statistiques ----------
+    function computeStats() {
+      const parClasse = {}, excl = { detachee: 0, non: 0 };
+      let total = 0, artereAdm = 0;
+      for (const o of state.collisions) {
+        if (!visible(o)) continue;
+        const cat = o.r[COL.CAT];
+        if (cat === DETACHEE) { excl.detachee++; continue; }
+        if (cat === NON_RATTACHEE) { excl.non++; continue; }
+        parClasse[cat] = (parClasse[cat] || 0) + 1;
+        total++;
+        if (o.r[COL.ARTERE] === 1) artereAdm++;
+      }
+      return { parClasse, total, artereAdm, excl };
+    }
+    function kmFor(slug) {
+      if (!resume) return null;
+      return resume.km[slug === 'all' ? 'tous' : slug] || null;
+    }
+    function renderStats() {
+      const s = computeStats();
+      const km = kmFor(state.slug);
+      const kmTotal = km ? Object.values(km.classes).reduce((a, b) => a + b, 0) : 0;
+      const kmOf = classes => km ? classes.reduce((a, c) => a + (km.classes[c] || 0), 0) : 0;
+      const n = cls => cls.reduce((a, c) => a + (s.parClasse[c] || 0), 0);
+      const zone = state.slug === 'all' ? 'à Montréal' : 'dans ' + (MANIFEST.find(a => a.slug === state.slug) || {}).name;
+      const periode = state.yearFrom === state.yearTo ? 'en ' + state.yearFrom : 'de ' + state.yearFrom + ' à ' + state.yearTo;
+
+      let html = '<p class="gf-stats-total"><b>' + nf.format(s.total) + '</b> collision' + (s.total > 1 ? 's' : '') +
+        ' rattachée' + (s.total > 1 ? 's' : '') + ' à une rue ' + esc(zone) + ', ' + periode +
+        (state.sev.size < 5 ? ' (gravité : ' + esc(GRAVITES.filter((g, i) => state.sev.has(i)).join(', ') || 'aucune') + ')' : '') +
+        (state.victime !== 'tous' ? ', avec <b>' + VICTIMES[state.victime].phrase + '</b>' : '') + '.</p>';
+      html += '<div class="gf-bar" role="img" aria-label="Répartition des collisions par type de voie">' +
+        GROUPES.map(g => '<span style="width:' + (s.total ? n(g.classes) / s.total * 100 : 0) + '%;background:' + g.color + '"></span>').join('') + '</div>';
+      GROUPES.forEach(g => {
+        const c = n(g.classes);
+        if (!c && !kmOf(g.classes)) return;   // ex. aucune autoroute sur le Plateau
+        html += '<div class="gf-stat-row"><span class="gf-legend-dot" style="background:' + g.color + '"></span>' +
+          '<span class="gf-stat-label">' + g.label + (g.sub ? '<small>' + g.sub + '</small>' : '') + '</span>' +
+          '<span class="gf-stat-pct">' + pct(c, s.total) + '</span>' +
+          '<span class="gf-stat-sub">' + nf.format(c) + ' collision' + (c > 1 ? 's' : '') +
+          (km ? ' · ' + pct(kmOf(g.classes), kmTotal) + ' des km de rues' : '') + '</span></div>';
+        if (g.detail) {
+          g.classes.forEach(cl => {
+            html += '<div class="gf-stat-row is-detail"><span class="gf-stat-label">' + g.detail[cl] + '</span>' +
+              '<span class="gf-stat-pct">' + pct(s.parClasse[cl] || 0, s.total) + '</span></div>';
+          });
+        }
+      });
+      html += '<div class="gf-stat-raa">Sur le <b>réseau artériel administratif</b> de la Ville (artères, presque toutes les collectrices et quelques rues locales)&nbsp;: <b>' +
+        pct(s.artereAdm, s.total) + '</b> des collisions' + (km ? ', pour ' + pct(km.artere, kmTotal) + ' des km de rues' : '') + '.</div>';
+      const exclN = s.excl.detachee + s.excl.non;
+      html += '<p class="gf-stats-excl">Hors calcul&nbsp;: ' + nf.format(s.excl.detachee) + ' collision' + (s.excl.detachee > 1 ? 's' : '') +
+        ' détachée' + (s.excl.detachee > 1 ? 's' : '') + ' du réseau routier par la Ville (stationnement, ruelle, terrain privé…) et ' +
+        nf.format(s.excl.non) + ' sans tronçon à 60&nbsp;m ou moins' +
+        (state.slug === 'all' && resume ? '. ' + nf.format(resume.compte.precision_nulle) + ' collisions à précision nulle ne sont pas cartographiées (toutes années et gravités)' : '') +
+        '.</p>';
+      document.getElementById('gfStats').innerHTML = html;
+
+      // Résumé mobile
+      document.getElementById('gfSummaryTitle').textContent = 'Part des collisions, ' + periode;
+      document.getElementById('gfSummaryRow').innerHTML = GROUPES.filter(g => g.court).map(g =>
+        '<span class="gf-summary-item"><b>' + pct(n(g.classes), s.total) + '</b><span><i style="background:' + g.color + '"></i>' + g.court + '</span></span>').join('');
+      document.getElementById('gfSummary').setAttribute('aria-label', 'Part des collisions : ' +
+        GROUPES.filter(g => g.court).map(g => g.court + ' ' + pct(n(g.classes), s.total)).join(', ') + '. Ouvrir les détails');
+
+      // Compteurs par gravité (période choisie)
+      const parG = [0, 0, 0, 0, 0];
+      for (const o of state.collisions) if (visibleSaufGravite(o)) parG[o.r[COL.GRAV]]++;
+      parG.forEach((c, g) => { const el = document.getElementById('sevCount' + g); if (el) el.textContent = nf.format(c); });
+    }
+
+    function refresh() { renderStats(); points.redraw(); }
+
+    // ---------- Chargement ----------
+    function prepCollisions(json) {
+      const noms = json.noms;
+      return json.collisions.map(r => {
+        const p = map.options.crs.latLngToPoint(L.latLng(r[COL.LAT], r[COL.LNG]), 0);
+        const an = +r[COL.DATE].slice(0, 4);
+        return { r, noms, x0: p.x, y0: p.y, an, k: an * 1e6 + r[COL.NUM] };
+      });
+    }
+    function fetchJSON(url) {
+      return fetch(url).then(res => { if (!res.ok) throw new Error(res.status + ' ' + url); return res.json(); });
+    }
+    function fetchStreets(slug) {
+      if (streetCache.has(slug)) return Promise.resolve(streetCache.get(slug));
+      return fetchJSON(TRONCONS_URL + slug + '.json').then(rows => { streetCache.set(slug, rows); return rows; });
+    }
+    function fetchCollisions(slug) {
+      if (colCache.has(slug)) return Promise.resolve(colCache.get(slug));
+      return fetchJSON('./data/' + slug + '.json').then(prepCollisions).then(rows => { colCache.set(slug, rows); return rows; });
+    }
+    function sortBySeverity(list) {
+      // Les plus graves dessinés en dernier (au-dessus)
+      return list.sort((a, b) => b.r[COL.GRAV] - a.r[COL.GRAV]);
+    }
+    function loadAll() {
+      if (streetCache.has('all') && colCache.has('all')) return Promise.resolve([streetCache.get('all'), colCache.get('all')]);
+      return Promise.all(MANIFEST.map(a => Promise.all([fetchStreets(a.slug), fetchCollisions(a.slug)]))).then(parts => {
+        const seenS = new Set(), streets = [];
+        const seenC = new Set(), cols = [];
+        parts.forEach(([s, c]) => {
+          s.forEach(row => { const k = JSON.stringify(row[0]); if (!seenS.has(k)) { seenS.add(k); streets.push(row); } });
+          c.forEach(o => { if (!seenC.has(o.k)) { seenC.add(o.k); cols.push(o); } });
+        });
+        sortBySeverity(cols);
+        streetCache.set('all', streets); colCache.set('all', cols);
+        return [streets, cols];
+      });
+    }
+    function loadArrondissement(slug, fit) {
+      state.slug = slug;
+      const loading = document.getElementById('gfLoading');
+      loading.classList.add('show');
+      const req = slug === 'all'
+        ? loadAll()
+        : Promise.all([fetchStreets(slug), fetchCollisions(slug).then(c => sortBySeverity(c.slice()))]);
+      req.then(([streets, cols]) => {
+        if (state.slug !== slug) return;
+        state.streets = streets;
+        state.collisions = cols;
+        renderStreets();
+        if (fit && streets.length) {
+          let s = 90, w = 180, n = -90, e = -180;
+          streets.forEach(row => row[0].forEach(([lng, lat]) => {
+            if (lat < s) s = lat; if (lat > n) n = lat; if (lng < w) w = lng; if (lng > e) e = lng;
+          }));
+          const headerH = document.querySelector('.gf-header').offsetHeight;
+          const sidebarOpen = !isMobile() && !document.body.classList.contains('gf-sidebar-collapsed');
+          map.fitBounds([[s, w], [n, e]], {
+            paddingTopLeft: [sidebarOpen ? sidebar.offsetWidth + 40 : 20, headerH + 30],
+            paddingBottomRight: [20, isMobile() ? 120 : 30]
+          });
+        }
+        refresh();
+      })
+      .catch(err => {
+        console.error('Erreur de chargement', slug, err);
+        document.getElementById('gfStats').innerHTML = '<p class="gf-stats-total">Les données n\'ont pas pu être chargées.</p>';
+      })
+      .finally(() => { if (state.slug === slug) loading.classList.remove('show'); });
+    }
+
+    // ---------- Contrôles ----------
+    const sel = document.getElementById('arrondSelect');
+    sel.appendChild(new Option('Tous les arrondissements (lent)', 'all'));
+    MANIFEST.forEach(a => sel.appendChild(new Option(a.name, a.slug)));
+    sel.value = DEFAULT_SLUG;
+    sel.addEventListener('change', function () { map.closePopup(); loadArrondissement(this.value, true); });
+
+    const yFrom = document.getElementById('yearFrom'), yTo = document.getElementById('yearTo');
+    function fillYears() {
+      yFrom.innerHTML = ''; yTo.innerHTML = '';
+      for (let y = YEAR_MIN; y <= YEAR_MAX; y++) { yFrom.appendChild(new Option(y, y)); yTo.appendChild(new Option(y, y)); }
+      yFrom.value = state.yearFrom = YEAR_MIN; yTo.value = state.yearTo = YEAR_MAX;
+    }
+    fillYears();
+    yFrom.addEventListener('change', function () {
+      state.yearFrom = +this.value;
+      if (state.yearTo < state.yearFrom) { state.yearTo = state.yearFrom; yTo.value = state.yearTo; }
+      map.closePopup(); refresh();
+    });
+    yTo.addEventListener('change', function () {
+      state.yearTo = +this.value;
+      if (state.yearFrom > state.yearTo) { state.yearFrom = state.yearTo; yFrom.value = state.yearFrom; }
+      map.closePopup(); refresh();
+    });
+
+    function renderSeverityList() {
+      const box = document.getElementById('gfSevList');
+      box.innerHTML = '';
+      GRAVITES.forEach((g, i) => {
+        const row = document.createElement('label');
+        row.className = 'gf-legend-row';
+        const d = SEV_RADIUS[i] * 2;
+        row.innerHTML = '<input type="checkbox"' + (state.sev.has(i) ? ' checked' : '') + ' data-sev="' + i + '">' +
+          '<span class="gf-sev-box"><span class="gf-sev" style="width:' + d + 'px;height:' + d + 'px;opacity:' + [1, .95, .8, .55, .55][i] + '"></span></span>' +
+          '<span class="gf-legend-label">' + esc(g) + '</span><span class="gf-legend-count" id="sevCount' + i + '"></span>';
+        row.querySelector('input').addEventListener('change', function () {
+          if (this.checked) state.sev.add(i); else state.sev.delete(i);
+          map.closePopup(); refresh();
+        });
+        box.appendChild(row);
+      });
+    }
+    renderSeverityList();
+
+    document.getElementById('victimeSelect').addEventListener('change', function () {
+      state.victime = this.value; map.closePopup(); refresh();
+    });
+
+    document.getElementById('collisionsToggle').addEventListener('change', function () {
+      state.showCollisions = this.checked; map.closePopup(); points.redraw();
+    });
+    document.getElementById('allStreetsToggle').addEventListener('change', function () {
+      state.showAllStreets = this.checked; renderStreets();
+    });
+
+    // Légende des rues (cases à cocher, comme sur la carte du réseau artériel)
+    (function renderLegend() {
+      const body = document.getElementById('gfLegendBody');
+      CLASSE_ORDER.forEach(c => {
+        const row = document.createElement('label');
+        row.className = 'gf-legend-row';
+        row.innerHTML = '<input type="checkbox" checked data-classe="' + c + '">' +
+          '<span class="gf-legend-dot" style="background:' + classeColor(c) + '"></span><span class="gf-legend-label">' + classeName(c) + '</span>';
+        body.appendChild(row);
+      });
+    })();
+    const legendBoxes = Array.from(document.querySelectorAll('#gfLegendBody input[data-classe]'));
+    const legendAllBtn = document.getElementById('gfLegendAll');
+    function syncLegendAll() {
+      legendAllBtn.textContent = state.hiddenClasses.size === legendBoxes.length ? 'Tout afficher' : 'Tout masquer';
+    }
+    legendBoxes.forEach(box => box.addEventListener('change', function () {
+      const c = Number(this.dataset.classe);
+      if (this.checked) state.hiddenClasses.delete(c); else state.hiddenClasses.add(c);
+      syncLegendAll(); renderStreets();
+    }));
+    legendAllBtn.addEventListener('click', function () {
+      const showAll = state.hiddenClasses.size === legendBoxes.length;
+      legendBoxes.forEach(box => {
+        box.checked = showAll;
+        const c = Number(box.dataset.classe);
+        if (showAll) state.hiddenClasses.delete(c); else state.hiddenClasses.add(c);
+      });
+      syncLegendAll(); renderStreets();
+    });
+
+    // ---------- Méta (période, gravités, dates) et résumé (km de rues) ----------
+    fetchJSON('./data/meta.json').then(meta => {
+      if (Array.isArray(meta.gravites) && meta.gravites.length === 5) { GRAVITES = meta.gravites; renderSeverityList(); }
+      if (meta.anneeDebut && meta.anneeFin) {
+        YEAR_MIN = meta.anneeDebut; YEAR_MAX = meta.anneeFin; fillYears();
+        document.querySelectorAll('.js-periode').forEach(el => { el.textContent = YEAR_MIN + ' à ' + YEAR_MAX; });
+      }
+      const ok = s => /^\d{4}-\d{2}-\d{2}$/.test(s || '');
+      if (ok(meta.donneesMisesAJour) && ok(meta.versionSource)) {
+        document.getElementById('donnees-maj-date').textContent = frDate(meta.donneesMisesAJour);
+        document.getElementById('donnees-source-date').textContent = frDate(meta.versionSource);
+        document.getElementById('donnees-maj').hidden = false;
+      }
+    }).catch(() => {}).finally(() => {
+      fetchJSON('./data/resume.json').then(r => { resume = r; }).catch(() => {}).finally(() => {
+        loadArrondissement(DEFAULT_SLUG, true);
+      });
+    });
+
+    // ---------- Panneau latéral (ouvert par défaut sur ordinateur, fermé sur mobile) ----------
+    const sidebarToggle = document.getElementById('gfSidebarToggle');
+    const sidebar = document.getElementById('gfSidebar');
+    const sidebarScrim = document.getElementById('gfSidebarScrim');
+    const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
+    function setSidebarOpenMobile(open) {
+      sidebar.classList.toggle('open', open);
+      sidebarScrim.classList.toggle('open', open);
+      sidebarToggle.setAttribute('aria-expanded', String(open));
+    }
+    function toggleSidebar() {
+      if (isMobile()) {
+        setSidebarOpenMobile(!sidebar.classList.contains('open'));
+      } else {
+        const collapsed = document.body.classList.toggle('gf-sidebar-collapsed');
+        sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
+      }
+    }
+    if (isMobile()) sidebarToggle.setAttribute('aria-expanded', 'false');
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    document.getElementById('gfSummary').addEventListener('click', () => setSidebarOpenMobile(true));
+    const headerEl = document.querySelector('.gf-header');
+    const syncHeaderH = () => document.documentElement.style.setProperty('--gf-header-h', headerEl.offsetHeight + 'px');
+    new ResizeObserver(syncHeaderH).observe(headerEl);
+    sidebarScrim.addEventListener('click', () => setSidebarOpenMobile(false));
+  </script>
+</body>
+</html>

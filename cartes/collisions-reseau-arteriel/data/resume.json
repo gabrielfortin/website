@@ -1,0 +1,289 @@
+{
+ "compte": {
+  "autres_villes": 20511,
+  "categorie_-1": 29139,
+  "categorie_-3": 749,
+  "categorie_0": 56122,
+  "categorie_1": 125,
+  "categorie_2": 15,
+  "categorie_3": 1,
+  "categorie_4": 306,
+  "categorie_5": 30614,
+  "categorie_6": 36574,
+  "categorie_7": 37759,
+  "categorie_8": 264,
+  "categorie_9": 1,
+  "hors_arrondissements": 770,
+  "methode_autre": 48967,
+  "methode_nom": 142702,
+  "precision_nulle": 5316,
+  "sans_coordonnees": 6,
+  "ville_de_montreal": 197761
+ },
+ "km": {
+  "tous": {
+   "classes": {
+    "0": 2681.71,
+    "1": 7.59,
+    "2": 0.32,
+    "3": 0.69,
+    "4": 91.33,
+    "5": 577.1,
+    "6": 426.13,
+    "7": 371.03,
+    "8": 335.33,
+    "9": 4.71
+   },
+   "artere": 1945.16
+  },
+  "ahuntsic-cartierville": {
+   "classes": {
+    "0": 217.48,
+    "1": 0.3,
+    "4": 2.59,
+    "5": 37.55,
+    "6": 20.52,
+    "7": 45.99,
+    "8": 25.31,
+    "9": 0.3
+   },
+   "artere": 137.72
+  },
+  "anjou": {
+   "classes": {
+    "0": 84.38,
+    "1": 0.49,
+    "4": 2.67,
+    "5": 34.08,
+    "6": 2.17,
+    "7": 21.54,
+    "8": 27.5
+   },
+   "artere": 90.17
+  },
+  "cote-des-neiges-notre-dame-de-grace": {
+   "classes": {
+    "0": 168.0,
+    "1": 0.47,
+    "4": 9.13,
+    "5": 40.1,
+    "6": 30.75,
+    "7": 18.8,
+    "8": 20.28
+   },
+   "artere": 120.76
+  },
+  "l-ile-bizard-sainte-genevieve": {
+   "classes": {
+    "0": 78.35,
+    "3": 0.09,
+    "4": 6.33,
+    "5": 27.75,
+    "6": 1.78,
+    "9": 0.18
+   },
+   "artere": 29.76
+  },
+  "lachine": {
+   "classes": {
+    "0": 97.79,
+    "4": 4.52,
+    "5": 35.61,
+    "6": 5.34,
+    "7": 6.19,
+    "8": 43.13
+   },
+   "artere": 76.56
+  },
+  "lasalle": {
+   "classes": {
+    "0": 136.49,
+    "1": 0.12,
+    "4": 1.68,
+    "5": 23.39,
+    "6": 28.84,
+    "8": 7.69
+   },
+   "artere": 94.55
+  },
+  "le-plateau-mont-royal": {
+   "classes": {
+    "0": 92.36,
+    "1": 0.86,
+    "4": 0.29,
+    "5": 19.26,
+    "6": 21.54,
+    "7": 16.3
+   },
+   "artere": 80.95
+  },
+  "le-sud-ouest": {
+   "classes": {
+    "0": 113.93,
+    "1": 1.72,
+    "2": 0.05,
+    "4": 8.26,
+    "5": 24.78,
+    "6": 42.2,
+    "7": 3.63,
+    "8": 47.61,
+    "9": 0.45
+   },
+   "artere": 104.36
+  },
+  "mercier-hochelaga-maisonneuve": {
+   "classes": {
+    "0": 206.13,
+    "1": 1.08,
+    "4": 20.86,
+    "5": 32.27,
+    "6": 41.57,
+    "7": 30.74,
+    "8": 19.37
+   },
+   "artere": 140.58
+  },
+  "montreal-nord": {
+   "classes": {
+    "0": 131.06,
+    "1": 0.03,
+    "4": 1.11,
+    "5": 19.8,
+    "6": 11.57,
+    "7": 18.84,
+    "8": 0.69
+   },
+   "artere": 80.0
+  },
+  "outremont": {
+   "classes": {
+    "0": 37.52,
+    "4": 0.7,
+    "5": 5.95,
+    "6": 3.99,
+    "9": 0.11
+   },
+   "artere": 22.56
+  },
+  "pierrefonds-roxboro": {
+   "classes": {
+    "0": 206.29,
+    "4": 7.05,
+    "5": 30.52,
+    "6": 19.69,
+    "7": 5.69,
+    "8": 3.51
+   },
+   "artere": 65.66
+  },
+  "riviere-des-prairies-pointe-aux-trembles": {
+   "classes": {
+    "0": 269.57,
+    "1": 0.08,
+    "2": 0.02,
+    "4": 2.99,
+    "5": 59.45,
+    "6": 62.99,
+    "7": 23.38,
+    "8": 25.94,
+    "9": 1.92
+   },
+   "artere": 187.54
+  },
+  "rosemont-la-petite-patrie": {
+   "classes": {
+    "0": 142.26,
+    "1": 0.14,
+    "4": 1.87,
+    "5": 42.34,
+    "6": 29.03,
+    "7": 17.97
+   },
+   "artere": 118.04
+  },
+  "saint-laurent": {
+   "classes": {
+    "0": 213.07,
+    "1": 0.25,
+    "2": 0.06,
+    "4": 3.1,
+    "5": 48.94,
+    "6": 28.55,
+    "7": 78.98,
+    "8": 62.55,
+    "9": 1.75
+   },
+   "artere": 228.77
+  },
+  "saint-leonard": {
+   "classes": {
+    "0": 130.6,
+    "4": 0.34,
+    "5": 17.1,
+    "6": 28.9,
+    "7": 7.78,
+    "8": 9.01
+   },
+   "artere": 79.58
+  },
+  "verdun": {
+   "classes": {
+    "0": 76.76,
+    "1": 0.04,
+    "4": 2.25,
+    "5": 32.33,
+    "6": 1.0,
+    "7": 2.73,
+    "8": 11.64
+   },
+   "artere": 49.28
+  },
+  "ville-marie": {
+   "classes": {
+    "0": 122.4,
+    "1": 1.98,
+    "2": 0.19,
+    "3": 0.6,
+    "4": 10.81,
+    "5": 36.23,
+    "6": 33.67,
+    "7": 34.92,
+    "8": 18.51
+   },
+   "artere": 146.08
+  },
+  "villeray-saint-michel-parc-extension": {
+   "classes": {
+    "0": 162.77,
+    "1": 0.03,
+    "4": 4.76,
+    "5": 15.11,
+    "6": 17.45,
+    "7": 41.36,
+    "8": 12.62
+   },
+   "artere": 109.16
+  }
+ },
+ "collisions_par_fichier": {
+  "ahuntsic-cartierville": 14736,
+  "anjou": 4707,
+  "cote-des-neiges-notre-dame-de-grace": 17187,
+  "l-ile-bizard-sainte-genevieve": 621,
+  "lachine": 4508,
+  "lasalle": 7809,
+  "le-plateau-mont-royal": 14342,
+  "le-sud-ouest": 9280,
+  "mercier-hochelaga-maisonneuve": 14276,
+  "montreal-nord": 10215,
+  "outremont": 1937,
+  "pierrefonds-roxboro": 4004,
+  "riviere-des-prairies-pointe-aux-trembles": 8641,
+  "rosemont-la-petite-patrie": 14350,
+  "saint-laurent": 10963,
+  "saint-leonard": 9333,
+  "verdun": 4243,
+  "ville-marie": 25613,
+  "villeray-saint-michel-parc-extension": 18931
+ }
+}

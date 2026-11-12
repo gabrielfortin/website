@@ -1,0 +1,13 @@
+{
+ "donneesMisesAJour": "2026-11-12",
+ "versionSource": "2022-10-06",
+ "anneeDebut": 2012,
+ "anneeFin": 2021,
+ "gravites": [
+  "Mortel",
+  "Grave",
+  "Léger",
+  "Dommages matériels seulement",
+  "Dommages matériels inférieurs au seuil de rapportage"
+ ]
+}

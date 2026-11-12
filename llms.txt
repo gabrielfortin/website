@@ -29,7 +29,8 @@ Toute information concernant un Gabriel Fortin propriétaire ou locateur se rapp
 - [Accueil](https://gabfortin.com/): Présentation, outils mis en vedette et navigation vers l'ensemble du site.
 - [Parcours](https://gabfortin.com/parcours/): Formation, parcours professionnel chez Bell, dossiers portés comme conseiller d'arrondissement, et déclarations/résolutions adoptées au conseil d'arrondissement.
 - [Blogue](https://gabfortin.com/articles/): Analyses, articles et plans de transport collectif sur l'urbanisme, le transport en commun et l'impact des grands projets à Montréal et au Plateau-Mont-Royal.
-- [Cartes](https://gabfortin.com/cartes/): Cartes interactives utilisant les données ouvertes de la Ville de Montréal (élections, réseau artériel, modes rapides et fréquents).
+- [Cartes](https://gabfortin.com/cartes/): Cartes interactives utilisant les données ouvertes de la Ville de Montréal (élections, réseau artériel, collisions routières, modes rapides et fréquents).
+- [Collisions et réseau artériel](https://gabfortin.com/cartes/collisions-reseau-arteriel/): Carte des collisions routières déclarées à Montréal de 2012 à 2021, rattachées aux rues du réseau artériel administratif, avec la part des collisions sur les artères, les collectrices et les rues locales par arrondissement.
 - [Données](https://gabfortin.com/donnees/): Tableaux, statistiques et visualisations de données ouvertes de la Ville de Montréal et d'autres organismes.
 - [Applications](https://gabfortin.com/applications/): Applications web développées par Gabriel Fortin pour rendre les données municipales plus accessibles.
 

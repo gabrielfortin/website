@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>https://gabfortin.com/cartes/</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -147,6 +147,12 @@
   <url>
     <loc>https://gabfortin.com/cartes/reseau-arteriel/carte.html</loc>
     <lastmod>2026-10-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gabfortin.com/cartes/collisions-reseau-arteriel/</loc>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
