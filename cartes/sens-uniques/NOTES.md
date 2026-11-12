@@ -54,9 +54,27 @@ le nord ; rue Saint-Urbain : -1, vers le sud).
    l'intérieur) forme une seule cellule avec les rues voisines jusqu'à la
    prochaine artère. De Brébeuf est une rue locale dans la Géobase : elle ne
    délimite rien.
+   **Liens (12 novembre 2026)** : les voies où l'on ne roule pas (CLASSE 1 à
+   4 et 9 : piétonnes, privées…) et les rues comptées comme ruelles, au
+   Plateau, relient aussi les parties d'une cellule, sans servir de passage
+   (`liens_cellules()` dans le script, boucle « Liens » dans `analyser()`).
+   Sans elles, Sherbrooke / des Pins / Saint-Laurent / Saint-Denis donnait 4
+   cellules (De Bullion, de l'Hôtel-de-Ville, Coloniale–Saint-Dominique,
+   Laval–Henri-Julien), parce que Prince-Arthur y est piétonne ; De Courville
+   rattache aussi Poitevin à sa cellule. Seulement au Plateau, parce que
+   l'export ne contient pas ces voies ailleurs. Les statuts des rues ne
+   changent pas (on ne roule pas sur les liens) ; 65 → 61 cellules.
 3. On ne roule « à l'intérieur » que sur les rues locales (CLASSE 0). Un nœud
    touché par une collectrice ou une artère (CLASSE 5 à 8) est une *porte* :
    un parcours y commence ou s'y arrête, sans la traverser.
+   **Exception (12 novembre 2026, choix de Gabriel)** : à un carrefour avec
+   une collectrice non cochée (porte qui ne touche aucune artère), on
+   traverse *tout droit* : une rue locale y continue sur la rue du même nom
+   (`noeud()` dans `analyser()` et dans le script : le nœud est dédoublé par
+   nom de rue). On n'y tourne pas sur une autre rue locale. « Tout droit » =
+   même nom, faute d'information sur les mouvements dans la Géobase.
+   Exemple : rue Marquette, Saint-Joseph → (Laurier) → Saint-Grégoire, rouge
+   (elle était verte avant).
 4. **Parcours traversant** : entre par une artère X et ressort par une autre
    artère Y. Ressortir sur une collectrice non cochée est acceptable (ex. rue
    Fabre, tête-bêche : on doit tourner sur une collectrice).
@@ -69,12 +87,15 @@ le nord ; rue Saint-Urbain : -1, vers le sud).
    bogue reliait deux parcours séparés par une collectrice.)
 6. Statut des rues locales : 0 sens unique sans parcours traversant (vert),
    1 sens unique traversant (rouge), 2 double sens sans parcours traversant,
-   3 double sens traversant (orange pointillé).
+   3 double sens traversant (orange pointillé). Le statut 2 est en vert pointillé
+   (gris avant le 12 novembre 2026, choix de Gabriel) ; le gris reste celui des
+   cellules sans sens unique dans la vue Cellules.
 
 7. **Rues locales comptées comme ruelles** (liste du panneau, cochées par
    défaut, choix de Gabriel) : rue Généreux, rue De Varennes, rue Simard,
    rue Barrette, rue La Mennais, rue Latreille, rue De Courville, avenue
-   Bureau, rue Lionais (ajoutée le 12 novembre 2026). Ce sont des rues locales (CLASSE 0) dans la Géobase, mais
+   Bureau, rue Lionais (ajoutée le 12 novembre 2026), rue Saint-Christophe (ajoutée
+   le 12 novembre 2026). Ce sont des rues locales (CLASSE 0) dans la Géobase, mais
    des ruelles en pratique : retirées du calcul comme les voies qui ne
    servent pas de passage, et non comptées dans les totaux. Les décocher les
    remet dans le calcul. Le script s'arrête si un de ces noms n'existe plus
@@ -90,6 +111,88 @@ le nord ; rue Saint-Urbain : -1, vers le sud).
    carrefours Mont-Royal/Saint-Laurent et Mont-Royal/De Lorimier, à moins de
    40 m de l'axe. Prioritaire sur la case « Avenue du Mont-Royal » des
    collectrices comptées comme artères.
+
+9. **Artères parallèles seulement** (case du panneau, **cochée par défaut**,
+   12 novembre 2026, choix de Gabriel) : une paire X → Y n'est examinée que
+   si X et Y sont parallèles, deux artères est-ouest ou deux nord-sud.
+   Couper le coin entre une artère est-ouest et une nord-sud ne rend pas
+   rouge ; relier deux artères parallèles est le rôle d'une collectrice, pas
+   d'une rue locale. Orientation d'une artère = moyenne, en angle doublé, des
+   tronçons de l'artère qui touchent les portes de la cellule (tracé de bout
+   en bout, longitude × cos(latitude)) ; parallèles si l'écart est de moins
+   de 45°. Au Plateau, les artères **est-ouest** sont à ~57° (Sherbrooke
+   ~74°) et les **nord-sud** à ~147° : aucune près du seuil. Même règle dans
+   `analyser()` (`state.paralleles`) et dans le script (`DEFAUT_PARALLELES`).
+
+10. **Virages maximaux** (curseur du panneau, **3 par défaut** (5 au départ,
+   puis 3, choix de Gabriel), 0 à 10, tout
+   au bout = sans limite ; 12 novembre 2026, choix de Gabriel) : un parcours
+   ne compte que s'il change de rue locale (nom différent ; un tronçon sans
+   nom compte toujours comme un changement) au plus ce nombre de fois.
+   Entrer et ressortir ne comptent pas ; traverser une collectrice tout droit
+   non plus (même nom). Calcul par arc, parcours en largeur 0-1 :
+   `virages()` dans la page et dans le script ; un arc compte si (virages
+   minimaux depuis une entrée jusqu'à lui) + (virages minimaux de lui
+   jusqu'à une sortie) ≤ maximum. Sans limite, on retombe sur `parcourir()`
+   (vérifié : 100 virages = sans limite).
+   Pourquoi pas une limite de détour en distance (essayée le même jour, puis
+   retirée) : dans une grille, un zigzag n'est pas plus long qu'un détour par
+   les artères ; même à 1 × la longueur par le réseau supérieur, seuls 5
+   sens uniques passaient au vert. C'est le nombre de virages qui rend un
+   zigzag improbable.
+   Exemple, rue Boyer : à 5 virages, Gilford → Saint-Joseph devient vert (les
+   parcours depuis Roy et Cherrier en demandaient 6 ou plus) ; Marie-Anne →
+   Gilford reste rouge par Papineau → Marie-Anne → Boyer → Gilford → Chambord
+   → Marie-Anne → Berri (4 virages : on contourne un îlot). À 3 virages
+   (défaut), tout Boyer est vert.
+
+Tableau calculé avant l'ajout de Saint-Christophe aux ruelles et des paires
+artérielles (9 ruelles, sans exception) :
+
+| Virages maximaux (défaut sinon) | 0 | 1 | 2 | 3 | 4 | **5** | 6 | 8 et + |
+|---|---|---|---|---|---|---|---|---|
+| Sens uniques rouges / verts | 165 / 430 | 180 / 415 | 271 / 324 | 297 / 298 | 356 / 239 | **356 / 239** | 359 / 236 | 362 / 233 |
+| Cellules traversantes (sur 65) | 25 | 26 | 28 | 28 | 28 | **28** | 28 | 28 |
+
+11. **Exception des paires artérielles** (case du panneau, **cochée par
+   défaut**, 12 novembre 2026, choix de Gabriel) : De Lorimier + Papineau,
+   Saint-Laurent + Saint-Urbain, Frontenac + D'Iberville sont des paires
+   (une vers le nord, l'autre vers le sud). Une paire X → Y formée des deux
+   artères d'une même paire n'est pas examinée : une rue locale peut les
+   relier d'est en ouest. `PAIRES_ARTERIELLES` dans la page et dans le
+   script ; le script s'arrête si un de ces noms n'est plus une artère au
+   Plateau.
+
+12. **Artères comptées comme rues locales** (cases du panneau, **cochées par
+   défaut**, 12 novembre 2026, choix de Gabriel) : rue Jeanne-Mance et rue
+   Léo-Pariseau. Leurs tronçons d'artère (CLASSE 7, entre Sherbrooke et des
+   Pins) **au Plateau seulement** deviennent des rues locales : ils ne
+   délimitent plus les cellules, on y roule et ils sont colorés. Page :
+   `appliquerArteresLocales()` change `r[T.CLASSE]` avant `analyser()` (classe
+   d'origine dans `r._c0`) ; script : `comme_locales()`. L'export prend les
+   cellules avec ces rues locales (les plus grandes possibles). Le script
+   s'arrête si un de ces noms n'est plus une artère au Plateau. Effet :
+   61 → 59 cellules (Milton-Parc fusionne).
+
+13. **Raccords** (12 novembre 2026) : la Géobase coupe la rue Clark à Bagg
+   et à Saint-Cuthbert (deux nœuds à ~8 m, sans tronçon entre eux), ce qui
+   séparait la cellule Saint-Laurent / Saint-Urbain / des Pins / Saint-Joseph
+   en trois et coupait les parcours. `RACCORDS` dans le script ajoute un
+   petit tronçon local à sens unique (dans le sens de Clark, vers le sud) à
+   chaque endroit ; identifiants -1 et -2 dans l'export (ajoutés aussi à la
+   main dans `data/reseau.json` le 12 novembre 2026, faute de Géobase brute :
+   la prochaine régénération les recrée). Autres paires de nœuds locaux à
+   moins de 9 m sans tronçon, non raccordées (à vérifier, certaines touchent
+   des bouts piétons) : Napoléon / Saint-André (5,7 m), des Érables /
+   Lafrance (7,6 m), Garnier / Gilford (8,1 m).
+14. **Rues isolées** (12 novembre 2026, choix de Gabriel) : une cellule qui
+   ne contient qu'une seule rue locale (un seul nom) est regroupée avec les
+   autres dans une cellule « Rues isolées », comptée une fois dans
+   l'indicateur, nommée et affichée comme une cellule. Les parcours restent
+   calculés dans la vraie cellule. `ISOLEES` (1e6 dans la page : la grille
+   de la vue Cellules est en Int32 et -1 y veut dire « vide » ; "isolees"
+   dans le script). Effet : 59 → 22 cellules ; l'indicateur passe de 69 % à
+   41 %, car ces petites cellules étaient presque toutes vertes.
 
 Indicateur : part des cellules (qui ont au moins une rue locale au Plateau)
 dont aucune rue locale du Plateau n'est de statut 1 ou 3.
@@ -110,10 +213,30 @@ un parcours d'artère à artère par des rues locales.
 
 | Réglage | Cellules (sans parcours traversant) | Sens uniques rouges / verts | Double sens traversants / non |
 |---|---|---|---|
-| **Défaut** : aucune collectrice cochée, 9 ruelles (`resume.json`) | 65 (35, 54 %) | 256 / 339 | 85 / 74 |
-| Défaut + Mont-Royal piétonne (`resume.json`, `mont_royal_pieton`) | 65 (35, 54 %) | 295 / 300 | 88 / 71 |
-| Aucune collectrice, aucune ruelle | 64 (34, 53 %) | 286 / 314 | 104 / 97 |
-| Rachel cochée, aucune ruelle | 75 (33, 44 %) | 382 / 218 | 138 / 63 |
+| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, raccords, rues isolées regroupées, aucune collectrice cochée, 10 ruelles (`resume.json`) | 22 (9, 41 %) | 263 / 336 | 67 / 88 |
+| Défaut + Mont-Royal piétonne (`resume.json`, `mont_royal_pieton`) | 22 (9, 41 %) | 263 / 336 | 67 / 88 |
+| Défaut sans artères locales | 22 (9, 41 %) | 259 / 335 | 66 / 89 |
+| Défaut à 5 virages | 22 (9, 41 %) | 320 / 279 | 91 / 64 |
+| Défaut sans l'exception des paires | 22 (5, 23 %) | 298 / 301 | 76 / 79 |
+| Défaut sans Saint-Christophe (9 ruelles) | 22 (9, 41 %) | 270 / 332 | 71 / 88 |
+| Défaut, aucune ruelle | 22 (9, 41 %) | 291 / 316 | 104 / 97 |
+| Défaut, Rachel cochée, aucune ruelle | 27 (7, 26 %) | 350 / 257 | 111 / 90 |
+
+Avant les raccords et le regroupement des rues isolées : 59 cellules (41,
+69 %), 263 / 334, 67 / 88.
+
+Avant les liens entre parties de cellule, les mêmes réglages donnaient 65
+cellules (42 sans parcours traversant au défaut).
+
+Avant la traversée tout droit des collectrices (règle 3), le défaut donnait
+65 (35, 54 %), 256 / 339, 85 / 74 ; avec Mont-Royal piétonne 295 / 300,
+88 / 71. Depuis, le scénario Mont-Royal piétonne ne change plus les totaux :
+on traversait déjà Mont-Royal tout droit, et la fermer n'ajoute pas de virage.
+
+Chiffres de cette règle calculés avec le script sur `data/reseau.json` (la
+Géobase brute n'était pas sur la machine) et vérifiés identiques dans le
+navigateur le 12 novembre 2026. À la prochaine régénération, le script
+revérifiera l'export sur toute l'île.
 
 Effet du scénario : les rues locales qui se terminaient sur Mont-Royal (une
 sortie acceptable) continuent de l'autre côté et peuvent mener à une autre
@@ -176,6 +299,22 @@ en dépendent). `plateau` = 1 : tronçon affiché et compté.
   au moins 46 × 30 px à l'écran (`majEtiquettes()`, refait à chaque zoom).
   Même calcul que la vue Rues : les réglages du panneau s'appliquent.
 
+- **Noms des cellules** (12 novembre 2026) : `nommerCellules()` après
+  `analyser()`. Nom automatique = artères qui bordent la cellule (portes des
+  rues locales sur une artère, plus les artères touchées par les liens),
+  triées par cap depuis le centre de la cellule, dans l'ordre nord, est,
+  sud, ouest (nord de Montréal = ~147° depuis l'est, secteur de ±45°), sans
+  le type de voie. Moins de 3 artères : la plus longue rue locale de la
+  cellule au Plateau, puis les artères entre parenthèses. Doublons : (2),
+  (3)… **Noms choisis** dans `data/noms-cellules.json` (`noms` : nom
+  automatique → nom choisi ; facultatif). La clé est le nom automatique au
+  réglage par défaut : si une règle change les artères d'une cellule, son
+  nom choisi ne s'applique plus (vérifier la liste du panneau). Affichés
+  dans le popup d'une rue (« Sa cellule »), la fiche d'une cellule, la vue
+  Cellules (au-dessus du %, seulement si le nom tient dans la cellule à
+  l'écran) et la liste « Cellules » du panneau (de la plus faible part de
+  verts à la plus forte ; un clic centre la carte et ouvre la fiche).
+
 ## Limites (affichées dans la modale)
 
 - Pas d'interdictions de virage ni d'accès réservés dans la Géobase ; des
@@ -196,5 +335,9 @@ script s'arrête sur une géométrie ou un `SENS_CIR` inattendus, ou si l'export
 ne suffit pas au calcul. Comparer `resume.json` avec ce que la page affiche
 (réglage par défaut), mettre à jour le tableau ci-dessus, puis refaire
 `apercu.png`. Le réglage par défaut est écrit à deux endroits :
-`DEFAUT_COMME_ARTERES` et `DEFAUT_RUELLES` dans le script, `state.commeArteres`
-et `state.ruelles` dans `index.html`.
+`DEFAUT_COMME_ARTERES`, `DEFAUT_RUELLES`, `DEFAUT_PARALLELES`,
+`DEFAUT_VIRAGES`, `DEFAUT_PAIRES` et `DEFAUT_ARTERES_LOCALES` dans le script, `state.commeArteres`,
+`state.ruelles`, `state.paralleles`, `state.virages` et
+`state.pairesArterielles`, `state.arteresLocales` dans `index.html` (plus l'attribut `checked` de
+`#parallelesToggle` et de `#pairesToggle`, la `value` de `#viragesRange` et le texte
+de `#viragesValeur`).

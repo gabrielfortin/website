@@ -1,0 +1,27 @@
+{
+ "_lisezmoi": "Noms choisis des cellules. Clé : nom automatique affiché dans la liste des cellules de la page (réglage par défaut) ; valeur : nom à afficher. Laisser la valeur vide pour garder le nom automatique.",
+ "noms": {
+  "De Lorimier / Saint-Joseph / Papineau": "Parc de Lorimier",
+  "des Pins / du Parc / Sherbrooke / University": "Milton-Parc ouest",
+  "des Pins / Saint-Denis / Sherbrooke / Saint-Laurent": "Square Saint-Louis",
+  "des Pins / Saint-Laurent / Sherbrooke / Saint-Urbain": "",
+  "des Pins / Saint-Urbain / Sherbrooke / Jeanne-Mance / du Parc": "Milton-Parc est",
+  "Pauline-Julien (Saint-Grégoire)": "",
+  "Rosemont / D'Iberville / Saint-Joseph / De Lorimier": "Centre du Plateau",
+  "Rues isolées": "",
+  "Saint-Denis / Saint-Joseph / Saint-Laurent": "Mile-End est",
+  "Saint-Grégoire / Papineau / Saint-Joseph / Saint-Denis": "Petit Laurier",
+  "Saint-Hubert (Rosemont)": "",
+  "Saint-Joseph / D'Iberville / Sherbrooke / De Lorimier": "Parc Baldwin",
+  "Saint-Joseph / De Lorimier / Sherbrooke / Papineau": "Parc des Compagnons",
+  "Saint-Joseph / Papineau / Sherbrooke / Cherrier / Berri / Roy / Saint-Denis": "Saint-Jean-Baptiste",
+  "Saint-Joseph / Pie-IX / Sherbrooke / Frontenac": "",
+  "Saint-Joseph / Saint-Denis / Roy / des Pins / Saint-Laurent": "Hôtel-de-Ville",
+  "Saint-Joseph / Saint-Laurent / des Pins / Saint-Urbain": "",
+  "Saint-Joseph / Saint-Urbain / du Parc": "Parc Jeanne-Mance",
+  "Saint-Laurent / Jean-Talon / Papineau / De Lorimier / Rosemont / Christophe-Colomb / Saint-Grégoire / Saint-Denis": "",
+  "Saint-Laurent / Saint-Joseph / Saint-Urbain": "",
+  "Van Horne / du Parc / de la Côte-Sainte-Catherine": "Limite Outremont",
+  "Van Horne / Saint-Urbain / Saint-Joseph / du Parc": "Mile-End ouest"
+ }
+}

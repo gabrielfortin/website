@@ -268,6 +268,9 @@
     transition: background .18s var(--ease), transform .18s var(--ease);
   }
   .gf-sidebar-item:hover { background: rgba(255,255,255,.55); transform: translateX(2px); }
+  .gf-sidebar-item.su-virages { flex-direction: column; align-items: stretch; gap: 6px; cursor: default; }
+  .gf-sidebar-item.su-virages:hover { transform: none; }
+  .gf-sidebar-item.su-virages input[type="range"] { width: 100%; accent-color: var(--su-rouge); }
   .gf-sidebar-item input[type="checkbox"], .gf-legend-row input[type="checkbox"] {
     width: 15px; height: 15px; margin: 0; accent-color: var(--brand-dark); cursor: pointer; flex-shrink: 0;
   }
@@ -506,6 +509,16 @@
   .su-cell-label b { display: inline-block; transform: translate(-50%, -50%); white-space: nowrap; padding: 1px 6px; border-radius: 999px;
     font: 700 .72rem/1.4 'Inter', sans-serif; font-variant-numeric: tabular-nums; color: #0f172a; background: rgba(255,255,255,.88);
     box-shadow: 0 1px 3px rgba(0,0,0,.25); cursor: pointer; }
+  .su-cell-label b .su-cell-nom { display: block; font-weight: 600; font-size: .68rem; text-align: center; }
+  /* Liste des cellules */
+  .su-cell-liste { max-height: 340px; overflow-y: auto; padding: 0 10px 8px; }
+  .su-cell-row { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 8px; border: 0; border-radius: var(--radius-sm);
+    background: none; color: inherit; font: inherit; font-size: .8rem; text-align: left; cursor: pointer; }
+  .su-cell-row:hover { background: rgba(255,255,255,.55); }
+  .su-cell-row:focus-visible { outline: 2px solid var(--ink-700); outline-offset: 1px; }
+  .su-cell-row i { flex: none; width: 10px; height: 10px; border-radius: 3px; }
+  .su-cell-row span { flex: 1; min-width: 0; }
+  .su-cell-row b { flex: none; font-variant-numeric: tabular-nums; font-weight: 600; }
   .su-gradient { height: 10px; border-radius: 999px; margin: 4px 4px 2px; }
   .su-gradient-axe { display: flex; justify-content: space-between; margin: 0 4px 6px; font-size: .72rem; color: var(--ink-700); font-variant-numeric: tabular-nums; }
   @media (prefers-color-scheme: dark) {
@@ -561,16 +574,22 @@
       <p>Le principe&nbsp;: on entre dans une cellule (un îlot de rues locales entouré d'artères ou de collectrices) et on en ressort par le réseau supérieur. Aucun parcours en auto ne devrait permettre de traverser une cellule d'une artère à une autre par les rues locales.</p>
       <p>Cette carte teste ce principe au Plateau-Mont-Royal avec les sens de circulation de la Géobase de la Ville&nbsp;:</p>
       <ul>
-        <li><strong style="color:var(--su-rouge)">En rouge</strong>, les rues locales à sens unique qui font partie d'au moins un parcours permettant d'entrer par une artère et de ressortir par une <em>autre</em> artère, en ne roulant que sur des rues locales.</li>
-        <li><strong style="color:var(--su-vert)">En vert</strong>, les rues locales à sens unique qui ne font partie d'aucun parcours de ce genre&nbsp;: on en ressort par l'artère d'entrée ou par une collectrice (par exemple une rue tête-bêche qui oblige à tourner sur une collectrice).</li>
+        <li><strong style="color:var(--su-rouge)">En rouge</strong>, les rues locales à sens unique qui font partie d'au moins un parcours permettant d'entrer par une artère et de ressortir par une <em>autre</em> artère parallèle à la première (deux artères est-ouest ou deux nord-sud), en ne roulant que sur des rues locales.</li>
+        <li><strong style="color:var(--su-vert)">En vert</strong>, les rues locales à sens unique qui ne font partie d'aucun parcours de ce genre&nbsp;: on en ressort par l'artère d'entrée, par une artère perpendiculaire ou par une collectrice (par exemple une rue tête-bêche qui oblige à tourner sur une collectrice).</li>
+        <li>Les rues locales à double sens suivent la même règle, en pointillé&nbsp;: <strong style="color:var(--su-orange)">orange</strong> si elles font partie d'un parcours traversant, <strong style="color:var(--su-vert)">vert</strong> sinon.</li>
       </ul>
 
       <h3>Méthode</h3>
       <ul>
-        <li><em>Réseau supérieur</em>&nbsp;: collectrices, artères et autoroutes (classes de la Géobase, les mêmes que sur la carte du réseau artériel). Seules les artères (et autoroutes, et les collectrices cochées) comptent comme entrée ou sortie d'un parcours traversant&nbsp;; arriver sur une autre collectrice termine le parcours sans le rendre traversant.</li>
-        <li><em>Cellule</em>&nbsp;: îlot délimité par les artères seulement. Les collectrices qu'il contient en font partie, mais un parcours qui arrive sur une collectrice s'y arrête. Dans le panneau, on peut compter certaines collectrices comme des artères (par exemple la rue Rachel).</li>
+        <li><em>Réseau supérieur</em>&nbsp;: collectrices, artères et autoroutes (classes de la Géobase, les mêmes que sur la carte du réseau artériel). Seules les artères (et autoroutes, et les collectrices cochées) comptent comme entrée ou sortie d'un parcours traversant&nbsp;; tourner sur une autre collectrice termine le parcours sans le rendre traversant. On peut toutefois la traverser tout droit, dans le prolongement de la même rue.</li>
+        <li><em>Rues isolées</em>&nbsp;: une cellule qui ne contient qu'une seule rue locale (par exemple un bout de rue entre deux artères) est regroupée avec les autres dans une cellule «&nbsp;Rues isolées&nbsp;», comptée une seule fois.</li>
+        <li><em>Cellule</em>&nbsp;: îlot délimité par les artères seulement. Les voies où l'on ne roule pas (rues piétonnes comme Prince-Arthur, ruelles) relient les rues d'une même cellule, sans servir de passage. Les collectrices qu'il contient en font partie&nbsp;: on peut les traverser tout droit (la rue continue sous le même nom de l'autre côté), mais un parcours qui y tourne s'arrête. Dans le panneau, on peut compter certaines collectrices comme des artères (par exemple la rue Rachel).</li>
         <li>Une artère est identifiée par son nom (l'avenue du Mont-Royal Est et Ouest comptent comme la même). Entrer et ressortir par la même artère n'est pas un parcours traversant.</li>
-        <li>Les voies piétonnières, privées ou projetées ne servent pas de passage. Quelques rues locales qui sont en pratique des ruelles (Généreux, De Varennes, Simard, Barrette, La Mennais, Latreille, De Courville, Bureau, Lionais) sont traitées de la même façon par défaut&nbsp;; on peut les remettre dans le panneau.</li>
+        <li><em>Artères parallèles</em>&nbsp;: relier deux artères parallèles est le rôle d'une collectrice, pas d'une rue locale. Une rue locale qui relie une artère est-ouest à une artère nord-sud ne fait que couper le coin, sans vrai raccourci&nbsp;: elle n'est pas comptée comme traversante. L'orientation d'une artère est mesurée là où elle touche la cellule&nbsp;; au Plateau, les artères est-ouest sont orientées à environ 57° et les nord-sud à environ 147° (la grille de Montréal est inclinée). Deux artères sont parallèles si leur écart est de moins de 45°. Cette règle peut être décochée dans le panneau.</li>
+        <li><em>Paires artérielles</em>&nbsp;: De Lorimier et Papineau, Saint-Laurent et Saint-Urbain, Frontenac et D'Iberville forment des paires (une artère vers le nord, l'autre vers le sud). Il est normal qu'une rue locale les relie d'est en ouest&nbsp;: un parcours d'une artère à l'autre de la même paire n'est pas compté comme traversant. Cette exception peut être décochée dans le panneau.</li>
+        <li><em>Artères comptées comme rues locales</em>&nbsp;: par défaut, la rue Jeanne-Mance et la rue Léo-Pariseau (artères dans la Géobase entre Sherbrooke et des Pins) sont traitées comme des rues locales&nbsp;; on peut les remettre en artères dans le panneau.</li>
+        <li><em>Virages maximaux</em>&nbsp;: un parcours ne compte que s'il change de rue au plus 3 fois (par défaut) entre l'artère d'entrée et l'artère de sortie (entrer et ressortir ne comptent pas). Dans une grille, un zigzag par les rues locales n'est pas plus long qu'un détour par les artères&nbsp;: c'est le nombre de virages et d'arrêts qui le rend improbable. Le curseur du panneau change ce maximum, ou l'enlève.</li>
+        <li>Les voies piétonnières, privées ou projetées ne servent pas de passage. Quelques rues locales qui sont en pratique des ruelles (Généreux, De Varennes, Simard, Barrette, La Mennais, Latreille, De Courville, Bureau, Lionais, Saint-Christophe) sont traitées de la même façon par défaut&nbsp;; on peut les remettre dans le panneau.</li>
         <li><em>Scénario « Mont-Royal piétonne »</em>&nbsp;: de Saint-Laurent à De Lorimier, l'avenue est retirée du réseau routier (on ne peut ni y rouler ni y tourner, et un parcours ne s'y arrête plus), mais les rues qui la croisent restent reliées au carrefour&nbsp;: on la traverse du nord au sud. Un carrefour avec une artère reste une limite.</li>
         <li>Le calcul couvre tout le réseau de l'île, pour que les cellules à la limite de l'arrondissement soient complètes. Seules les rues du Plateau sont affichées.</li>
       </ul>
@@ -625,7 +644,7 @@
       <p class="gf-stats-total">Chargement…</p>
     </div>
 
-    <p class="gf-sidebar-note">Rouge&nbsp;: on peut entrer par une artère et ressortir par une autre artère en ne roulant que sur des rues locales. Ressortir sur une collectrice (par exemple une rue tête-bêche qui oblige à y tourner) est acceptable.</p>
+    <p class="gf-sidebar-note">Rouge&nbsp;: on peut entrer par une artère et ressortir par une autre artère parallèle en ne roulant que sur des rues locales. Ressortir sur une collectrice (par exemple une rue tête-bêche qui oblige à y tourner) est acceptable.</p>
 
     <div class="gf-sidebar-divider"></div>
     <div class="gf-sidebar-header"><h2>Scénario</h2></div>
@@ -636,6 +655,32 @@
       </label>
     </div>
     <p class="gf-sidebar-note">De Saint-Laurent à De Lorimier, l'avenue est fermée aux autos (on ne peut ni y rouler ni y tourner), mais on peut encore la traverser du nord au sud aux carrefours.</p>
+    <div class="gf-sidebar-list">
+      <label class="gf-sidebar-item">
+        <input type="checkbox" id="parallelesToggle" checked>
+        <span class="gf-sidebar-label">Seulement entre artères parallèles</span>
+      </label>
+    </div>
+    <p class="gf-sidebar-note">Cochée (par défaut), un parcours n'est traversant que s'il relie deux artères parallèles, deux est-ouest ou deux nord-sud&nbsp;: une rue locale qui coupe le coin entre une artère est-ouest et une artère nord-sud reste verte. Décochée, toute paire d'artères compte.</p>
+    <div class="gf-sidebar-list">
+      <label class="gf-sidebar-item">
+        <input type="checkbox" id="pairesToggle" checked>
+        <span class="gf-sidebar-label">Exception&nbsp;: paires artérielles</span>
+      </label>
+    </div>
+    <p class="gf-sidebar-note">Cochée (par défaut), une rue locale peut relier les deux artères d'une paire (une vers le nord, l'autre vers le sud)&nbsp;: De Lorimier et Papineau, Saint-Laurent et Saint-Urbain, Frontenac et D'Iberville. Ces liens est-ouest ne rendent pas rouge.</p>
+    <div class="gf-sidebar-list">
+      <label class="gf-sidebar-item su-virages" for="viragesRange">
+        <span class="gf-sidebar-label">Virages maximaux&nbsp;: <b id="viragesValeur">3 virages</b></span>
+        <input type="range" id="viragesRange" min="0" max="11" step="1" value="3" aria-describedby="viragesNote">
+      </label>
+    </div>
+    <p class="gf-sidebar-note" id="viragesNote">Un parcours ne compte que s'il change de rue au plus ce nombre de fois entre l'artère d'entrée et l'artère de sortie (entrer et ressortir ne comptent pas). Les zigzags que personne ne prendrait restent verts. Tout au bout du curseur&nbsp;: sans limite.</p>
+
+    <div class="gf-sidebar-divider"></div>
+    <div class="gf-sidebar-header"><h2>Artères comptées comme rues locales</h2></div>
+    <p class="gf-sidebar-note">Cochée (par défaut), l'artère est traitée comme une rue locale au Plateau&nbsp;: elle ne délimite plus les cellules, on peut y rouler dans un parcours et elle est colorée comme les autres rues locales.</p>
+    <div class="gf-sidebar-list" id="gfArteresLocales"></div>
 
     <div class="gf-sidebar-divider"></div>
     <div class="gf-sidebar-header"><h2>Rues locales comptées comme ruelles</h2></div>
@@ -657,6 +702,10 @@
         <p class="gf-sidebar-note" style="margin-top:0">Part des rues locales à sens unique de la cellule (en longueur) qui sont vertes, c'est-à-dire sans parcours traversant. En gris&nbsp;: cellule sans sens unique local.</p>
       </div>
     </div>
+    <div class="gf-sidebar-divider"></div>
+    <div class="gf-sidebar-header"><h2>Cellules</h2></div>
+    <p class="gf-sidebar-note">Part des sens uniques en vert, de la plus faible à la plus forte. Cliquez sur une cellule pour la voir sur la carte. Nom automatique&nbsp;: les artères qui la bordent, du nord à l'ouest&nbsp;; s'il y en a moins de trois, la principale rue locale, puis ses artères entre parenthèses.</p>
+    <div class="su-cell-liste" id="suCellListe"></div>
     <p class="gf-sidebar-note">Cliquez sur une rue pour voir les parcours qu'elle permet et mettre sa cellule en évidence. Flèches&nbsp;: sens de circulation, visibles en zoomant.</p>
   </aside>
   <div class="gf-sidebar-scrim" id="gfSidebarScrim"></div>
@@ -704,7 +753,8 @@
       rouge: { label: "Sens unique, parcours traversant", color: cssVar('--su-rouge'), weight: 3.2, opacity: 0.95 },
       vert: { label: "Sens unique, sans parcours traversant", color: cssVar('--su-vert'), weight: 3.2, opacity: 0.95 },
       orange: { label: "Double sens, parcours traversant", color: cssVar('--su-orange'), weight: 2.4, opacity: 0.9, dashArray: '6 5' },
-      gris: { label: "Double sens, sans parcours traversant", color: cssVar('--su-gris'), weight: 2, opacity: 0.8 },
+      // Double sens sans parcours traversant : vert comme les sens uniques, en pointillé comme l'orange
+      gris: { label: "Double sens, sans parcours traversant", color: cssVar('--su-vert'), weight: 2.4, opacity: 0.9, dashArray: '6 5' },
       principale: { label: "Artère principale", color: cssVar('--su-superieur'), weight: 5, opacity: 0.85 },
       secondaire: { label: "Artère secondaire", color: cssVar('--su-superieur'), weight: 4, opacity: 0.75 },
       ruelle: { label: "Rue locale comptée comme ruelle", color: cssVar('--su-autre'), weight: 2.4, opacity: 0.9, dashArray: '2 4' },
@@ -719,13 +769,34 @@
     // mrPieton : scénario « Mont-Royal piétonne » (tronçons retirés du réseau, traversée nord-sud permise)
     // ruelles : rues locales traitées comme des ruelles (retirées du calcul) ; par défaut, choix de Gabriel
     // (mêmes noms que DEFAUT_RUELLES dans le script)
-    const state = { vue: 'rues', hidden: new Set(), focusCell: null, commeArteres: new Set(), mrPieton: false,
+    const state = { vue: 'rues', hidden: new Set(), focusCell: null, commeArteres: new Set(), mrPieton: false, paralleles: true, pairesArterielles: true, virages: 3, arteresLocales: new Set(['Rue Jeanne-Mance', 'Rue Léo-Pariseau']),
                     ruelles: new Set(['Rue Généreux', 'Rue De Varennes', 'Rue Simard', 'Rue Barrette',
                                        'Rue La Mennais', 'Rue Latreille', 'Rue De Courville', 'Avenue Bureau',
-                                       'Rue Lionais']) };
+                                       'Rue Lionais', 'Rue Saint-Christophe']) };
+    // Paires artérielles (une artère vers le nord, l'autre vers le sud) : une rue locale peut les relier
+    // (même liste que PAIRES_ARTERIELLES dans le script)
+    const PAIRES_ARTERIELLES = [['Avenue De Lorimier', 'Avenue Papineau'], ['Boulevard Saint-Laurent', 'Rue Saint-Urbain'],
+                                ['Rue Frontenac', "Rue D'Iberville"]];
+    const estPaire = (x, y) => PAIRES_ARTERIELLES.some(([a, b]) => (a === x && b === y) || (a === y && b === x));
+    // Artères traitées comme des rues locales au Plateau (cochées par défaut, choix de Gabriel ;
+    // mêmes noms que DEFAUT_ARTERES_LOCALES dans le script)
+    const ARTERES_LOCALES = ['Rue Jeanne-Mance', 'Rue Léo-Pariseau'];
+    // Applique le réglage : la classe d'origine est gardée dans r._c0
+    function appliquerArteresLocales() {
+      for (const r of data.troncons) {
+        if (r._c0 === undefined) r._c0 = r[T.CLASSE];
+        r[T.CLASSE] = r[T.PLATEAU] && r._c0 >= 6 && r._c0 <= 8 && state.arteresLocales.has(nomDe(r)) ? 0 : r._c0;
+      }
+    }
     const estPietonne = r => state.mrPieton && r[T.PIETON] === 1;
     const estRuelle = r => r[T.CLASSE] === 0 && state.ruelles.has(nomDe(r));
     let data = null, noms = [];
+    // Noms des cellules : automatiques (artères qui les bordent) ou choisis (data/noms-cellules.json,
+    // { "noms": { "<nom automatique>": "<nom choisi>" } })
+    let nomsChoisis = {};
+    const coordNoeud = new Map();          // nœud -> [lng, lat]
+    const arteresCellule = new Map();      // cellule -> [[nœud, [noms d'artères]], ...] (portes sur une artère)
+    let nomsCellules = new Map();          // cellule -> { auto, nom }
 
     function esc(s) {
       return String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -766,6 +837,76 @@
       }
       return vus;
     }
+    function virages(arcs, suivants, estDepart, estPorte, cDepart, cSuivant) {
+      // Virages minimaux, par arc, depuis un nœud de départ (entrée en avant, sortie en arrière).
+      // cDepart / cSuivant : extrémité de l'arc côté départ / côté suivant (0 = u, 1 = v).
+      // Un parcours ne dépasse pas une porte qui n'est pas un départ (comme parcourir()).
+      const best = new Array(arcs.length).fill(Infinity), file = [];
+      arcs.forEach((a, i) => { if (estDepart(a[cDepart])) { best[i] = 0; file.push(i); } });
+      // File 0-1 : deque simple (unshift pour un coût 0, push pour un coût 1)
+      while (file.length) {
+        const i = file.shift(), n = arcs[i][cSuivant];
+        if (estPorte(n)) continue;
+        for (const j of suivants.get(n) || []) {
+          const c = best[i] + (nomDe(arcs[j][2]) === nomDe(arcs[i][2]) && nomDe(arcs[i][2]) !== null ? 0 : 1);
+          if (c < best[j]) { best[j] = c; if (c === best[i]) file.unshift(j); else file.push(j); }
+        }
+      }
+      return best;
+    }
+    // Nom automatique : artères qui bordent la cellule, dans l'ordre nord, est, sud, ouest (nord de Montréal :
+    // direction des artères nord-sud au Plateau, ~147° depuis l'est), sans le type de voie
+    const NORD_MTL = 147 * Math.PI / 180;
+    const ISOLEES = 1e6;   // identifiant de la cellule commune des rues isolées (entier positif : grille Int32)
+    const nomCourt = nom => nom.replace(/^(Rue|Avenue|Boulevard|Chemin|Place|Terrasse|Voie) /, '');
+    function nommerCellules() {
+      const centres = new Map(), longueurs = new Map();   // cellule -> nom de rue locale -> km
+      for (const r of data.troncons) {
+        if (r._c === -1 || r[T.CLASSE] !== 0) continue;
+        const cs = r[T.COORDS], m = cs[Math.floor(cs.length / 2)];
+        const c = centres.get(r._c) || [0, 0, 0];
+        c[0] += m[0]; c[1] += m[1]; c[2]++;
+        centres.set(r._c, c);
+        if (!r[T.PLATEAU] || !nomDe(r)) continue;
+        if (!longueurs.has(r._c)) longueurs.set(r._c, new Map());
+        const lc = longueurs.get(r._c);
+        lc.set(nomDe(r), (lc.get(nomDe(r)) || 0) + r._km);
+      }
+      const autos = new Map(), vus = new Map();
+      for (const cell of centres.keys()) {
+        if (cell === ISOLEES) { autos.set(cell, 'Rues isolées'); continue; }
+        const portesA = arteresCellule.get(cell) || [];
+        const ce = centres.get(cell);
+        if (!ce) continue;
+        const lng0 = ce[0] / ce[2], lat0 = ce[1] / ce[2], k = Math.cos(lat0 * Math.PI / 180);
+        const pos = new Map();   // artère -> [somme dx, somme dy, n]
+        for (const [n, ars] of portesA) {
+          const q = coordNoeud.get(n);
+          if (!q) continue;
+          for (const a of ars) {
+            const v = pos.get(a) || [0, 0, 0];
+            v[0] += (q[0] - lng0) * k; v[1] += q[1] - lat0; v[2]++;
+            pos.set(a, v);
+          }
+        }
+        // Cap depuis le nord de Montréal, dans le sens horaire, décalé de 45° : le secteur nord va de −45° à +45°
+        const cap = ([dx, dy]) => ((NORD_MTL - Math.atan2(dy, dx) + Math.PI / 4) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+        let auto = [...pos].sort((a, b) => cap(a[1]) - cap(b[1])).map(([a]) => nomCourt(a)).join(' / ');
+        // Moins de 3 artères : la rue locale la plus longue de la cellule (au Plateau), puis les artères entre parenthèses
+        if (pos.size < 3) {
+          const rue = [...(longueurs.get(cell) || [])].sort((a, b) => b[1] - a[1])[0];
+          if (rue) auto = nomCourt(rue[0]) + (auto ? ' (' + auto + ')' : '');
+          else if (!auto) auto = 'Cellule sans artère';
+        }
+        // Deux cellules bordées des mêmes artères : (2), (3)…
+        const deja = vus.get(auto) || 0;
+        vus.set(auto, deja + 1);
+        if (deja) auto += ' (' + (deja + 1) + ')';
+        autos.set(cell, auto);
+      }
+      nomsCellules = new Map([...autos].map(([cell, auto]) => [cell, { auto, nom: nomsChoisis[auto] || auto }]));
+    }
+    const nomCellule = cell => (nomsCellules.get(cell) || {}).nom || 'Cellule';
     function analyser() {
       // Scénario Mont-Royal piétonne : ses tronçons sont retirés du réseau (ni rue, ni porte) ; les rues qui la
       // croisent restent reliées au carrefour, donc on la traverse du nord au sud
@@ -773,14 +914,27 @@
       const rows = data.troncons.filter(r => !estPietonne(r) && !estRuelle(r));
       // Portes (nœuds touchés par une collectrice ou une artère) et artères qui touchent chaque nœud
       const portes = new Set(), arteresAu = new Map();
+      // Orientation des artères à chaque nœud (option « artères parallèles ») : vecteur en angle doublé,
+      // pour que les deux sens d'une même droite s'additionnent ; nœud -> nom -> [x, y]
+      const dirAu = new Map();
       for (const r of rows) {
         const c = r[T.CLASSE];
         if (c < 5 || c > 8) continue;
+        let dx = 0, dy = 0;
+        if (estArtere(r)) {
+          const p0 = r[T.COORDS][0], p1 = r[T.COORDS][r[T.COORDS].length - 1];
+          const ex = (p1[0] - p0[0]) * Math.cos(p0[1] * Math.PI / 180), ey = p1[1] - p0[1];
+          const a = 2 * Math.atan2(ey, ex);
+          dx = Math.cos(a); dy = Math.sin(a);
+        }
         for (const n of [r[T.A], r[T.B]]) {
           portes.add(n);
           if (estArtere(r)) {
-            if (!arteresAu.has(n)) arteresAu.set(n, new Set());
-            arteresAu.get(n).add(nomDe(r) || '#' + r[T.ID]);
+            const nom = nomDe(r) || '#' + r[T.ID];
+            if (!arteresAu.has(n)) { arteresAu.set(n, new Set()); dirAu.set(n, new Map()); }
+            arteresAu.get(n).add(nom);
+            const v = dirAu.get(n).get(nom) || [0, 0];
+            dirAu.get(n).set(nom, [v[0] + dx, v[1] + dy]);
           }
         }
       }
@@ -789,10 +943,24 @@
       const find = x => { if (!parent.has(x)) parent.set(x, x); let r = x; while (parent.get(r) !== r) r = parent.get(r);
         while (parent.get(x) !== r) { const nx = parent.get(x); parent.set(x, r); x = nx; } return r; };
       const union = (a, b) => parent.set(find(a), find(b));
+      const liensArtere = [];   // [nœud intérieur, nœud d'artère] des liens qui touchent une artère
       const dansCellule = rows.filter(r => r[T.CLASSE] === 0 || (r[T.CLASSE] === 5 && !estArtere(r)));
       for (const r of dansCellule) {
         find('t' + r[T.ID]);
         for (const n of [r[T.A], r[T.B]]) if (!arteresAu.has(n)) union('t' + r[T.ID], 'n' + n);
+      }
+      // Liens entre parties d'une même cellule : voies où l'on ne roule pas (piétonnes, privées… CLASSE 1 à 4
+      // et 9) et rues comptées comme ruelles, au Plateau. Ex. Prince-Arthur piétonne relie De Bullion,
+      // de l'Hôtel-de-Ville, Coloniale et Laval en une seule cellule. On n'y roule toujours pas.
+      for (const r of data.troncons) {
+        const c = r[T.CLASSE];
+        if (!r[T.PLATEAU] || !((c >= 1 && c <= 4) || c === 9 || estRuelle(r))) continue;
+        if (!arteresAu.has(r[T.A]) && !arteresAu.has(r[T.B])) union('n' + r[T.A], 'n' + r[T.B]);
+        // Un lien qui touche une artère d'un côté ne relie rien, mais l'artère borde la cellule (pour son nom)
+        else if (arteresAu.has(r[T.A]) !== arteresAu.has(r[T.B])) {
+          const [na, ni] = arteresAu.has(r[T.A]) ? [r[T.A], r[T.B]] : [r[T.B], r[T.A]];
+          liensArtere.push([ni, na]);
+        }
       }
       const groupes = new Map();
       for (const r of dansCellule) {
@@ -801,46 +969,92 @@
         groupes.get(g).push(r);
       }
       for (const r of data.troncons) { r._s = -1; r._c = -1; r._p = []; r._n = 0; }
+      arteresCellule.clear();
       let num = 0;
       for (const tous of groupes.values()) {
         const cell = num++;
-        for (const r of tous) r._c = cell;
         const membres = tous.filter(r => r[T.CLASSE] === 0);
+        // Cellule d'une seule rue locale (un seul nom) : regroupée avec les autres dans « Rues isolées »
+        // (compte, noms et affichage ; les parcours restent calculés ici, dans la vraie cellule)
+        const isolee = new Set(membres.map(nomDe)).size === 1;
+        for (const r of tous) r._c = isolee ? ISOLEES : cell;
         const arcs = [], sortants = new Map(), entrants = new Map();
         const add = (m, k, v) => { if (!m.has(k)) m.set(k, []); m.get(k).push(v); };
+        // Carrefour avec une collectrice non cochée (porte sans artère) : on le traverse tout droit,
+        // c.-à-d. la rue ne se raccorde qu'à elle-même (même nom) ; on n'y tourne pas
+        const noeud = (n, r) => portes.has(n) && !arteresAu.has(n) ? n + '|' + (nomDe(r) || '#' + r[T.ID]) : n;
         for (const r of membres) {
-          arcs.push([r[T.A], r[T.B], r]);
-          if (!r[T.UNIQUE]) arcs.push([r[T.B], r[T.A], r]);
+          const a = noeud(r[T.A], r), b = noeud(r[T.B], r);
+          arcs.push([a, b, r]);
+          if (!r[T.UNIQUE]) arcs.push([b, a, r]);
         }
         for (const [u, v] of arcs) { add(sortants, u, v); add(entrants, v, u); }
+        // Arcs (par index) qui partent de / arrivent à chaque nœud, pour compter les virages
+        const sortantsI = new Map(), entrantsI = new Map();
+        arcs.forEach(([u, v], i) => { add(sortantsI, u, i); add(entrantsI, v, i); });
         const portesArt = new Set();
         for (const r of membres) for (const n of [r[T.A], r[T.B]]) if (arteresAu.has(n)) portesArt.add(n);
         const nomsCell = [...new Set([...portesArt].flatMap(n => [...arteresAu.get(n)]))].sort();
+        arteresCellule.set(cell, [...portesArt].map(n => [n, [...arteresAu.get(n)]]));
+        // Orientation de chaque artère là où elle touche la cellule (angle doublé, en radians)
+        const angleCell = new Map();
+        for (const nom of nomsCell) {
+          let x = 0, y = 0;
+          for (const n of portesArt) { const v = dirAu.get(n).get(nom); if (v) { x += v[0]; y += v[1]; } }
+          angleCell.set(nom, Math.atan2(y, x));
+        }
+        const paralleles = (x, y) => {
+          let d = Math.abs(angleCell.get(x) - angleCell.get(y)) % (2 * Math.PI);
+          if (d > Math.PI) d = 2 * Math.PI - d;
+          return d < Math.PI / 2;    // angle doublé : π/2 = 45° d'écart réel
+        };
         const trav = new Map();   // rangée -> [[X, Y], ...]
         for (const x of nomsCell) for (const y of nomsCell) {
           if (x === y) continue;
+          if (state.paralleles && !paralleles(x, y)) continue;
+          if (state.pairesArterielles && estPaire(x, y)) continue;
           const entrees = new Set([...portesArt].filter(n => arteresAu.get(n).has(x) && !arteresAu.get(n).has(y)));
           const sorties = new Set([...portesArt].filter(n => arteresAu.get(n).has(y) && !arteresAu.get(n).has(x)));
           if (!entrees.size || !sorties.size) continue;
           const avant = parcourir(entrees, sortants, portes);
           if (![...sorties].some(n => avant.has(n))) continue;
           const arriere = parcourir(sorties, entrants, portes);
-          // Un arc part d'une entrée ou d'un nœud intérieur et arrive à une sortie ou à un nœud intérieur
-          for (const [u, v, r] of arcs) {
-            const okU = avant.has(u) && (entrees.has(u) || !portes.has(u));
-            const okV = arriere.has(v) && (sorties.has(v) || !portes.has(v));
-            if (okU && okV) {
-              if (!trav.has(r)) trav.set(r, []);
-              const l = trav.get(r);
-              if (!l.some(([a, b]) => a === x && b === y)) l.push([x, y]);
+          const marquer = r => {
+            if (!trav.has(r)) trav.set(r, []);
+            const l = trav.get(r);
+            if (!l.some(([a, b]) => a === x && b === y)) l.push([x, y]);
+          };
+          if (state.virages === null) {
+            // Un arc part d'une entrée ou d'un nœud intérieur et arrive à une sortie ou à un nœud intérieur
+            for (const [u, v, r] of arcs) {
+              const okU = avant.has(u) && (entrees.has(u) || !portes.has(u));
+              const okV = arriere.has(v) && (sorties.has(v) || !portes.has(v));
+              if (okU && okV) marquer(r);
             }
+            continue;
           }
+          // Virages maximaux : un virage = passer d'une rue locale à une autre (nom différent) ; entrer et
+          // sortir ne comptent pas. avantV[i] = virages minimaux depuis une entrée jusqu'à l'arc i compris ;
+          // apresV[i] = virages minimaux de l'arc i jusqu'à une sortie. L'arc compte si avantV + apresV ≤ max.
+          // Parcours en largeur 0-1 sur les arcs (coût 1 quand le nom change).
+          const avantV = virages(arcs, sortantsI, (u) => entrees.has(u), (u) => portes.has(u), 0, 1);
+          const apresV = virages(arcs, entrantsI, (v) => sorties.has(v), (v) => portes.has(v), 1, 0);
+          arcs.forEach(([, , r], i) => { if (avantV[i] + apresV[i] <= state.virages) marquer(r); });
         }
         for (const r of membres) {
           const l = trav.get(r) || [];
           r._s = r[T.UNIQUE] ? (l.length ? 1 : 0) : (l.length ? 3 : 2);
           r._p = l.slice(0, MAX_PAIRES); r._n = l.length;
         }
+      }
+      // Artères touchées par les liens (nom des cellules seulement : elles ne servent pas au calcul)
+      const celluleRacine = new Map();
+      for (const [g, tous] of groupes) celluleRacine.set(g, tous[0]._c);
+      for (const [ni, na] of liensArtere) {
+        if (!parent.has('n' + ni)) continue;
+        const cell = celluleRacine.get(find('n' + ni));
+        if (cell === undefined || !arteresCellule.has(cell)) continue;
+        arteresCellule.get(cell).push([na, [...arteresAu.get(na)]]);
       }
     }
 
@@ -893,12 +1107,12 @@
     // ---------- Vue « Cellules » : chaque cellule teintée selon sa part de sens uniques verts ----------
     // Couleur de 0 (rouge) à 1 (vert) ; gris si la cellule n'a aucun sens unique local
     function teinte(part) {
-      if (part === null) return CATS.gris.color;
+      if (part === null) return cssVar('--su-gris');
       return 'hsl(' + Math.round(part * 130) + ', ' + (DARK ? '65%, 55%' : '70%, 42%') + ')';
     }
     function teinteRVB(part) {
       // Même teinte que teinte(), en [r, v, b] pour remplir le canevas
-      if (part === null) { const h = CATS.gris.color.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); }
+      if (part === null) { const h = cssVar('--su-gris').replace('#', ''); return [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); }
       const h = part * 130, sat = DARK ? 0.65 : 0.70, lum = DARK ? 0.55 : 0.42;
       const k = n => (n + h / 30) % 12, a = sat * Math.min(lum, 1 - lum);
       return [0, 8, 4].map(n => Math.round(255 * (lum - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1)))));
@@ -1016,9 +1230,14 @@
     function majEtiquettes() {
       for (const { m, bounds } of etiquettes) {
         const a = map.latLngToContainerPoint(bounds.getSouthWest()), b = map.latLngToContainerPoint(bounds.getNorthEast());
-        const visible = Math.abs(b.x - a.x) >= 46 && Math.abs(b.y - a.y) >= 30;
+        const larg = Math.abs(b.x - a.x), haut = Math.abs(b.y - a.y);
+        const visible = larg >= 46 && haut >= 30;
         const el = m.getElement();
-        if (el) el.style.display = visible ? '' : 'none';
+        if (!el) continue;
+        el.style.display = visible ? '' : 'none';
+        // Nom au-dessus du % seulement s'il tient dans la cellule
+        const nomEl = el.querySelector('.su-cell-nom');
+        if (nomEl && visible) { nomEl.style.display = ''; if (haut < 54 || nomEl.offsetWidth + 16 > larg) nomEl.style.display = 'none'; }
       }
     }
     map.on('zoomend', majEtiquettes);
@@ -1045,8 +1264,8 @@
         const o = grille.info.get(id);
         if (!o || c.part === null) continue;   // cellule grise : pas d'étiquette
         const i = o.q % grille.W, j = (o.q - i) / grille.W;
-        const m = L.marker(grille.latlng(i + 0.5, j + 0.5), { icon: L.divIcon({ className: 'su-cell-label', html: '<b>' + pf.format(c.part * 100) + '&nbsp;%</b>', iconSize: null }),
-          keyboard: false, title: 'Cellule : ' + pf.format(c.part * 100) + ' % des sens uniques en vert' });
+        const m = L.marker(grille.latlng(i + 0.5, j + 0.5), { icon: L.divIcon({ className: 'su-cell-label', html: '<b><span class="su-cell-nom">' + esc(nomCellule(id)) + '</span>' + pf.format(c.part * 100) + '&nbsp;%</b>', iconSize: null }),
+          keyboard: false, title: nomCellule(id) + ' : ' + pf.format(c.part * 100) + ' % des sens uniques en vert' });
         m.on('click', e => popupCellule(c, e.latlng));
         layer.addLayer(m);
         etiquettes.push({ m, bounds: L.latLngBounds(grille.latlng(o.i0, o.j1 + 1), grille.latlng(o.i1 + 1, o.j0)) });
@@ -1072,11 +1291,14 @@
     function popupCellule(c, latlng) {
       const ligne = (k, v) => '<div class="gf-pop-row"><span class="k">' + k + '</span><span class="v">' + v + '</span></div>';
       const km = v => kmf.format(v) + ' km';
+      const nc = nomsCellules.get(c.id);
       const html = '<span class="gf-pop-drag" aria-hidden="true"></span><div class="gf-pop-eyebrow" style="color:' + teinte(c.part) + '">Cellule</div>' +
         '<h3 class="gf-pop-name">' + (c.part === null ? 'Aucun sens unique local' : pf.format(c.part * 100) + ' % des sens uniques en vert') + '</h3>' +
         ligne('Sens uniques verts', km(c.km[0])) + ligne('Sens uniques rouges', km(c.km[1])) +
         ligne('Double sens', km(c.km[2] + c.km[3])) +
         ligne('Parcours traversant', c.trav ? 'oui' : 'non') +
+        ligne('Nom', '<b>' + esc(nomCellule(c.id)) + '</b>') +
+        (nc && nc.nom !== nc.auto ? ligne('Artères', esc(nc.auto)) : '') +
         '<p class="gf-pop-note">Longueurs des rues locales de la cellule au Plateau. La surface colorée va jusqu\'aux artères qui délimitent la cellule.</p>';
       L.popup({ maxWidth: 280 }).setLatLng(latlng).setContent(html).openOn(map);
     }
@@ -1138,7 +1360,7 @@
       let html = '<span class="gf-pop-drag" aria-hidden="true"></span><div class="gf-pop-eyebrow" style="color:' + CATS[cat].color + '">' + esc(CATS[cat].label) + '</div>' +
         '<h3 class="gf-pop-name">' + esc(nom) + '</h3>';
       if (s === -1) {
-        html += '<p class="gf-pop-note">' + (estRuelle(r) ? 'Rue locale comptée comme une ruelle (réglage du panneau) : elle ne sert pas de passage dans le calcul et n\'est pas comptée.' : estPietonne(r) ? 'Scénario piéton : ce tronçon est fermé aux autos. On peut seulement le traverser du nord au sud aux carrefours.' : c === 5 && !estArtere(r) ? 'Collectrice : elle fait partie de sa cellule, mais un parcours qui y arrive s\'arrête (c\'est une sortie vers le réseau supérieur).' : c === 5 ? 'Collectrice comptée comme artère (réglage du panneau) : elle délimite les cellules et compte comme entrée ou sortie d\'un parcours traversant.' : c >= 6 && c <= 8 ? 'Artère : elle délimite les cellules.' : 'Voie qui ne sert pas de passage dans l\'analyse.') + '</p>';
+        html += '<p class="gf-pop-note">' + (estRuelle(r) ? 'Rue locale comptée comme une ruelle (réglage du panneau) : elle ne sert pas de passage dans le calcul et n\'est pas comptée.' : estPietonne(r) ? 'Scénario piéton : ce tronçon est fermé aux autos. On peut seulement le traverser du nord au sud aux carrefours.' : c === 5 && !estArtere(r) ? 'Collectrice : elle fait partie de sa cellule. On peut la traverser tout droit, mais un parcours qui y tourne s\'arrête (c\'est une sortie vers le réseau supérieur).' : c === 5 ? 'Collectrice comptée comme artère (réglage du panneau) : elle délimite les cellules et compte comme entrée ou sortie d\'un parcours traversant.' : c >= 6 && c <= 8 ? 'Artère : elle délimite les cellules.' : 'Voie qui ne sert pas de passage dans l\'analyse.') + '</p>';
       } else {
         const paires = r._p, total = r._n;
         if (paires.length) {
@@ -1146,11 +1368,12 @@
             paires.map(([x, y]) => '<li>de <b>' + esc(x) + '</b> à <b>' + esc(y) + '</b></li>').join('') + '</ul>' +
             (total > paires.length ? '<p class="gf-pop-note">et ' + (total - paires.length) + ' autre' + (total - paires.length > 1 ? 's' : '') + ' paire' + (total - paires.length > 1 ? 's' : '') + '.</p>' : '');
         } else {
-          html += '<p class="gf-pop-note">Aucun parcours ne permet de passer d\'une artère à une autre artère par ce tronçon. On en ressort par l\'artère d\'entrée ou par une collectrice.</p>';
+          html += '<p class="gf-pop-note">Aucun parcours ne permet de passer d\'une artère à une autre artère par ce tronçon. On en ressort par l\'artère d\'entrée' + (state.paralleles ? ', par une artère perpendiculaire' : '') + ' ou par une collectrice.</p>';
         }
         const cell = r._c;
         const cs = cellStats().get(cell);
-        if (cs) html += '<div class="gf-pop-row"><span class="k">Sa cellule</span><span class="v">' + cs.n + ' tronçon' + (cs.n > 1 ? 's' : '') + ' de rues locales, ' + (cs.trav ? 'traversante' : 'sans parcours traversant') + '</span></div>';
+        if (cs) html += '<div class="gf-pop-row"><span class="k">Sa cellule</span><span class="v">' + cs.n + ' tronçon' + (cs.n > 1 ? 's' : '') + ' de rues locales, ' + (cs.trav ? 'traversante' : 'sans parcours traversant') + '</span></div>' +
+          '<div class="gf-pop-row"><span class="k">Cellule</span><span class="v">' + esc(nomCellule(cell)) + '</span></div>';
       }
       const headerEl = document.querySelector('.gf-header');
       const topPad = (headerEl ? headerEl.offsetHeight : 76) + 16;
@@ -1228,7 +1451,7 @@
       const pct = (a, b) => b ? pf.format(a / b * 100) + ' %' : '–';
       let html = '<div class="su-big"><b>' + pct(sans, total) + '</b><span>des cellules n\'ont aucun parcours traversant</span></div>' +
         '<p class="gf-stats-total">' + nf.format(sans) + ' cellule' + (sans > 1 ? 's' : '') + ' sur ' + nf.format(total) +
-        '. Les ' + nf.format(trav) + ' autres permettent de passer d\'une artère à une autre artère par les rues locales.</p>' +
+        '. Les ' + nf.format(trav) + ' autres permettent de passer d\'une artère à une autre artère' + (state.paralleles ? ' parallèle' : '') + ' par les rues locales.</p>' +
         '<div class="gf-bar" role="img" aria-label="Sens uniques locaux : ' + pct(cnt.rouge, uniques) + ' sur un parcours traversant">' +
         '<span style="width:' + (uniques ? cnt.rouge / uniques * 100 : 0) + '%;background:' + CATS.rouge.color + '"></span>' +
         '<span style="width:' + (uniques ? cnt.vert / uniques * 100 : 0) + '%;background:' + CATS.vert.color + '"></span></div>';
@@ -1284,6 +1507,20 @@
         box.appendChild(row);
       });
     }
+    function renderArteresLocales() {
+      const box = document.getElementById('gfArteresLocales');
+      ARTERES_LOCALES.forEach(nom => {
+        const row = document.createElement('label');
+        row.className = 'gf-sidebar-item';
+        row.innerHTML = '<input type="checkbox"' + (state.arteresLocales.has(nom) ? ' checked' : '') + '><span class="gf-sidebar-label">' + esc(nom) + '</span>';
+        row.querySelector('input').addEventListener('change', function () {
+          if (this.checked) state.arteresLocales.add(nom); else state.arteresLocales.delete(nom);
+          map.closePopup(); state.focusCell = null;
+          recalculer();
+        });
+        box.appendChild(row);
+      });
+    }
     function renderRuelles() {
       const box = document.getElementById('gfRuelles');
       [...state.ruelles].sort((a, b) => a.localeCompare(b, 'fr')).forEach(nom => {
@@ -1304,8 +1541,53 @@
       map.closePopup(); state.focusCell = null;
       recalculer();
     });
+    document.getElementById('parallelesToggle').addEventListener('change', function () {
+      state.paralleles = this.checked;
+      map.closePopup(); state.focusCell = null;
+      recalculer();
+    });
+    document.getElementById('pairesToggle').addEventListener('change', function () {
+      state.pairesArterielles = this.checked;
+      map.closePopup(); state.focusCell = null;
+      recalculer();
+    });
+    const viragesRange = document.getElementById('viragesRange');
+    const majViragesLabel = () => {
+      document.getElementById('viragesValeur').textContent =
+        state.virages === null ? 'sans limite' : state.virages + (state.virages > 1 ? ' virages' : ' virage');
+    };
+    viragesRange.addEventListener('input', function () {
+      state.virages = Number(this.value) > 10 ? null : Number(this.value);
+      majViragesLabel();
+      map.closePopup(); state.focusCell = null;
+      recalculer();
+    });
+    // Liste des cellules du panneau : de la plus faible part de verts à la plus forte (sans sens unique à la fin)
+    function renderListeCellules() {
+      const box = document.getElementById('suCellListe');
+      const cells = [...cellulesVue().values()].sort((a, b) => (a.part ?? 2) - (b.part ?? 2) || nomCellule(a.id).localeCompare(nomCellule(b.id), 'fr'));
+      box.innerHTML = '';
+      for (const c of cells) {
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'su-cell-row';
+        btn.innerHTML = '<i style="background:' + teinte(c.part) + '"></i><span>' + esc(nomCellule(c.id)) + '</span><b>' +
+          (c.part === null ? '—' : pf.format(c.part * 100) + '&nbsp;%') + '</b>';
+        btn.addEventListener('click', () => allerCellule(c));
+        box.appendChild(btn);
+      }
+    }
+    // Centre la carte sur une cellule, ouvre sa fiche et la met en évidence
+    function allerCellule(c) {
+      const rues = data.troncons.filter(r => r._c === c.id && r[T.PLATEAU]);
+      if (!rues.length) return;
+      const b = L.latLngBounds(rues.flatMap(r => r[T.COORDS].map(q => [q[1], q[0]])));
+      if (isMobile()) setSidebarOpenMobile(false);
+      map.fitBounds(b, { padding: [40, 40], maxZoom: 17 });
+      popupCellule(c, b.getCenter());
+      state.focusCell = c.id; render();
+    }
     function recalculer() {
-      analyser(); versionCalcul++; render(); renderStats();
+      appliquerArteresLocales(); analyser(); nommerCellules(); versionCalcul++; render(); renderStats(); renderListeCellules();
     }
     document.getElementById('suGradient').style.background =
       'linear-gradient(to right, ' + [0, 0.25, 0.5, 0.75, 1].map(teinte).join(', ') + ')';
@@ -1320,11 +1602,18 @@
     // ---------- Chargement ----------
     const loading = document.getElementById('gfLoading');
     loading.classList.add('show');
-    fetch('./data/reseau.json').then(res => { if (!res.ok) throw new Error(res.status); return res.json(); })
-      .then(json => {
+    // Noms choisis des cellules (facultatif : sans ce fichier, les noms automatiques)
+    const chargementNoms = fetch('./data/noms-cellules.json').then(r => r.ok ? r.json() : {})
+      .then(j => { if (j && typeof j.noms === 'object') nomsChoisis = j.noms; }).catch(() => {});
+    Promise.all([fetch('./data/reseau.json').then(res => { if (!res.ok) throw new Error(res.status); return res.json(); }), chargementNoms])
+      .then(([json]) => {
         data = json; noms = json.noms;
-        data.troncons.forEach(r => { r._km = lengthKm(r[T.COORDS]); });
+        data.troncons.forEach(r => {
+          r._km = lengthKm(r[T.COORDS]);
+          coordNoeud.set(r[T.A], r[T.COORDS][0]); coordNoeud.set(r[T.B], r[T.COORDS][r[T.COORDS].length - 1]);
+        });
         renderCollectrices();
+        renderArteresLocales();
         renderRuelles();
         recalculer();
         if (layer) {

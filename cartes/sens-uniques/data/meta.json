@@ -2,6 +2,26 @@
  "donneesMisesAJour": "2026-11-12",
  "versionSource": "2026-11-04",
  "collectricesCommeArteres": [],
+ "arteresParallelesSeulement": true,
+ "viragesMaximaux": 3,
+ "arteresLocales": [
+  "Rue Jeanne-Mance",
+  "Rue Léo-Pariseau"
+ ],
+ "pairesArterielles": [
+  [
+   "Avenue De Lorimier",
+   "Avenue Papineau"
+  ],
+  [
+   "Boulevard Saint-Laurent",
+   "Rue Saint-Urbain"
+  ],
+  [
+   "Rue Frontenac",
+   "Rue D'Iberville"
+  ]
+ ],
  "ruelles": [
   "Avenue Bureau",
   "Rue Barrette",
@@ -11,6 +31,7 @@
   "Rue La Mennais",
   "Rue Latreille",
   "Rue Lionais",
+  "Rue Saint-Christophe",
   "Rue Simard"
  ]
 }

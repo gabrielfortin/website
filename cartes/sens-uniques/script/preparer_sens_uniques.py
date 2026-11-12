@@ -27,9 +27,15 @@ Règle (choix de Gabriel, détails dans ../NOTES.md) :
     (sans DIR_VOIE : « Mont-Royal Est » et « Ouest » sont la même avenue).
   - Cellule = îlot délimité par les artères seulement : rues locales et
     autres collectrices reliées par des nœuds qui ne touchent pas une artère.
+    Les voies où l'on ne roule pas (CLASSE 1 à 4 et 9) et les rues comptées
+    comme ruelles, au Plateau, relient aussi les parties d'une cellule
+    (ex. Prince-Arthur piétonne), sans servir de passage.
   - On ne roule « à l'intérieur » que sur les rues locales (CLASSE 0). Un
     nœud qui touche une collectrice ou une artère (CLASSE 5 à 8) est une
     porte : un parcours y commence ou s'y arrête, sans la traverser.
+    Exception : à un carrefour avec une collectrice non cochée (sans
+    artère), on traverse tout droit, c.-à-d. une rue locale y continue sur la
+    rue du même nom (on n'y tourne pas).
   - Parcours TRAVERSANT : entre par une artère X et ressort par une autre
     artère Y (X ≠ Y). Ressortir sur une collectrice (non cochée) est
     acceptable, ex. une rue tête-bêche qui oblige à y tourner.
@@ -38,9 +44,34 @@ Règle (choix de Gabriel, détails dans ../NOTES.md) :
     traversant si u est une entrée ou un nœud intérieur atteignable depuis
     une entrée, et si v est une sortie ou un nœud intérieur depuis lequel une
     sortie est atteignable.
+  - Artères parallèles (DEFAUT_PARALLELES, case dans la page) : une paire
+    (X, Y) n'est examinée que si X et Y sont parallèles (deux est-ouest ou
+    deux nord-sud). Orientation = moyenne, en angle doublé, des tronçons de
+    l'artère qui touchent les portes de la cellule (tracé de bout en bout,
+    longitude × cos(latitude)) ; parallèles si l'écart est de moins de 45°.
+  - Artères comptées comme rues locales (DEFAUT_ARTERES_LOCALES, cases dans
+    la page) : leurs tronçons d'artère au Plateau sont traités comme des rues
+    locales (CLASSE 0).
+  - Paires artérielles (DEFAUT_PAIRES, case dans la page) : une paire (X, Y)
+    de PAIRES_ARTERIELLES (une artère vers le nord, l'autre vers le sud)
+    n'est pas examinée : une rue locale peut les relier d'est en ouest.
+  - Virages maximaux (DEFAUT_VIRAGES, curseur dans la page) : un parcours ne
+    compte que s'il change de rue locale (nom différent) au plus ce nombre de
+    fois ; entrer et ressortir ne comptent pas. Un arc compte si virages
+    minimaux depuis une entrée jusqu'à lui + virages minimaux de lui jusqu'à
+    une sortie ≤ maximum.
   - Statut d'une rue locale : 0 sens unique sans parcours traversant (vert),
     1 sens unique traversant (rouge), 2 double sens sans parcours
     traversant, 3 double sens traversant.
+
+Rues isolées : une cellule qui ne contient qu'une seule rue locale (un seul
+  nom) est regroupée avec les autres dans une cellule commune (ISOLEES), pour
+  le compte des cellules et l'affichage ; les parcours sont calculés dans la
+  vraie cellule.
+
+Raccords (RACCORDS) : petits tronçons ajoutés où la Géobase coupe une rue
+  continue (rue Clark à Bagg et à Saint-Cuthbert : deux nœuds à ~8 m, sans
+  tronçon entre eux). Identifiant négatif dans l'export.
 
 Rues locales traitées comme des ruelles (DEFAUT_RUELLES, décochables dans la
   page) : retirées du calcul comme les autres voies qui ne servent pas de
@@ -72,6 +103,7 @@ Usage (date « Dernière modification des données » de la ressource) :
 import collections
 import datetime
 import json
+import math
 import re
 import sys
 import unicodedata
@@ -83,15 +115,31 @@ SORTIE = ICI.parent / "data"
 LOCALE = 0
 COLLECTRICE = 5
 ARTERES = {6, 7, 8}
+NON_CARROSSABLES = {1, 2, 3, 4, 9}   # voies où l'on ne roule pas : liens entre parties d'une cellule
 PORTES = {5, 6, 7, 8}
 MONT_ROYAL = ("avenue", "Mont-Royal")
 MONT_ROYAL_BOUTS = ("Saint-Laurent", "De Lorimier")   # rues qui bornent le tronçon piéton
 DEFAUT_COMME_ARTERES = set()   # collectrices traitées comme des artères par défaut (aucune)
+DEFAUT_PARALLELES = True       # parcours traversant seulement entre artères parallèles (case cochée par défaut)
+DEFAUT_VIRAGES = 3             # virages maximaux d'un parcours traversant (curseur de la page) ; None = sans limite
 # Rues locales que Gabriel considère comme des ruelles (par défaut, retirées du calcul)
 DEFAUT_RUELLES = {"Rue Généreux", "Rue De Varennes", "Rue Simard", "Rue Barrette",
                   "Rue La Mennais", "Rue Latreille", "Rue De Courville", "Avenue Bureau",
-                  "Rue Lionais"}
+                  "Rue Lionais", "Rue Saint-Christophe"}
+# Artères traitées comme des rues locales au Plateau (cases cochées par défaut dans la page)
+DEFAUT_ARTERES_LOCALES = {"Rue Jeanne-Mance", "Rue Léo-Pariseau"}
+DEFAUT_PAIRES = True           # exception des paires artérielles (case cochée par défaut)
+# Paires artérielles (une vers le nord, l'autre vers le sud) : une rue locale peut les relier
+PAIRES_ARTERIELLES = [("Avenue De Lorimier", "Avenue Papineau"), ("Boulevard Saint-Laurent", "Rue Saint-Urbain"),
+                      ("Rue Frontenac", "Rue D'Iberville")]
+# Raccords : tronçons ajoutés là où la Géobase coupe une rue continue (deux nœuds à quelques mètres, sans
+# tronçon entre eux). (voie, [lng, lat] de départ, [lng, lat] d'arrivée), dans le sens de la circulation.
+RACCORDS = [
+    ("Rue Clark", [-73.578903, 45.515958], [-73.578804, 45.515991]),   # Clark coupée à Bagg (~8 m)
+    ("Rue Clark", [-73.577695, 45.515512], [-73.577651, 45.515445]),   # Clark coupée à Saint-Cuthbert (~8 m)
+]
 MAX_PAIRES = 6
+ISOLEES = "isolees"            # cellule commune des cellules d'une seule rue locale
 ARRONDISSEMENT = "le-plateau-mont-royal"
 
 
@@ -132,9 +180,44 @@ def est_artere(t, comme_arteres):
     return t["classe"] in ARTERES or (t["classe"] == COLLECTRICE and t["voie"] in comme_arteres)
 
 
-def cellules(troncons, comme_arteres):
+def comme_locales(troncons, noms=DEFAUT_ARTERES_LOCALES):
+    """Copie de la liste où les tronçons d'artère du Plateau nommés dans `noms` sont des rues locales."""
+    return [dict(t, classe=LOCALE) if t["plateau"] and t["classe"] in ARTERES and t["voie"] in noms else t
+            for t in troncons]
+
+
+def ajouter_raccords(troncons):
+    """Ajoute les RACCORDS : tronçon local à sens unique entre deux extrémités de tronçon existantes
+    (à moins de 2 m des coordonnées données). S'arrête si une extrémité est introuvable."""
+    def noeud(c):
+        meilleur = None
+        for t in troncons:
+            for q, n in ((t["coords"][0], t["a"]), (t["coords"][-1], t["b"])):
+                d = math.hypot((q[0] - c[0]) * 111320 * math.cos(math.radians(c[1])), (q[1] - c[1]) * 110574)
+                if d < 2 and (meilleur is None or d < meilleur[0]):
+                    meilleur = (d, n, q)
+        if meilleur is None:
+            sys.exit(f"Raccord : aucun nœud près de {c}")
+        return meilleur[1], meilleur[2]
+    for k, (voie, de, a) in enumerate(RACCORDS):
+        na, qa = noeud(de)
+        nb, qb = noeud(a)
+        if not any(t["voie"] == voie and n in (t["a"], t["b"]) for t in troncons for n in (na, nb)):
+            sys.exit(f"Raccord : {voie} ne touche pas ses deux nœuds")
+        troncons.append({"id": -(k + 1), "classe": LOCALE, "sens": 1, "voie": voie, "coords": [qa, qb],
+                         "typ": None, "nom": None, "a": na, "b": nb, "plateau": True})
+
+
+def liens_cellules(troncons, ruelles=DEFAUT_RUELLES):
+    """Voies où l'on ne roule pas (CLASSE 1 à 4 et 9, rues comptées comme ruelles), au Plateau : elles
+    relient les parties d'une même cellule (ex. Prince-Arthur piétonne), sans servir de passage."""
+    return [t for t in troncons if t["plateau"]
+            and (t["classe"] in NON_CARROSSABLES or (t["classe"] == LOCALE and t["voie"] in ruelles))]
+
+
+def cellules(troncons, comme_arteres, liens=()):
     """Liste de cellules (listes d'index) : rues locales et collectrices non cochées,
-    reliées par des nœuds qui ne touchent pas une artère."""
+    reliées par des nœuds qui ne touchent pas une artère, ou par un des `liens`."""
     noeuds_artere = set()
     for t in troncons:
         if est_artere(t, comme_arteres):
@@ -148,6 +231,9 @@ def cellules(troncons, comme_arteres):
         for n in (t["a"], t["b"]):
             if n not in noeuds_artere:
                 uf.union(("t", i), ("n", n))
+    for t in liens:
+        if t["a"] not in noeuds_artere and t["b"] not in noeuds_artere:
+            uf.union(("n", t["a"]), ("n", t["b"]))
     groupes = collections.defaultdict(list)
     for i in idx:
         groupes[uf.find(("t", i))].append(i)
@@ -169,42 +255,108 @@ def parcourir(depart, voisins, portes):
     return vus
 
 
-def analyser(troncons, comme_arteres):
+def virages(arcs, suivants, est_depart, portes, c_depart, c_suivant):
+    """Virages minimaux, par arc (index), depuis un nœud de départ (entrée en avant, sortie en arrière).
+    c_depart / c_suivant : extrémité de l'arc côté départ / côté suivant (0 = u, 1 = v). Un parcours
+    ne dépasse pas une porte qui n'est pas un départ. Parcours en largeur 0-1 (coût 1 si le nom change)."""
+    best = [math.inf] * len(arcs)
+    file = collections.deque()
+    for i, a in enumerate(arcs):
+        if est_depart(a[c_depart]):
+            best[i] = 0
+            file.append(i)
+    while file:
+        i = file.popleft()
+        n = arcs[i][c_suivant]
+        if n in portes:
+            continue
+        nom_i = arcs[i][3]
+        for j in suivants.get(n, ()):
+            c = best[i] + (0 if nom_i is not None and arcs[j][3] == nom_i else 1)
+            if c < best[j]:
+                best[j] = c
+                if c == best[i]:
+                    file.appendleft(j)
+                else:
+                    file.append(j)
+    return best
+
+
+def analyser(troncons, comme_arteres, paralleles=DEFAUT_PARALLELES, max_virages=DEFAUT_VIRAGES,
+             paires_arterielles=DEFAUT_PAIRES, liens=()):
     """{index: (statut, cellule, paires limitées, nombre de paires)} ; statut -1 pour les collectrices de cellule."""
     portes = set()
     arteres_au = collections.defaultdict(set)
+    # Orientation des artères à chaque nœud, en angle doublé (les deux sens d'une droite s'additionnent)
+    dir_au = collections.defaultdict(lambda: collections.defaultdict(lambda: [0.0, 0.0]))
     for t in troncons:
         if t["classe"] in PORTES:
+            artere = est_artere(t, comme_arteres)
+            if artere:
+                (x0, y0), (x1, y1) = t["coords"][0][:2], t["coords"][-1][:2]
+                a = 2 * math.atan2(y1 - y0, (x1 - x0) * math.cos(math.radians(y0)))
             for n in (t["a"], t["b"]):
                 portes.add(n)
-                if est_artere(t, comme_arteres):
-                    arteres_au[n].add(t["voie"] or f"#{t['id']}")
+                if artere:
+                    nom = t["voie"] or f"#{t['id']}"
+                    arteres_au[n].add(nom)
+                    v = dir_au[n][nom]
+                    v[0] += math.cos(a)
+                    v[1] += math.sin(a)
 
     resultat = {}
-    for num, tous in enumerate(cellules(troncons, comme_arteres)):
+    for num, tous in enumerate(cellules(troncons, comme_arteres, liens)):
+        membres = [i for i in tous if troncons[i]["classe"] == LOCALE]
+        # Cellule d'une seule rue locale (un seul nom) : regroupée avec les autres dans « Rues isolées »
+        # (pour le compte et l'affichage ; les parcours restent calculés dans la vraie cellule)
+        if len({troncons[i]["voie"] for i in membres}) == 1:
+            num = ISOLEES
         for i in tous:
             if troncons[i]["classe"] == COLLECTRICE:
                 resultat[i] = (-1, num, [], 0)
-        membres = [i for i in tous if troncons[i]["classe"] == LOCALE]
+
+        def noeud(n, t):
+            # Carrefour avec une collectrice non cochée (porte sans artère) : on le traverse tout droit,
+            # c.-à-d. la rue ne se raccorde qu'à elle-même (même nom) ; on n'y tourne pas
+            if n in portes and n not in arteres_au:
+                return (n, t["voie"] or f"#{t['id']}")
+            return n
+
         arcs = []
         for i in membres:
             t = troncons[i]
+            a, b = noeud(t["a"], t), noeud(t["b"], t)
             if t["sens"] in (0, 1):
-                arcs.append((t["a"], t["b"], i))
+                arcs.append((a, b, i, t["voie"]))
             if t["sens"] in (0, -1):
-                arcs.append((t["b"], t["a"], i))
+                arcs.append((b, a, i, t["voie"]))
         sortants = collections.defaultdict(list)
         entrants = collections.defaultdict(list)
-        for u, v, _ in arcs:
+        sortants_i = collections.defaultdict(list)
+        entrants_i = collections.defaultdict(list)
+        for k, (u, v, _, _) in enumerate(arcs):
             sortants[u].append(v)
             entrants[v].append(u)
+            sortants_i[u].append(k)
+            entrants_i[v].append(k)
         portes_art = {n for i in membres for n in (troncons[i]["a"], troncons[i]["b"]) if arteres_au.get(n)}
         noms = sorted(set().union(*(arteres_au[n] for n in portes_art))) if portes_art else []
+        angle = {}
+        for nom in noms:
+            x = sum(dir_au[n][nom][0] for n in portes_art if nom in dir_au[n])
+            y = sum(dir_au[n][nom][1] for n in portes_art if nom in dir_au[n])
+            angle[nom] = math.atan2(y, x)
+
+        def sont_paralleles(x, y):
+            d = abs(angle[x] - angle[y]) % (2 * math.pi)
+            return min(d, 2 * math.pi - d) < math.pi / 2   # angle doublé : π/2 = 45° d'écart réel
 
         traversant = collections.defaultdict(list)
         for x in noms:
             for y in noms:
-                if x == y:
+                if x == y or (paralleles and not sont_paralleles(x, y)):
+                    continue
+                if paires_arterielles and ((x, y) in PAIRES_ARTERIELLES or (y, x) in PAIRES_ARTERIELLES):
                     continue
                 entrees = {n for n in portes_art if x in arteres_au[n] and y not in arteres_au[n]}
                 sorties = {n for n in portes_art if y in arteres_au[n] and x not in arteres_au[n]}
@@ -213,11 +365,17 @@ def analyser(troncons, comme_arteres):
                 avant = parcourir(entrees, sortants, portes)
                 if not avant & sorties:
                     continue
-                arriere = parcourir(sorties, entrants, portes)
-                depart_ok = {n for n in avant if n in entrees or n not in portes}
-                arrivee_ok = {n for n in arriere if n in sorties or n not in portes}
-                for u, v, i in arcs:
-                    if u in depart_ok and v in arrivee_ok and (x, y) not in traversant[i]:
+                if max_virages is None:
+                    arriere = parcourir(sorties, entrants, portes)
+                    depart_ok = {n for n in avant if n in entrees or n not in portes}
+                    arrivee_ok = {n for n in arriere if n in sorties or n not in portes}
+                    sur = [u in depart_ok and v in arrivee_ok for u, v, _, _ in arcs]
+                else:
+                    avant_v = virages(arcs, sortants_i, entrees.__contains__, portes, 0, 1)
+                    apres_v = virages(arcs, entrants_i, sorties.__contains__, portes, 1, 0)
+                    sur = [a + b <= max_virages for a, b in zip(avant_v, apres_v)]
+                for (u, v, i, _), ok in zip(arcs, sur):
+                    if ok and (x, y) not in traversant[i]:
                         traversant[i].append((x, y))
         for i in membres:
             sur = bool(traversant.get(i))
@@ -300,11 +458,13 @@ def main():
         })
     if not any(t["plateau"] for t in troncons):
         sys.exit(f"Aucun tronçon pour {ARRONDISSEMENT} : vérifier ARR_GCH / ARR_DRT")
+    ajouter_raccords(troncons)
     print(f"{len(troncons)} tronçons ; {marquer_mont_royal_pieton(troncons)} tronçons de Mont-Royal piétonne", file=sys.stderr)
 
     # Tronçons à exporter
     garder = {i for i, t in enumerate(troncons) if t["plateau"]}
-    for groupe in cellules(troncons, set()):
+    # Cellules les plus grandes possibles : artères locales par défaut comprises (décocher ne peut que découper)
+    for groupe in cellules(comme_locales(troncons), set(), liens_cellules(troncons, set())):
         if any(troncons[i]["plateau"] for i in groupe):
             garder.update(groupe)
     noeuds = {n for i in garder for n in (troncons[i]["a"], troncons[i]["b"])}
@@ -313,15 +473,24 @@ def main():
             garder.add(i)
     sous_ensemble = [troncons[i] for i in sorted(garder)]
 
+    for nom in DEFAUT_ARTERES_LOCALES:
+        if not any(t["voie"] == nom and t["classe"] in ARTERES and t["plateau"] for t in troncons):
+            sys.exit(f"Artère comptée comme locale introuvable au Plateau : {nom}")
     for nom in DEFAUT_RUELLES:
         if not any(t["voie"] == nom and t["classe"] == LOCALE and t["plateau"] for t in troncons):
             sys.exit(f"Ruelle par défaut introuvable au Plateau : {nom}")
 
+    for paire in PAIRES_ARTERIELLES:
+        for nom in paire:
+            if not any(t["voie"] == nom and t["classe"] in ARTERES and t["plateau"] for t in troncons):
+                sys.exit(f"Artère d'une paire introuvable au Plateau : {nom}")
+
     def calcul(liste, pieton):
+        liste = comme_locales(liste)
         # Réglage par défaut : ruelles retirées, Mont-Royal piétonne si demandé
         garde = [t for t in liste if not (t["classe"] == LOCALE and t["voie"] in DEFAUT_RUELLES)
                  and not (pieton and t["pieton"])]
-        return totaux(garde, analyser(garde, DEFAUT_COMME_ARTERES))
+        return totaux(garde, analyser(garde, DEFAUT_COMME_ARTERES, liens=liens_cellules(liste)))
 
     # Références, calculées sur le sous-ensemble exporté ET sur toute l'île
     ref = calcul(sous_ensemble, False)
@@ -360,6 +529,10 @@ def main():
     with open(SORTIE / "reseau.json", "w", encoding="utf-8") as f:
         json.dump({"noms": table, "troncons": rangees}, f, ensure_ascii=False, separators=(",", ":"))
     resume = {"reglage_par_defaut": {"collectrices_comme_arteres": sorted(DEFAUT_COMME_ARTERES),
+                                     "arteres_paralleles_seulement": DEFAUT_PARALLELES,
+                                     "virages_maximaux": DEFAUT_VIRAGES,
+                                     "arteres_locales": sorted(DEFAUT_ARTERES_LOCALES),
+                                     "paires_arterielles": [list(p) for p in PAIRES_ARTERIELLES] if DEFAUT_PAIRES else [],
                                      "ruelles": sorted(DEFAUT_RUELLES)},
               "troncons_exportes": len(rangees),
               "troncons_plateau": sum(1 for t in sous_ensemble if t["plateau"]), **ref,
@@ -370,6 +543,10 @@ def main():
         json.dump({"donneesMisesAJour": datetime.date.today().isoformat(),
                    "versionSource": version_source,
                    "collectricesCommeArteres": sorted(DEFAUT_COMME_ARTERES),
+                   "arteresParallelesSeulement": DEFAUT_PARALLELES,
+                   "viragesMaximaux": DEFAUT_VIRAGES,
+                   "arteresLocales": sorted(DEFAUT_ARTERES_LOCALES),
+                   "pairesArterielles": [list(p) for p in PAIRES_ARTERIELLES] if DEFAUT_PAIRES else [],
                    "ruelles": sorted(DEFAUT_RUELLES)}, f, ensure_ascii=False, indent=1)
     json.dump(resume, sys.stderr, ensure_ascii=False, indent=1)
     print(file=sys.stderr)
