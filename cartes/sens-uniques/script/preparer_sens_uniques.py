@@ -64,10 +64,14 @@ Règle (choix de Gabriel, détails dans ../NOTES.md) :
     1 sens unique traversant (rouge), 2 double sens sans parcours
     traversant, 3 double sens traversant.
 
+Noms des cellules (noms_automatiques(), même méthode que la page) : les
+  cellules qui portent le même nom choisi dans data/noms-cellules.json sont
+  regroupées, pour le compte et l'affichage.
+
 Rues isolées : une cellule qui ne contient qu'une seule rue locale (un seul
-  nom) est regroupée avec les autres dans une cellule commune (ISOLEES), pour
-  le compte des cellules et l'affichage ; les parcours sont calculés dans la
-  vraie cellule.
+  nom) est regroupée avec les autres sous ISOLEES, qui ne compte pas comme
+  une cellule (ses tronçons restent comptés) ; les parcours sont calculés
+  dans la vraie cellule.
 
 Raccords (RACCORDS) : petits tronçons ajoutés où la Géobase coupe une rue
   continue (rue Clark à Bagg et à Saint-Cuthbert : deux nœuds à ~8 m, sans
@@ -385,6 +389,137 @@ def analyser(troncons, comme_arteres, paralleles=DEFAUT_PARALLELES, max_virages=
     return resultat
 
 
+NORD_MTL = math.radians(147)   # direction des artères nord-sud au Plateau, depuis l'est
+
+
+def longueur_m(coords):
+    """Longueur en mètres (haversine, R = 6 371 000 m, comme Leaflet dans la page)."""
+    m = 0.0
+    for (x0, y0), (x1, y1) in zip(coords, coords[1:]):
+        p0, p1 = math.radians(y0), math.radians(y1)
+        a = math.sin((p1 - p0) / 2) ** 2 + math.cos(p0) * math.cos(p1) * math.sin(math.radians(x1 - x0) / 2) ** 2
+        m += 2 * 6371000 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return m
+
+
+def nom_court(nom):
+    return re.sub(r"^(Rue|Avenue|Boulevard|Chemin|Place|Terrasse|Voie) ", "", nom)
+
+
+def noms_automatiques(troncons, resultat, comme_arteres, liens):
+    """{cellule: nom automatique} des cellules qui ont une rue locale au Plateau (même méthode que
+    nommerCellules() dans la page) : artères qui bordent la cellule, dans l'ordre nord, est, sud, ouest ;
+    moins de 3 artères : la plus longue rue locale au Plateau, puis les artères entre parenthèses."""
+    cell_de = {i: r[1] for i, r in resultat.items()}
+    ordre, au_plateau = [], set()
+    for i, t in enumerate(troncons):
+        if i in cell_de and t["classe"] == LOCALE:
+            if cell_de[i] not in ordre:
+                ordre.append(cell_de[i])
+            if t["plateau"]:
+                au_plateau.add(cell_de[i])
+    arteres_au, coord = collections.defaultdict(set), {}
+    for t in troncons:
+        coord.setdefault(t["a"], t["coords"][0])
+        coord.setdefault(t["b"], t["coords"][-1])
+        if est_artere(t, comme_arteres):
+            for n in (t["a"], t["b"]):
+                arteres_au[n].add(t["voie"] or f"#{t['id']}")
+    cellule_au = {}
+    for i, t in enumerate(troncons):
+        if i in cell_de:
+            for n in (t["a"], t["b"]):
+                if n not in arteres_au and n not in cellule_au:
+                    cellule_au[n] = cell_de[i]
+    change = True
+    while change:
+        change = False
+        for t in liens:
+            a, b = t["a"], t["b"]
+            if a in arteres_au or b in arteres_au:
+                continue
+            if a in cellule_au and b not in cellule_au:
+                cellule_au[b] = cellule_au[a]
+                change = True
+            elif b in cellule_au and a not in cellule_au:
+                cellule_au[a] = cellule_au[b]
+                change = True
+    portes = collections.defaultdict(dict)   # cellule -> nœuds (dict : ordre d'insertion)
+    centres = collections.defaultdict(lambda: [0.0, 0.0, 0])
+    longueurs = collections.defaultdict(dict)
+    for i, t in enumerate(troncons):
+        if i not in cell_de or t["classe"] != LOCALE:
+            continue
+        c = cell_de[i]
+        for n in (t["a"], t["b"]):
+            if n in arteres_au:
+                portes[c][n] = True
+        m = t["coords"][len(t["coords"]) // 2]
+        centres[c][0] += m[0]
+        centres[c][1] += m[1]
+        centres[c][2] += 1
+        if t["plateau"] and t["voie"]:
+            longueurs[c][t["voie"]] = longueurs[c].get(t["voie"], 0) + longueur_m(t["coords"])
+    for t in liens:
+        a, b = t["a"], t["b"]
+        if (a in arteres_au) == (b in arteres_au):
+            continue
+        na, ni = (a, b) if a in arteres_au else (b, a)
+        if ni in cellule_au:
+            portes[cellule_au[ni]][na] = True
+
+    def cap(v):
+        return ((NORD_MTL - math.atan2(v[1], v[0]) + math.pi / 4) % (2 * math.pi) + 2 * math.pi) % (2 * math.pi)
+
+    autos, vus = {}, collections.Counter()
+    for c in ordre:
+        if c not in au_plateau:
+            continue
+        if c == ISOLEES:
+            autos[c] = "Rues isolées"
+            continue
+        x, y, k = centres[c]
+        lng0, lat0 = x / k, y / k
+        kx = math.cos(math.radians(lat0))
+        pos = {}
+        for n in portes[c]:
+            q = coord[n]
+            for a in sorted(arteres_au[n]):
+                v = pos.setdefault(a, [0.0, 0.0])
+                v[0] += (q[0] - lng0) * kx
+                v[1] += q[1] - lat0
+        auto = " / ".join(nom_court(a) for a, v in sorted(pos.items(), key=lambda av: cap(av[1])))
+        if len(pos) < 3:
+            rues = sorted(longueurs[c].items(), key=lambda kv: -kv[1])
+            if rues:
+                auto = nom_court(rues[0][0]) + (f" ({auto})" if auto else "")
+            elif not auto:
+                auto = "Cellule sans artère"
+        vus[auto] += 1
+        if vus[auto] > 1:
+            auto += f" ({vus[auto]})"
+        autos[c] = auto
+    return autos
+
+
+def regrouper_par_nom(resultat, autos, noms_choisis):
+    """Cellules qui portent le même nom (choisi dans data/noms-cellules.json, sinon automatique) :
+    regroupées dans la première (compte et affichage ; les parcours restent ceux de chaque cellule)."""
+    par_nom, vers = {}, {}
+    for c, auto in autos.items():
+        nom = noms_choisis.get(auto) or auto
+        if nom in par_nom:
+            vers[c] = par_nom[nom]
+        else:
+            par_nom[nom] = c
+    return {i: (r[0], vers.get(r[1], r[1]), *r[2:]) for i, r in resultat.items()}
+
+
+def charger_noms_choisis():
+    f = SORTIE / "noms-cellules.json"
+    return json.load(open(f, encoding="utf-8")).get("noms", {}) if f.exists() else {}
+
+
 def totaux(troncons, resultat):
     statuts = collections.Counter()
     cells, traversantes = set(), set()
@@ -393,6 +528,8 @@ def totaux(troncons, resultat):
         if not t["plateau"] or t["classe"] != LOCALE or not r:
             continue
         statuts[r[0]] += 1
+        if r[1] == ISOLEES:          # rues isolées : comptées parmi les tronçons, pas comme une cellule
+            continue
         cells.add(r[1])
         if r[0] in (1, 3):
             traversantes.add(r[1])
@@ -490,7 +627,11 @@ def main():
         # Réglage par défaut : ruelles retirées, Mont-Royal piétonne si demandé
         garde = [t for t in liste if not (t["classe"] == LOCALE and t["voie"] in DEFAUT_RUELLES)
                  and not (pieton and t["pieton"])]
-        return totaux(garde, analyser(garde, DEFAUT_COMME_ARTERES, liens=liens_cellules(liste)))
+        liens = liens_cellules(liste)
+        res = analyser(garde, DEFAUT_COMME_ARTERES, liens=liens)
+        # Noms des cellules et regroupement des cellules de même nom (comme la page)
+        res = regrouper_par_nom(res, noms_automatiques(garde, res, DEFAUT_COMME_ARTERES, liens), charger_noms_choisis())
+        return totaux(garde, res)
 
     # Références, calculées sur le sous-ensemble exporté ET sur toute l'île
     ref = calcul(sous_ensemble, False)

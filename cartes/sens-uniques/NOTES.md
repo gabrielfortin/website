@@ -189,10 +189,27 @@ artérielles (9 ruelles, sans exception) :
    ne contient qu'une seule rue locale (un seul nom) est regroupée avec les
    autres dans une cellule « Rues isolées », comptée une fois dans
    l'indicateur, nommée et affichée comme une cellule. Les parcours restent
-   calculés dans la vraie cellule. `ISOLEES` (1e6 dans la page : la grille
+   calculés dans la vraie cellule. **Hors indicateur** (même jour, choix de
+   Gabriel : ces rues ne correspondent pas au modèle) : « Rues isolées » ne
+   compte pas comme une cellule, n'est ni dans la liste ni dans la vue
+   Cellules ; ses tronçons restent colorés et comptés. `ISOLEES` (1e6 dans la page : la grille
    de la vue Cellules est en Int32 et -1 y veut dire « vide » ; "isolees"
    dans le script). Effet : 59 → 22 cellules ; l'indicateur passe de 69 % à
    41 %, car ces petites cellules étaient presque toutes vertes.
+
+15. **Regroupement par nom** (12 novembre 2026, choix de Gabriel) : les
+   cellules qui portent le même nom (choisi dans `data/noms-cellules.json`)
+   sont regroupées dans la première, comme les rues isolées (compte, noms,
+   affichage ; parcours inchangés). Sert à rattacher les bandes entre
+   Saint-Laurent et Saint-Urbain (paire artérielle) à la cellule voisine à
+   l'ouest : « des Pins / Saint-Laurent / Sherbrooke / Saint-Urbain » →
+   Milton-Parc est, « Saint-Joseph / Saint-Laurent / des Pins / Saint-Urbain »
+   → Parc Jeanne-Mance, « Saint-Laurent / Saint-Joseph / Saint-Urbain » →
+   Mile-End ouest. Pour que le script donne les mêmes totaux, les noms
+   automatiques y sont calculés de la même façon (`noms_automatiques()`,
+   `regrouper_par_nom()` ; page : `nommerCellules()`), vérifiés identiques le
+   12 novembre 2026. Effet : 22 → 19 cellules, 9 → 7 sans parcours
+   traversant (41 % → 37 %).
 
 Indicateur : part des cellules (qui ont au moins une rue locale au Plateau)
 dont aucune rue locale du Plateau n'est de statut 1 ou 3.
@@ -213,14 +230,18 @@ un parcours d'artère à artère par des rues locales.
 
 | Réglage | Cellules (sans parcours traversant) | Sens uniques rouges / verts | Double sens traversants / non |
 |---|---|---|---|
-| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, raccords, rues isolées regroupées, aucune collectrice cochée, 10 ruelles (`resume.json`) | 22 (9, 41 %) | 263 / 336 | 67 / 88 |
-| Défaut + Mont-Royal piétonne (`resume.json`, `mont_royal_pieton`) | 22 (9, 41 %) | 263 / 336 | 67 / 88 |
-| Défaut sans artères locales | 22 (9, 41 %) | 259 / 335 | 66 / 89 |
+| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, raccords, rues isolées hors indicateur, cellules de même nom regroupées, aucune collectrice cochée, 10 ruelles (`resume.json`) | 18 (7, 39 %) | 263 / 336 | 67 / 88 |
+| Défaut + Mont-Royal piétonne (`resume.json`, `mont_royal_pieton`) | 18 (7, 39 %) | 263 / 336 | 67 / 88 |
+| Défaut sans regroupement par nom | 22 (9, 41 %) | 263 / 336 | 67 / 88 |
+| Défaut sans artères locales, sans regroupement par nom | 22 (9, 41 %) | 259 / 335 | 66 / 89 |
 | Défaut à 5 virages | 22 (9, 41 %) | 320 / 279 | 91 / 64 |
 | Défaut sans l'exception des paires | 22 (5, 23 %) | 298 / 301 | 76 / 79 |
 | Défaut sans Saint-Christophe (9 ruelles) | 22 (9, 41 %) | 270 / 332 | 71 / 88 |
 | Défaut, aucune ruelle | 22 (9, 41 %) | 291 / 316 | 104 / 97 |
 | Défaut, Rachel cochée, aucune ruelle | 27 (7, 26 %) | 350 / 257 | 111 / 90 |
+
+Les lignes « sans artères locales » et suivantes ont été calculées avant le
+regroupement par nom (cellules : compter jusqu'à 3 de moins avec lui).
 
 Avant les raccords et le regroupement des rues isolées : 59 cellules (41,
 69 %), 263 / 334, 67 / 88.

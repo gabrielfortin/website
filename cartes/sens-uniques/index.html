@@ -582,7 +582,7 @@
       <h3>Méthode</h3>
       <ul>
         <li><em>Réseau supérieur</em>&nbsp;: collectrices, artères et autoroutes (classes de la Géobase, les mêmes que sur la carte du réseau artériel). Seules les artères (et autoroutes, et les collectrices cochées) comptent comme entrée ou sortie d'un parcours traversant&nbsp;; tourner sur une autre collectrice termine le parcours sans le rendre traversant. On peut toutefois la traverser tout droit, dans le prolongement de la même rue.</li>
-        <li><em>Rues isolées</em>&nbsp;: une cellule qui ne contient qu'une seule rue locale (par exemple un bout de rue entre deux artères) est regroupée avec les autres dans une cellule «&nbsp;Rues isolées&nbsp;», comptée une seule fois.</li>
+        <li><em>Rues isolées</em>&nbsp;: une cellule qui ne contient qu'une seule rue locale (par exemple un bout de rue entre deux artères) ne correspond pas à ce modèle&nbsp;: ces rues sont regroupées sous «&nbsp;Rues isolées&nbsp;», qui ne compte pas comme une cellule. Elles restent colorées et comptées parmi les tronçons.</li>
         <li><em>Cellule</em>&nbsp;: îlot délimité par les artères seulement. Les voies où l'on ne roule pas (rues piétonnes comme Prince-Arthur, ruelles) relient les rues d'une même cellule, sans servir de passage. Les collectrices qu'il contient en font partie&nbsp;: on peut les traverser tout droit (la rue continue sous le même nom de l'autre côté), mais un parcours qui y tourne s'arrête. Dans le panneau, on peut compter certaines collectrices comme des artères (par exemple la rue Rachel).</li>
         <li>Une artère est identifiée par son nom (l'avenue du Mont-Royal Est et Ouest comptent comme la même). Entrer et ressortir par la même artère n'est pas un parcours traversant.</li>
         <li><em>Artères parallèles</em>&nbsp;: relier deux artères parallèles est le rôle d'une collectrice, pas d'une rue locale. Une rue locale qui relie une artère est-ouest à une artère nord-sud ne fait que couper le coin, sans vrai raccourci&nbsp;: elle n'est pas comptée comme traversante. L'orientation d'une artère est mesurée là où elle touche la cellule&nbsp;; au Plateau, les artères est-ouest sont orientées à environ 57° et les nord-sud à environ 147° (la grille de Montréal est inclinée). Deux artères sont parallèles si leur écart est de moins de 45°. Cette règle peut être décochée dans le panneau.</li>
@@ -795,7 +795,6 @@
     // { "noms": { "<nom automatique>": "<nom choisi>" } })
     let nomsChoisis = {};
     const coordNoeud = new Map();          // nœud -> [lng, lat]
-    const arteresCellule = new Map();      // cellule -> [[nœud, [noms d'artères]], ...] (portes sur une artère)
     let nomsCellules = new Map();          // cellule -> { auto, nom }
 
     function esc(s) {
@@ -859,10 +858,41 @@
     const NORD_MTL = 147 * Math.PI / 180;
     const ISOLEES = 1e6;   // identifiant de la cellule commune des rues isolées (entier positif : grille Int32)
     const nomCourt = nom => nom.replace(/^(Rue|Avenue|Boulevard|Chemin|Place|Terrasse|Voie) /, '');
+    // Même méthode que noms_automatiques() et regrouper_par_nom() dans le script
     function nommerCellules() {
-      const centres = new Map(), longueurs = new Map();   // cellule -> nom de rue locale -> km
+      // Cellules nommées : celles qui ont une rue locale au Plateau, dans l'ordre de leur première rue locale
+      const ordre = [], auPlateau = new Set();
       for (const r of data.troncons) {
         if (r._c === -1 || r[T.CLASSE] !== 0) continue;
+        if (!ordre.includes(r._c)) ordre.push(r._c);
+        if (r[T.PLATEAU]) auPlateau.add(r._c);
+      }
+      // Artères à chaque nœud ; cellule de chaque nœud intérieur (bouts des tronçons de cellule, puis liens)
+      const arteresAu = new Map(), celluleAu = new Map();
+      for (const r of data.troncons) {
+        if (estPietonne(r) || !estArtere(r)) continue;
+        for (const n of [r[T.A], r[T.B]]) { if (!arteresAu.has(n)) arteresAu.set(n, new Set()); arteresAu.get(n).add(nomDe(r) || '#' + r[T.ID]); }
+      }
+      for (const r of data.troncons) {
+        if (r._c === -1) continue;
+        for (const n of [r[T.A], r[T.B]]) if (!arteresAu.has(n) && !celluleAu.has(n)) celluleAu.set(n, r._c);
+      }
+      const liens = data.troncons.filter(r => { const c = r[T.CLASSE]; return r[T.PLATEAU] && ((c >= 1 && c <= 4) || c === 9 || estRuelle(r)); });
+      for (let change = true; change;) {
+        change = false;
+        for (const r of liens) {
+          const a = r[T.A], b = r[T.B];
+          if (arteresAu.has(a) || arteresAu.has(b)) continue;
+          if (celluleAu.has(a) && !celluleAu.has(b)) { celluleAu.set(b, celluleAu.get(a)); change = true; }
+          else if (celluleAu.has(b) && !celluleAu.has(a)) { celluleAu.set(a, celluleAu.get(b)); change = true; }
+        }
+      }
+      // Portes sur une artère : bouts des rues locales de la cellule, et liens qui touchent une artère
+      const portes = new Map(), centres = new Map(), longueurs = new Map();
+      const ajouterPorte = (cell, n) => { if (!portes.has(cell)) portes.set(cell, new Set()); portes.get(cell).add(n); };
+      for (const r of data.troncons) {
+        if (r._c === -1 || r[T.CLASSE] !== 0) continue;
+        for (const n of [r[T.A], r[T.B]]) if (arteresAu.has(n)) ajouterPorte(r._c, n);
         const cs = r[T.COORDS], m = cs[Math.floor(cs.length / 2)];
         const c = centres.get(r._c) || [0, 0, 0];
         c[0] += m[0]; c[1] += m[1]; c[2]++;
@@ -872,25 +902,29 @@
         const lc = longueurs.get(r._c);
         lc.set(nomDe(r), (lc.get(nomDe(r)) || 0) + r._km);
       }
+      for (const r of liens) {
+        const a = r[T.A], b = r[T.B];
+        if (arteresAu.has(a) === arteresAu.has(b)) continue;
+        const [na, ni] = arteresAu.has(a) ? [a, b] : [b, a];
+        if (celluleAu.has(ni)) ajouterPorte(celluleAu.get(ni), na);
+      }
+      // Cap depuis le nord de Montréal, dans le sens horaire, décalé de 45° : le secteur nord va de −45° à +45°
+      const cap = ([dx, dy]) => ((NORD_MTL - Math.atan2(dy, dx) + Math.PI / 4) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
       const autos = new Map(), vus = new Map();
-      for (const cell of centres.keys()) {
+      for (const cell of ordre) {
+        if (!auPlateau.has(cell)) continue;
         if (cell === ISOLEES) { autos.set(cell, 'Rues isolées'); continue; }
-        const portesA = arteresCellule.get(cell) || [];
         const ce = centres.get(cell);
-        if (!ce) continue;
         const lng0 = ce[0] / ce[2], lat0 = ce[1] / ce[2], k = Math.cos(lat0 * Math.PI / 180);
-        const pos = new Map();   // artère -> [somme dx, somme dy, n]
-        for (const [n, ars] of portesA) {
+        const pos = new Map();   // artère -> [somme dx, somme dy]
+        for (const n of portes.get(cell) || []) {
           const q = coordNoeud.get(n);
-          if (!q) continue;
-          for (const a of ars) {
-            const v = pos.get(a) || [0, 0, 0];
-            v[0] += (q[0] - lng0) * k; v[1] += q[1] - lat0; v[2]++;
+          for (const a of arteresAu.get(n)) {
+            const v = pos.get(a) || [0, 0];
+            v[0] += (q[0] - lng0) * k; v[1] += q[1] - lat0;
             pos.set(a, v);
           }
         }
-        // Cap depuis le nord de Montréal, dans le sens horaire, décalé de 45° : le secteur nord va de −45° à +45°
-        const cap = ([dx, dy]) => ((NORD_MTL - Math.atan2(dy, dx) + Math.PI / 4) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
         let auto = [...pos].sort((a, b) => cap(a[1]) - cap(b[1])).map(([a]) => nomCourt(a)).join(' / ');
         // Moins de 3 artères : la rue locale la plus longue de la cellule (au Plateau), puis les artères entre parenthèses
         if (pos.size < 3) {
@@ -904,7 +938,17 @@
         if (deja) auto += ' (' + (deja + 1) + ')';
         autos.set(cell, auto);
       }
-      nomsCellules = new Map([...autos].map(([cell, auto]) => [cell, { auto, nom: nomsChoisis[auto] || auto }]));
+      // Cellules qui portent le même nom (choisi) : regroupées dans la première (compte, noms et affichage ;
+      // les parcours restent calculés dans chaque vraie cellule)
+      nomsCellules = new Map();
+      const parNom = new Map(), vers = new Map();
+      for (const [cell, auto] of autos) {
+        const nom = nomsChoisis[auto] || auto;
+        if (parNom.has(nom)) { vers.set(cell, parNom.get(nom)); nomsCellules.get(parNom.get(nom)).autos.push(auto); continue; }
+        parNom.set(nom, cell);
+        nomsCellules.set(cell, { auto, autos: [auto], nom });
+      }
+      if (vers.size) for (const r of data.troncons) if (vers.has(r._c)) r._c = vers.get(r._c);
     }
     const nomCellule = cell => (nomsCellules.get(cell) || {}).nom || 'Cellule';
     function analyser() {
@@ -943,7 +987,6 @@
       const find = x => { if (!parent.has(x)) parent.set(x, x); let r = x; while (parent.get(r) !== r) r = parent.get(r);
         while (parent.get(x) !== r) { const nx = parent.get(x); parent.set(x, r); x = nx; } return r; };
       const union = (a, b) => parent.set(find(a), find(b));
-      const liensArtere = [];   // [nœud intérieur, nœud d'artère] des liens qui touchent une artère
       const dansCellule = rows.filter(r => r[T.CLASSE] === 0 || (r[T.CLASSE] === 5 && !estArtere(r)));
       for (const r of dansCellule) {
         find('t' + r[T.ID]);
@@ -956,11 +999,6 @@
         const c = r[T.CLASSE];
         if (!r[T.PLATEAU] || !((c >= 1 && c <= 4) || c === 9 || estRuelle(r))) continue;
         if (!arteresAu.has(r[T.A]) && !arteresAu.has(r[T.B])) union('n' + r[T.A], 'n' + r[T.B]);
-        // Un lien qui touche une artère d'un côté ne relie rien, mais l'artère borde la cellule (pour son nom)
-        else if (arteresAu.has(r[T.A]) !== arteresAu.has(r[T.B])) {
-          const [na, ni] = arteresAu.has(r[T.A]) ? [r[T.A], r[T.B]] : [r[T.B], r[T.A]];
-          liensArtere.push([ni, na]);
-        }
       }
       const groupes = new Map();
       for (const r of dansCellule) {
@@ -969,7 +1007,6 @@
         groupes.get(g).push(r);
       }
       for (const r of data.troncons) { r._s = -1; r._c = -1; r._p = []; r._n = 0; }
-      arteresCellule.clear();
       let num = 0;
       for (const tous of groupes.values()) {
         const cell = num++;
@@ -995,7 +1032,6 @@
         const portesArt = new Set();
         for (const r of membres) for (const n of [r[T.A], r[T.B]]) if (arteresAu.has(n)) portesArt.add(n);
         const nomsCell = [...new Set([...portesArt].flatMap(n => [...arteresAu.get(n)]))].sort();
-        arteresCellule.set(cell, [...portesArt].map(n => [n, [...arteresAu.get(n)]]));
         // Orientation de chaque artère là où elle touche la cellule (angle doublé, en radians)
         const angleCell = new Map();
         for (const nom of nomsCell) {
@@ -1046,15 +1082,6 @@
           r._s = r[T.UNIQUE] ? (l.length ? 1 : 0) : (l.length ? 3 : 2);
           r._p = l.slice(0, MAX_PAIRES); r._n = l.length;
         }
-      }
-      // Artères touchées par les liens (nom des cellules seulement : elles ne servent pas au calcul)
-      const celluleRacine = new Map();
-      for (const [g, tous] of groupes) celluleRacine.set(g, tous[0]._c);
-      for (const [ni, na] of liensArtere) {
-        if (!parent.has('n' + ni)) continue;
-        const cell = celluleRacine.get(find('n' + ni));
-        if (cell === undefined || !arteresCellule.has(cell)) continue;
-        arteresCellule.get(cell).push([na, [...arteresAu.get(na)]]);
       }
     }
 
@@ -1121,7 +1148,7 @@
     function cellulesVue() {
       const cells = new Map();
       for (const r of data.troncons) {
-        if (r._s === -1 || !r[T.PLATEAU] || r[T.CLASSE] !== 0) continue;
+        if (r._s === -1 || !r[T.PLATEAU] || r[T.CLASSE] !== 0 || r._c === ISOLEES) continue;
         if (!cells.has(r._c)) cells.set(r._c, { id: r._c, km: [0, 0, 0, 0], trav: false });
         const c = cells.get(r._c);
         c.km[r._s] += r._km;
@@ -1298,7 +1325,7 @@
         ligne('Double sens', km(c.km[2] + c.km[3])) +
         ligne('Parcours traversant', c.trav ? 'oui' : 'non') +
         ligne('Nom', '<b>' + esc(nomCellule(c.id)) + '</b>') +
-        (nc && nc.nom !== nc.auto ? ligne('Artères', esc(nc.auto)) : '') +
+        (nc && nc.nom !== nc.auto ? ligne('Artères', nc.autos.map(esc).join('<br>')) : '') +
         '<p class="gf-pop-note">Longueurs des rues locales de la cellule au Plateau. La surface colorée va jusqu\'aux artères qui délimitent la cellule.</p>';
       L.popup({ maxWidth: 280 }).setLatLng(latlng).setContent(html).openOn(map);
     }
@@ -1374,6 +1401,7 @@
         const cs = cellStats().get(cell);
         if (cs) html += '<div class="gf-pop-row"><span class="k">Sa cellule</span><span class="v">' + cs.n + ' tronçon' + (cs.n > 1 ? 's' : '') + ' de rues locales, ' + (cs.trav ? 'traversante' : 'sans parcours traversant') + '</span></div>' +
           '<div class="gf-pop-row"><span class="k">Cellule</span><span class="v">' + esc(nomCellule(cell)) + '</span></div>';
+        else if (cell === ISOLEES) html += '<div class="gf-pop-row"><span class="k">Cellule</span><span class="v">Rue isolée (hors indicateur)</span></div>';
       }
       const headerEl = document.querySelector('.gf-header');
       const topPad = (headerEl ? headerEl.offsetHeight : 76) + 16;
@@ -1426,7 +1454,7 @@
       // Cellules qui ont au moins une rue locale au Plateau (comme resume.json)
       for (const r of data.troncons) {
         const s = r._s;
-        if (s === -1 || !r[T.PLATEAU]) continue;
+        if (s === -1 || !r[T.PLATEAU] || r._c === ISOLEES) continue;   // rues isolées : pas une cellule
         const id = r._c;
         const c = cells.get(id) || { n: 0, trav: false };
         c.n++; if (s === 1 || s === 3) c.trav = true;
