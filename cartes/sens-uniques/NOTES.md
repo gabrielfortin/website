@@ -74,7 +74,7 @@ le nord ; rue Saint-Urbain : -1, vers le sud).
 7. **Rues locales comptées comme ruelles** (liste du panneau, cochées par
    défaut, choix de Gabriel) : rue Généreux, rue De Varennes, rue Simard,
    rue Barrette, rue La Mennais, rue Latreille, rue De Courville, avenue
-   Bureau. Ce sont des rues locales (CLASSE 0) dans la Géobase, mais
+   Bureau, rue Lionais (ajoutée le 12 novembre 2026). Ce sont des rues locales (CLASSE 0) dans la Géobase, mais
    des ruelles en pratique : retirées du calcul comme les voies qui ne
    servent pas de passage, et non comptées dans les totaux. Les décocher les
    remet dans le calcul. Le script s'arrête si un de ces noms n'existe plus
@@ -110,8 +110,8 @@ un parcours d'artère à artère par des rues locales.
 
 | Réglage | Cellules (sans parcours traversant) | Sens uniques rouges / verts | Double sens traversants / non |
 |---|---|---|---|
-| **Défaut** : aucune collectrice cochée, 8 ruelles (`resume.json`) | 65 (35, 54 %) | 258 / 337 | 86 / 74 |
-| Défaut + Mont-Royal piétonne (`resume.json`, `mont_royal_pieton`) | 65 (35, 54 %) | 297 / 298 | 89 / 71 |
+| **Défaut** : aucune collectrice cochée, 9 ruelles (`resume.json`) | 65 (35, 54 %) | 256 / 339 | 85 / 74 |
+| Défaut + Mont-Royal piétonne (`resume.json`, `mont_royal_pieton`) | 65 (35, 54 %) | 295 / 300 | 88 / 71 |
 | Aucune collectrice, aucune ruelle | 64 (34, 53 %) | 286 / 314 | 104 / 97 |
 | Rachel cochée, aucune ruelle | 75 (33, 44 %) | 382 / 218 | 138 / 63 |
 
@@ -156,6 +156,25 @@ en dépendent). `plateau` = 1 : tronçon affiché et compté.
   pour dégager la cellule : le décalage est gardé dans `options.offset`, donc
   il suit la rue quand on déplace la carte ; sa pointe est masquée une fois
   déplacé. `autoPan` est coupé au premier glisser.
+
+- **Vue « Cellules »** (choix Rues / Cellules en haut du panneau, ajoutée le
+  12 novembre 2026 à la demande de Gabriel) : chaque cellule comptée dans
+  l'indicateur est remplie d'une teinte de rouge (0 %) à vert (100 %) selon
+  la part, **en longueur**, de ses rues locales à sens unique au Plateau qui
+  sont vertes (statut 0 / statuts 0 + 1) ; le % est écrit dessus. Gris : aucun
+  sens unique local (pas d'étiquette). La surface est calculée dans le
+  navigateur sur une grille de 4 m (`calculerGrille()`) : chaque case prend
+  la cellule de la rue la plus proche (rues locales et collectrices de la
+  cellule, au Plateau), sans franchir une artère (murs) et à au plus 90 m
+  d'une rue ; les cellules remplissent donc l'espace entre les artères, le
+  milieu d'un grand parc reste vide et, au bord du Plateau sans artère (voie
+  ferrée), la surface s'arrête à 90 m des rues. Image posée par
+  `L.imageOverlay` dans le volet `cellules`, refaite seulement quand le
+  calcul change ; l'étiquette va au point le plus éloigné du bord. Une première
+  version (enveloppe convexe des rues) a été jugée trop approximative par
+  Gabriel. Une étiquette n'est affichée que si la cellule mesure
+  au moins 46 × 30 px à l'écran (`majEtiquettes()`, refait à chaque zoom).
+  Même calcul que la vue Rues : les réglages du panneau s'appliquent.
 
 ## Limites (affichées dans la modale)
 

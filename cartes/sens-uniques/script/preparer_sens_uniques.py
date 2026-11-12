@@ -86,10 +86,11 @@ ARTERES = {6, 7, 8}
 PORTES = {5, 6, 7, 8}
 MONT_ROYAL = ("avenue", "Mont-Royal")
 MONT_ROYAL_BOUTS = ("Saint-Laurent", "De Lorimier")   # rues qui bornent le tronçon piéton
-DEFAUT_COMME_ARTERES = set()
+DEFAUT_COMME_ARTERES = set()   # collectrices traitées comme des artères par défaut (aucune)
 # Rues locales que Gabriel considère comme des ruelles (par défaut, retirées du calcul)
 DEFAUT_RUELLES = {"Rue Généreux", "Rue De Varennes", "Rue Simard", "Rue Barrette",
-                  "Rue La Mennais", "Rue Latreille", "Rue De Courville", "Avenue Bureau"}   # collectrices traitées comme des artères par défaut (aucune)
+                  "Rue La Mennais", "Rue Latreille", "Rue De Courville", "Avenue Bureau",
+                  "Rue Lionais"}
 MAX_PAIRES = 6
 ARRONDISSEMENT = "le-plateau-mont-royal"
 

@@ -494,6 +494,24 @@
   .gf-pop-eyebrow { background: var(--track); }
   .gf-summary-item span { white-space: normal; align-items: flex-start; }
   .gf-summary-row { gap: 14px; justify-content: flex-start; }
+  /* Choix de la vue (rues ou cellules) */
+  .su-vue { display: flex; gap: 4px; margin: 0 4px 10px; padding: 3px; border-radius: 10px; background: var(--track); }
+  .su-vue label { flex: 1; position: relative; cursor: pointer; }
+  .su-vue input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .su-vue span { display: block; text-align: center; padding: 6px 8px; border-radius: 8px; font-size: .8rem; font-weight: 600; color: var(--ink-700); }
+  .su-vue input:checked + span { background: var(--surface, #fff); color: var(--ink-900); box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+  .su-vue input:focus-visible + span { outline: 2px solid var(--ink-700); outline-offset: 1px; }
+  /* Étiquette de pourcentage d'une cellule */
+  .su-cell-label { background: none; border: 0; }
+  .su-cell-label b { display: inline-block; transform: translate(-50%, -50%); white-space: nowrap; padding: 1px 6px; border-radius: 999px;
+    font: 700 .72rem/1.4 'Inter', sans-serif; font-variant-numeric: tabular-nums; color: #0f172a; background: rgba(255,255,255,.88);
+    box-shadow: 0 1px 3px rgba(0,0,0,.25); cursor: pointer; }
+  .su-gradient { height: 10px; border-radius: 999px; margin: 4px 4px 2px; }
+  .su-gradient-axe { display: flex; justify-content: space-between; margin: 0 4px 6px; font-size: .72rem; color: var(--ink-700); font-variant-numeric: tabular-nums; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .su-vue input:checked + span { background: rgba(255,255,255,.14); }
+    :root:not([data-theme="light"]) .su-cell-label b { color: #f8fafc; background: rgba(15,23,42,.85); }
+  }
 </style>
 <link rel="stylesheet" href="../carte-sombre.css">
 <script type="application/ld+json">
@@ -552,7 +570,7 @@
         <li><em>Réseau supérieur</em>&nbsp;: collectrices, artères et autoroutes (classes de la Géobase, les mêmes que sur la carte du réseau artériel). Seules les artères (et autoroutes, et les collectrices cochées) comptent comme entrée ou sortie d'un parcours traversant&nbsp;; arriver sur une autre collectrice termine le parcours sans le rendre traversant.</li>
         <li><em>Cellule</em>&nbsp;: îlot délimité par les artères seulement. Les collectrices qu'il contient en font partie, mais un parcours qui arrive sur une collectrice s'y arrête. Dans le panneau, on peut compter certaines collectrices comme des artères (par exemple la rue Rachel).</li>
         <li>Une artère est identifiée par son nom (l'avenue du Mont-Royal Est et Ouest comptent comme la même). Entrer et ressortir par la même artère n'est pas un parcours traversant.</li>
-        <li>Les voies piétonnières, privées ou projetées ne servent pas de passage. Quelques rues locales qui sont en pratique des ruelles (Généreux, De Varennes, Simard, Barrette, La Mennais, Latreille, De Courville, Bureau) sont traitées de la même façon par défaut&nbsp;; on peut les remettre dans le panneau.</li>
+        <li>Les voies piétonnières, privées ou projetées ne servent pas de passage. Quelques rues locales qui sont en pratique des ruelles (Généreux, De Varennes, Simard, Barrette, La Mennais, Latreille, De Courville, Bureau, Lionais) sont traitées de la même façon par défaut&nbsp;; on peut les remettre dans le panneau.</li>
         <li><em>Scénario « Mont-Royal piétonne »</em>&nbsp;: de Saint-Laurent à De Lorimier, l'avenue est retirée du réseau routier (on ne peut ni y rouler ni y tourner, et un parcours ne s'y arrête plus), mais les rues qui la croisent restent reliées au carrefour&nbsp;: on la traverse du nord au sud. Un carrefour avec une artère reste une limite.</li>
         <li>Le calcul couvre tout le réseau de l'île, pour que les cellules à la limite de l'arrondissement soient complètes. Seules les rues du Plateau sont affichées.</li>
       </ul>
@@ -597,6 +615,11 @@
   </button>
 
   <aside class="gf-sidebar" id="gfSidebar" aria-label="Indicateur et légende">
+    <div class="gf-sidebar-header"><h2>Vue</h2></div>
+    <div class="su-vue" role="radiogroup" aria-label="Vue">
+      <label><input type="radio" name="suVue" value="rues" checked><span>Rues</span></label>
+      <label><input type="radio" name="suVue" value="cellules"><span>Cellules</span></label>
+    </div>
     <div class="gf-sidebar-header"><h2>Indicateur</h2></div>
     <div class="gf-stats" id="gfStats" aria-live="polite">
       <p class="gf-stats-total">Chargement…</p>
@@ -628,6 +651,11 @@
     <div class="gf-legend">
       <div class="gf-sidebar-header" style="padding: 4px 4px 6px;"><h2>Légende</h2></div>
       <div id="gfLegendBody"></div>
+      <div id="suCellLegend" hidden>
+        <div class="su-gradient" id="suGradient"></div>
+        <div class="su-gradient-axe"><span>0&nbsp;%</span><span>50&nbsp;%</span><span>100&nbsp;%</span></div>
+        <p class="gf-sidebar-note" style="margin-top:0">Part des rues locales à sens unique de la cellule (en longueur) qui sont vertes, c'est-à-dire sans parcours traversant. En gris&nbsp;: cellule sans sens unique local.</p>
+      </div>
     </div>
     <p class="gf-sidebar-note">Cliquez sur une rue pour voir les parcours qu'elle permet et mettre sa cellule en évidence. Flèches&nbsp;: sens de circulation, visibles en zoomant.</p>
   </aside>
@@ -691,9 +719,10 @@
     // mrPieton : scénario « Mont-Royal piétonne » (tronçons retirés du réseau, traversée nord-sud permise)
     // ruelles : rues locales traitées comme des ruelles (retirées du calcul) ; par défaut, choix de Gabriel
     // (mêmes noms que DEFAUT_RUELLES dans le script)
-    const state = { hidden: new Set(), focusCell: null, commeArteres: new Set(), mrPieton: false,
+    const state = { vue: 'rues', hidden: new Set(), focusCell: null, commeArteres: new Set(), mrPieton: false,
                     ruelles: new Set(['Rue Généreux', 'Rue De Varennes', 'Rue Simard', 'Rue Barrette',
-                                       'Rue La Mennais', 'Rue Latreille', 'Rue De Courville', 'Avenue Bureau']) };
+                                       'Rue La Mennais', 'Rue Latreille', 'Rue De Courville', 'Avenue Bureau',
+                                       'Rue Lionais']) };
     const estPietonne = r => state.mrPieton && r[T.PIETON] === 1;
     const estRuelle = r => r[T.CLASSE] === 0 && state.ruelles.has(nomDe(r));
     let data = null, noms = [];
@@ -831,6 +860,7 @@
       if (layer) map.removeLayer(layer);
       lines.length = 0;
       layer = L.layerGroup();
+      if (state.vue === 'cellules') { renderCellules(); return; }
       // Ordre de dessin : contexte d'abord, rouges et verts au-dessus
       const order = { autre: 0, ruelle: 0, gris: 1, pieton: 2, collectrice: 2, promue: 3, secondaire: 3, principale: 4, orange: 5, vert: 6, rouge: 7 };
       const rows = data.troncons.filter(r => r[T.PLATEAU]).sort((a, b) => order[catOf(a)] - order[catOf(b)]);
@@ -852,6 +882,197 @@
       });
       layer.addTo(map);
       arrows.redraw();
+    }
+
+    // ---------- Vue « Cellules » : chaque cellule teintée selon sa part de sens uniques verts ----------
+    // Couleur de 0 (rouge) à 1 (vert) ; gris si la cellule n'a aucun sens unique local
+    function teinte(part) {
+      if (part === null) return CATS.gris.color;
+      return 'hsl(' + Math.round(part * 130) + ', ' + (DARK ? '65%, 55%' : '70%, 42%') + ')';
+    }
+    function teinteRVB(part) {
+      // Même teinte que teinte(), en [r, v, b] pour remplir le canevas
+      if (part === null) { const h = CATS.gris.color.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); }
+      const h = part * 130, sat = DARK ? 0.65 : 0.70, lum = DARK ? 0.55 : 0.42;
+      const k = n => (n + h / 30) % 12, a = sat * Math.min(lum, 1 - lum);
+      return [0, 8, 4].map(n => Math.round(255 * (lum - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1)))));
+    }
+    // Cellules du Plateau : longueurs par statut (mêmes cellules que l'indicateur)
+    function cellulesVue() {
+      const cells = new Map();
+      for (const r of data.troncons) {
+        if (r._s === -1 || !r[T.PLATEAU] || r[T.CLASSE] !== 0) continue;
+        if (!cells.has(r._c)) cells.set(r._c, { id: r._c, km: [0, 0, 0, 0], trav: false });
+        const c = cells.get(r._c);
+        c.km[r._s] += r._km;
+        if (r._s === 1 || r._s === 3) c.trav = true;
+      }
+      for (const c of cells.values()) {
+        const su = c.km[0] + c.km[1];
+        c.part = su > 0 ? c.km[0] / su : null;
+      }
+      return cells;
+    }
+
+    // Surface de chaque cellule, sur une grille de PAS mètres : chaque case prend la cellule de la rue
+    // la plus proche (rues locales et collectrices de la cellule, au Plateau), sans franchir une artère
+    // (les artères sont des murs) et à au plus PORTEE mètres d'une rue. Les cellules remplissent ainsi
+    // l'espace entre les artères ; le milieu d'un grand parc reste vide.
+    const PAS = 4, PORTEE = 90;
+    let versionCalcul = 0, grille = null;
+    function calculerGrille(cells) {
+      const lat0 = 45.52, kx = 111320 * Math.cos(lat0 * Math.PI / 180), ky = 110574;
+      const graines = data.troncons.filter(r => r[T.PLATEAU] && cells.has(r._c));
+      let w = 180, e = -180, so = 90, n = -90;
+      graines.forEach(r => r[T.COORDS].forEach(([lng, lat]) => { w = Math.min(w, lng); e = Math.max(e, lng); so = Math.min(so, lat); n = Math.max(n, lat); }));
+      const marge = PORTEE + 10;
+      w -= marge / kx; e += marge / kx; so -= marge / ky; n += marge / ky;
+      const W = Math.ceil((e - w) * kx / PAS), H = Math.ceil((n - so) * ky / PAS);
+      e = w + W * PAS / kx; so = n - H * PAS / ky;
+      const px = lng => (lng - w) * kx / PAS, py = lat => (n - lat) * ky / PAS;
+      const N = W * H, mur = new Uint8Array(N), proprio = new Int32Array(N).fill(-1);
+      const dist = new Float32Array(N).fill(Infinity), gx = new Float32Array(N), gy = new Float32Array(N);
+      // Parcourt chaque segment par demi-case
+      const tracer = (coords, f) => {
+        for (let i = 1; i < coords.length; i++) {
+          const x0 = px(coords[i - 1][0]), y0 = py(coords[i - 1][1]), x1 = px(coords[i][0]), y1 = py(coords[i][1]);
+          const pas = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) * 2));
+          for (let k = 0; k <= pas; k++) f(x0 + (x1 - x0) * k / pas, y0 + (y1 - y0) * k / pas);
+        }
+      };
+      // Murs : artères (et collectrices cochées), sur 2 × 2 cases pour bloquer les diagonales
+      for (const r of data.troncons) {
+        if (!estArtere(r) || estPietonne(r)) continue;
+        tracer(r[T.COORDS], (x, y) => {
+          const i = Math.floor(x), j = Math.floor(y);
+          for (const [a, b] of [[i, j], [i + 1, j], [i, j + 1], [i + 1, j + 1]])
+            if (a >= 0 && b >= 0 && a < W && b < H) mur[b * W + a] = 1;
+        });
+      }
+      // Graines : cases des rues de chaque cellule
+      const file = [];
+      for (const r of graines) {
+        tracer(r[T.COORDS], (x, y) => {
+          const i = Math.floor(x), j = Math.floor(y), q = j * W + i;
+          if (i < 0 || j < 0 || i >= W || j >= H || mur[q] || dist[q] === 0) return;
+          proprio[q] = r._c; dist[q] = 0; gx[q] = x; gy[q] = y; file.push(q);
+        });
+      }
+      // Propagation : chaque case garde la graine la plus proche (distance euclidienne à la graine)
+      const max = PORTEE / PAS;
+      for (let t = 0; t < file.length; t++) {
+        const q = file[t], i = q % W, j = (q - i) / W;
+        for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+          if (!di && !dj) continue;
+          const a = i + di, b = j + dj;
+          if (a < 0 || b < 0 || a >= W || b >= H) continue;
+          const v = b * W + a;
+          if (mur[v]) continue;
+          const d = Math.hypot(a + 0.5 - gx[q], b + 0.5 - gy[q]);
+          if (d > max || d >= dist[v] - 1e-6) continue;
+          dist[v] = d; proprio[v] = proprio[q]; gx[v] = gx[q]; gy[v] = gy[q]; file.push(v);
+        }
+      }
+      // Distance au bord de sa cellule (chanfrein, 2 passes) : l'étiquette va au point le plus éloigné du bord
+      const bord = new Float32Array(N);
+      const diff = (q, a, b) => a < 0 || b < 0 || a >= W || b >= H || proprio[b * W + a] !== proprio[q];
+      for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+        const q = j * W + i;
+        if (proprio[q] < 0) continue;
+        if (diff(q, i - 1, j) || diff(q, i + 1, j) || diff(q, i, j - 1) || diff(q, i, j + 1)) { bord[q] = 0; continue; }
+        bord[q] = Math.min(bord[q - 1] + 1, bord[q - W] + 1, bord[q - W - 1] + 1.414, bord[q - W + 1] + 1.414);
+      }
+      for (let j = H - 1; j >= 0; j--) for (let i = W - 1; i >= 0; i--) {
+        const q = j * W + i;
+        if (proprio[q] < 0 || bord[q] === 0) continue;
+        bord[q] = Math.min(bord[q], bord[q + 1] + 1, bord[q + W] + 1, bord[q + W + 1] + 1.414, bord[q + W - 1] + 1.414);
+      }
+      // Par cellule : point de l'étiquette et étendue
+      const info = new Map();
+      for (let q = 0; q < N; q++) {
+        const c = proprio[q];
+        if (c < 0) continue;
+        const i = q % W, j = (q - i) / W;
+        let o = info.get(c);
+        if (!o) info.set(c, o = { meilleur: -1, q: q, i0: i, i1: i, j0: j, j1: j });
+        if (bord[q] > o.meilleur) { o.meilleur = bord[q]; o.q = q; }
+        o.i0 = Math.min(o.i0, i); o.i1 = Math.max(o.i1, i); o.j0 = Math.min(o.j0, j); o.j1 = Math.max(o.j1, j);
+      }
+      const latlng = (x, y) => L.latLng(n - y * PAS / ky, w + x * PAS / kx);
+      return { W, H, proprio, info, latlng, bounds: L.latLngBounds([so, w], [n, e]),
+               cellule: ll => { const i = Math.floor(px(ll.lng)), j = Math.floor(py(ll.lat));
+                                return i < 0 || j < 0 || i >= W || j >= H ? -1 : proprio[j * W + i]; } };
+    }
+    map.createPane('cellules').style.zIndex = 350;   // sous les lignes (overlayPane, 400)
+
+    // Étiquette affichée seulement si la cellule est assez grande à l'écran (sinon elles se chevauchent)
+    const etiquettes = [];
+    function majEtiquettes() {
+      for (const { m, bounds } of etiquettes) {
+        const a = map.latLngToContainerPoint(bounds.getSouthWest()), b = map.latLngToContainerPoint(bounds.getNorthEast());
+        const visible = Math.abs(b.x - a.x) >= 46 && Math.abs(b.y - a.y) >= 30;
+        const el = m.getElement();
+        if (el) el.style.display = visible ? '' : 'none';
+      }
+    }
+    map.on('zoomend', majEtiquettes);
+    let cellsVue = null;
+    function renderCellules() {
+      etiquettes.length = 0;
+      const cells = cellsVue = cellulesVue();
+      if (!grille || grille.version !== versionCalcul) {
+        const g = calculerGrille(cells);
+        const cv = document.createElement('canvas');
+        cv.width = g.W; cv.height = g.H;
+        const ctx = cv.getContext('2d'), img = ctx.createImageData(g.W, g.H), alpha = Math.round(255 * (DARK ? 0.5 : 0.55));
+        const couleurs = new Map([...cells].map(([id, c]) => [id, teinteRVB(c.part)]));
+        for (let q = 0; q < g.W * g.H; q++) {
+          const rgb = couleurs.get(g.proprio[q]);
+          if (!rgb) continue;
+          img.data[4 * q] = rgb[0]; img.data[4 * q + 1] = rgb[1]; img.data[4 * q + 2] = rgb[2]; img.data[4 * q + 3] = alpha;
+        }
+        ctx.putImageData(img, 0, 0);
+        grille = { ...g, version: versionCalcul, url: cv.toDataURL() };
+      }
+      layer.addLayer(L.imageOverlay(grille.url, grille.bounds, { pane: 'cellules', interactive: false }));
+      for (const [id, c] of cells) {
+        const o = grille.info.get(id);
+        if (!o || c.part === null) continue;   // cellule grise : pas d'étiquette
+        const i = o.q % grille.W, j = (o.q - i) / grille.W;
+        const m = L.marker(grille.latlng(i + 0.5, j + 0.5), { icon: L.divIcon({ className: 'su-cell-label', html: '<b>' + pf.format(c.part * 100) + '&nbsp;%</b>', iconSize: null }),
+          keyboard: false, title: 'Cellule : ' + pf.format(c.part * 100) + ' % des sens uniques en vert' });
+        m.on('click', e => popupCellule(c, e.latlng));
+        layer.addLayer(m);
+        etiquettes.push({ m, bounds: L.latLngBounds(grille.latlng(o.i0, o.j1 + 1), grille.latlng(o.i1 + 1, o.j0)) });
+      }
+      // Réseau supérieur par-dessus : il trace les limites des cellules
+      data.troncons.filter(r => r[T.PLATEAU]).forEach(r => {
+        const cat = catOf(r);
+        if (!['principale', 'secondaire', 'promue', 'collectrice', 'pieton'].includes(cat)) return;
+        const st = CATS[cat];
+        layer.addLayer(L.polyline(r[T.COORDS].map(q => [q[1], q[0]]), {
+          color: st.color, weight: st.weight - 1, opacity: st.opacity, dashArray: st.dashArray || null, interactive: false }));
+      });
+      layer.addTo(map);
+      majEtiquettes();
+      arrows.redraw();
+    }
+    // Clic dans une cellule (vue Cellules)
+    map.on('click', e => {
+      if (state.vue !== 'cellules' || !grille || !cellsVue) return;
+      const c = cellsVue.get(grille.cellule(e.latlng));
+      if (c) popupCellule(c, e.latlng);
+    });
+    function popupCellule(c, latlng) {
+      const ligne = (k, v) => '<div class="gf-pop-row"><span class="k">' + k + '</span><span class="v">' + v + '</span></div>';
+      const km = v => kmf.format(v) + ' km';
+      const html = '<span class="gf-pop-drag" aria-hidden="true"></span><div class="gf-pop-eyebrow" style="color:' + teinte(c.part) + '">Cellule</div>' +
+        '<h3 class="gf-pop-name">' + (c.part === null ? 'Aucun sens unique local' : pf.format(c.part * 100) + ' % des sens uniques en vert') + '</h3>' +
+        ligne('Sens uniques verts', km(c.km[0])) + ligne('Sens uniques rouges', km(c.km[1])) +
+        ligne('Double sens', km(c.km[2] + c.km[3])) +
+        ligne('Parcours traversant', c.trav ? 'oui' : 'non') +
+        '<p class="gf-pop-note">Longueurs des rues locales de la cellule au Plateau. La surface colorée va jusqu\'aux artères qui délimitent la cellule.</p>';
+      L.popup({ maxWidth: 280 }).setLatLng(latlng).setContent(html).openOn(map);
     }
 
     // ---------- Flèches (canevas maison, au milieu de chaque sens unique local) ----------
@@ -1078,8 +1299,17 @@
       recalculer();
     });
     function recalculer() {
-      analyser(); render(); renderStats();
+      analyser(); versionCalcul++; render(); renderStats();
     }
+    document.getElementById('suGradient').style.background =
+      'linear-gradient(to right, ' + [0, 0.25, 0.5, 0.75, 1].map(teinte).join(', ') + ')';
+    document.querySelectorAll('input[name="suVue"]').forEach(inp => inp.addEventListener('change', function () {
+      state.vue = this.value;
+      map.closePopup(); state.focusCell = null;
+      document.getElementById('gfLegendBody').hidden = state.vue === 'cellules';
+      document.getElementById('suCellLegend').hidden = state.vue !== 'cellules';
+      if (data) render();
+    }));
 
     // ---------- Chargement ----------
     const loading = document.getElementById('gfLoading');

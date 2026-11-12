@@ -9,26 +9,27 @@
    "Rue Généreux",
    "Rue La Mennais",
    "Rue Latreille",
+   "Rue Lionais",
    "Rue Simard"
   ]
  },
  "troncons_exportes": 2266,
  "troncons_plateau": 1463,
  "troncons_locaux_par_statut": {
-  "0": 337,
-  "1": 258,
+  "0": 339,
+  "1": 256,
   "2": 74,
-  "3": 86
+  "3": 85
  },
  "cellules": 65,
  "cellules_traversantes": 30,
  "mont_royal_pieton": {
   "troncons_retires": 32,
   "troncons_locaux_par_statut": {
-   "0": 298,
-   "1": 297,
+   "0": 300,
+   "1": 295,
    "2": 71,
-   "3": 89
+   "3": 88
   },
   "cellules": 65,
   "cellules_traversantes": 30
