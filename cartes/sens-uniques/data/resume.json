@@ -1,0 +1,13 @@
+{
+ "reglage_par_defaut": [],
+ "troncons_exportes": 2266,
+ "troncons_plateau": 1463,
+ "troncons_locaux_par_statut": {
+  "0": 314,
+  "1": 286,
+  "2": 97,
+  "3": 104
+ },
+ "cellules": 64,
+ "cellules_traversantes": 30
+}
