@@ -414,7 +414,8 @@ def analyser(troncons, comme_arteres, paralleles=DEFAUT_PARALLELES, max_virages=
     """{index: (statut, cellule, paires limitées, nombre de paires)} ; statut -1 pour les collectrices de cellule.
     Statuts : 0/1 sens unique sans/avec parcours traversant, 2/3 double sens sans/avec, 4/5 sens unique/double sens
     sur un parcours « partiel » : traversant seulement par une porte de `portes_droite` (virage à droite
-    seulement, ex. filtre dans le terre-plein de l'artère) ; refait sans ces portes, il ne l'est plus."""
+    seulement, ex. filtre dans le terre-plein de l'artère ; refait sans ces portes, il ne l'est plus), ou
+    seulement entre les deux artères d'une paire artérielle (si `paires_arterielles`)."""
     portes = set()
     arteres_au = collections.defaultdict(set)
     # Orientation des artères à chaque nœud, en angle doublé (les deux sens d'une droite s'additionnent)
@@ -499,8 +500,9 @@ def analyser(troncons, comme_arteres, paralleles=DEFAUT_PARALLELES, max_virages=
             for y in noms:
                 if x == y or (paralleles and not sont_paralleles(x, y)):
                     continue
-                if paires_arterielles and ((x, y) in PAIRES_ARTERIELLES or (y, x) in PAIRES_ARTERIELLES):
-                    continue
+                # Paire artérielle (une artère vers le nord, l'autre vers le sud) : la relier n'est qu'un
+                # raccourci partiel (compté à moitié), depuis le 13 novembre 2026 (avant : pas compté)
+                paire = paires_arterielles and ((x, y) in PAIRES_ARTERIELLES or (y, x) in PAIRES_ARTERIELLES)
                 entrees = {n for n in portes_art if x in arteres_au[n] and y not in arteres_au[n]}
                 sorties = {n for n in portes_art if y in arteres_au[n] and x not in arteres_au[n]}
                 if not entrees or not sorties:
@@ -521,7 +523,8 @@ def analyser(troncons, comme_arteres, paralleles=DEFAUT_PARALLELES, max_virages=
                     return [min(av[0][k], av[1][k]) + min(ap[0][k], ap[1][k]) <= limite for k in range(len(arcs))]
                 sur = arcs_sur(entrees, sorties)
                 # Sans les portes à virage à droite seulement : ce qui reste traversant l'est pleinement
-                libre = sur if not (entrees | sorties) & portes_droite else arcs_sur(entrees - portes_droite, sorties - portes_droite)
+                libre = ([False] * len(arcs) if paire else sur if not (entrees | sorties) & portes_droite
+                         else arcs_sur(entrees - portes_droite, sorties - portes_droite))
                 for (u, v, i, _), ok, ok_libre in zip(arcs, sur, libre):
                     if ok and (x, y) not in traversant[i]:
                         traversant[i].append((x, y))

@@ -21,14 +21,14 @@ ajoutées ; certaines ont été remplacées. Ce qui s'applique aujourd'hui :
 | Rouge = parcours d'une artère à une autre **parallèle**, par les rues locales | règle 10 | case cochée |
 | Au plus **3 virages** (changement de rue locale) | règle 11 | curseur |
 | Il faut traverser un **carrefour où l'on pourrait détourner** le parcours | règle 16 (« corrigeables ») | case cochée |
-| **Paires artérielles** (De Lorimier-Papineau, Saint-Laurent-Saint-Urbain, Frontenac-D'Iberville) : les relier ne rend pas rouge | règle 12 | case cochée |
+| **Paires artérielles** (De Lorimier-Papineau, Saint-Laurent-Saint-Urbain, Frontenac-D'Iberville) : les relier n'est qu'un raccourci **partiel** | règles 12 et 24 | case cochée |
 | Jeanne-Mance et Léo-Pariseau = rues locales | règle 13 | cases cochées |
 | Avenue du Parc, entre des Pins et Sherbrooke et entre Van Horne et Côte-Sainte-Catherine = collectrices (Milton-Parc d'un seul tenant ; Limite Outremont partagée) | règles 18 et 21 | cases cochées |
 | Saint-Grégoire = artère | règle 19 | case décochée |
 | Bout de collectrice de Saint-Joseph à l'ouest de Parc = artère | règle 21 | case cochée |
 | 11 rues comptées comme ruelles (dont Saint-Christophe, Lavers) | règles 8 et 15 | cases cochées |
 | Filtres modaux connus (Saint-André, Mentana, De Brébeuf, Clark : terre-plein de Saint-Joseph) | règle 22 | case cochée |
-| **Parcours partiels** (virage à droite seulement) en jaune, comptés à moitié | règle 23 | suit les filtres |
+| **Parcours partiels** (paire artérielle, ou virage à droite seulement) en jaune, comptés à moitié | règles 23 et 24 | suit les filtres et les paires |
 | Rues isolées et Parc Ludger Duvernay hors indicateur ; cellules de même nom regroupées ; fusions de noms | règles 14, 17, 20 et « Noms des cellules » | `noms-cellules.json` |
 
 Statuts d'une rue locale (page `r._s`, script et `securite-plateau`) :
@@ -368,6 +368,16 @@ artérielles (9 ruelles, sans exception) :
    Petit Laurier 56 → 64 %, Parc La Fontaine 67 → 72 %. Partiels : Saint-André,
    Mentana, Boucher, Bousquet, Resther.
 
+24. **Paires artérielles : partiel plutôt que vert** (13 novembre 2026, choix
+   de Gabriel) : un parcours entre les deux artères d'une paire n'est plus
+   ignoré ; il est calculé, mais compte seulement comme partiel (jaune, à
+   moitié), jamais comme rouge plein (`paire` dans `analyser()`, page et
+   script). Décochée, l'exception ne s'applique pas (rouge). Effet : 225
+   rouges, 54 partiels, 320 verts (au lieu de 19 partiels et 355 verts) ;
+   11 cellules traversantes sur 15 (4 sans, 27 %) : Parc des Compagnons,
+   Parc de Lorimier et Parc Jeanne-Mance ont maintenant des liens partiels.
+   Milton-Parc 10 %, Mile-End ouest 21 %.
+
 Indicateur : part des cellules (qui ont au moins une rue locale au Plateau)
 dont aucune rue locale du Plateau n'est de statut 1 ou 3.
 
@@ -387,7 +397,7 @@ un parcours d'artère à artère par des rues locales.
 
 | Réglage | Cellules (sans parcours traversant) | Sens uniques rouges / verts | Double sens traversants / non |
 |---|---|---|---|
-| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, Parc (des Pins – Sherbrooke, Van Horne – Côte-Sainte-Catherine) collectrice, Saint-Joseph (bout de collectrice) artère, Saint-Grégoire artère, raccords, rues isolées et Parc Ludger Duvernay hors indicateur, cellules de même nom regroupées, parcours corrigeables, filtres modaux connus, 11 ruelles (`resume.json`) | 15 (6, 40 %) | 225 + 19 partiels / 355 | 53 + 5 partiels / 96 |
+| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, Parc (des Pins – Sherbrooke, Van Horne – Côte-Sainte-Catherine) collectrice, Saint-Joseph (bout de collectrice) artère, Saint-Grégoire artère, raccords, rues isolées et Parc Ludger Duvernay hors indicateur, cellules de même nom regroupées, parcours corrigeables, filtres modaux connus, 11 ruelles (`resume.json`) | 15 (4, 27 %) | 225 + 54 partiels / 320 | 53 + 13 partiels / 88 |
 | Défaut + Saint-Grégoire collectrice (défaut du 12 au 13 novembre) | 14 (5, 36 %) | 228 / 371 | 63 / 91 |
 | Défaut sans Parc collectrice (avant le 13 novembre) | 15 (5, 33 %) | 228 / 371 | 63 / 91 |
 | Défaut sans Saint-Grégoire collectrice | 18 (7, 39 %) | 247 / 352 | 65 / 89 |

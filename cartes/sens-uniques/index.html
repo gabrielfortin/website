@@ -581,7 +581,7 @@
       <ul>
         <li><strong style="color:var(--su-rouge)">En rouge</strong>, les rues locales à sens unique qui font partie d'au moins un parcours permettant d'entrer par une artère et de ressortir par une <em>autre</em> artère parallèle à la première (deux artères est-ouest ou deux nord-sud), en ne roulant que sur des rues locales.</li>
         <li><strong style="color:var(--su-vert)">En vert</strong>, les rues locales à sens unique qui ne font partie d'aucun parcours de ce genre&nbsp;: on en ressort par l'artère d'entrée, par une artère perpendiculaire ou par une collectrice (par exemple une rue tête-bêche qui oblige à tourner sur une collectrice).</li>
-        <li><em>Parcours partiel</em>&nbsp;: une rue qui n'est traversante qu'en entrant ou en sortant par un carrefour où l'on ne peut que tourner à droite (filtre modal dans le terre-plein de l'artère, ex. Saint-André au boulevard Saint-Joseph) est en <strong style="color:var(--su-partiel)">jaune</strong>&nbsp;: seules les autos qui viennent d'un côté de l'artère peuvent la prendre comme raccourci. Elle compte à moitié dans la part de sens uniques verts, et sa cellule n'est pas «&nbsp;sans parcours traversant&nbsp;».</li>
+        <li><em>Parcours partiel</em>&nbsp;: une rue qui n'est traversante qu'entre les deux artères d'une paire artérielle (voir plus bas), ou qu'en entrant ou en sortant par un carrefour où l'on ne peut que tourner à droite (filtre modal dans le terre-plein de l'artère, ex. Saint-André au boulevard Saint-Joseph) est en <strong style="color:var(--su-partiel)">jaune</strong>&nbsp;: seules les autos qui viennent d'un côté de l'artère peuvent la prendre comme raccourci. Elle compte à moitié dans la part de sens uniques verts, et sa cellule n'est pas «&nbsp;sans parcours traversant&nbsp;».</li>
         <li>Les rues locales à double sens suivent la même règle, en pointillé&nbsp;: <strong style="color:var(--su-orange)">orange</strong> si elles font partie d'un parcours traversant, <strong style="color:var(--su-vert)">vert</strong> sinon.</li>
       </ul>
 
@@ -592,7 +592,7 @@
         <li><em>Cellule</em>&nbsp;: îlot délimité par les artères seulement. Les voies où l'on ne roule pas (rues piétonnes comme Prince-Arthur, ruelles) relient les rues d'une même cellule, sans servir de passage. Les collectrices qu'il contient en font partie&nbsp;: on peut les traverser tout droit (la rue continue sous le même nom de l'autre côté), mais un parcours qui y tourne s'arrête. Dans le panneau, on peut compter certaines collectrices comme des artères (par exemple la rue Rachel ; par défaut, le bout du boulevard Saint-Joseph à l'ouest de l'avenue du Parc).</li>
         <li>Une artère est identifiée par son nom (l'avenue du Mont-Royal Est et Ouest comptent comme la même). Entrer et ressortir par la même artère n'est pas un parcours traversant.</li>
         <li><em>Artères parallèles</em>&nbsp;: relier deux artères parallèles est le rôle d'une collectrice, pas d'une rue locale. Une rue locale qui relie une artère est-ouest à une artère nord-sud ne fait que couper le coin, sans vrai raccourci&nbsp;: elle n'est pas comptée comme traversante. L'orientation d'une artère est mesurée là où elle touche la cellule&nbsp;; au Plateau, les artères est-ouest sont orientées à environ 57° et les nord-sud à environ 147° (la grille de Montréal est inclinée). Deux artères sont parallèles si leur écart est de moins de 45°. Cette règle peut être décochée dans le panneau.</li>
-        <li><em>Paires artérielles</em>&nbsp;: De Lorimier et Papineau, Saint-Laurent et Saint-Urbain, Frontenac et D'Iberville forment des paires (une artère vers le nord, l'autre vers le sud). Il est normal qu'une rue locale les relie d'est en ouest&nbsp;: un parcours d'une artère à l'autre de la même paire n'est pas compté comme traversant. Cette exception peut être décochée dans le panneau.</li>
+        <li><em>Paires artérielles</em>&nbsp;: De Lorimier et Papineau, Saint-Laurent et Saint-Urbain, Frontenac et D'Iberville forment des paires (une artère vers le nord, l'autre vers le sud). Une rue locale qui les relie d'est en ouest n'est qu'un raccourci <strong style="color:var(--su-partiel)">partiel</strong> (en jaune, compté à moitié). Décochée dans le panneau, l'exception ne s'applique pas&nbsp;: ces liens sont rouges.</li>
         <li><em>Artères comptées comme collectrices</em>&nbsp;: par défaut, l'avenue du Parc entre des Pins et Sherbrooke est traitée comme une collectrice&nbsp;: elle ne délimite plus les cellules et on la traverse tout droit. On peut aussi y compter la rue Saint-Grégoire (décochée par défaut) ou remettre Parc en artère, dans le panneau.</li>
         <li><em>Artères comptées comme rues locales</em>&nbsp;: par défaut, la rue Jeanne-Mance et la rue Léo-Pariseau (artères dans la Géobase entre Sherbrooke et des Pins) sont traitées comme des rues locales&nbsp;; on peut les remettre en artères dans le panneau.</li>
         <li><em>Parcours qu'on peut corriger</em>&nbsp;: un parcours traversant ne compte que s'il passe par un carrefour où l'on pourrait le détourner (croisement avec une autre rue locale, ou d'une collectrice, où l'on peut faire sortir les autos). Une rue qui file d'une artère à l'autre sans rien croiser n'a pas de solution par les sens uniques&nbsp;: elle reste verte. Cette règle peut être décochée dans le panneau.</li>
@@ -676,7 +676,7 @@
         <span class="gf-sidebar-label">Exception&nbsp;: paires artérielles</span>
       </label>
     </div>
-    <p class="gf-sidebar-note">Cochée (par défaut), une rue locale peut relier les deux artères d'une paire (une vers le nord, l'autre vers le sud)&nbsp;: De Lorimier et Papineau, Saint-Laurent et Saint-Urbain, Frontenac et D'Iberville. Ces liens est-ouest ne rendent pas rouge.</p>
+    <p class="gf-sidebar-note">Cochée (par défaut), une rue locale peut relier les deux artères d'une paire (une vers le nord, l'autre vers le sud)&nbsp;: De Lorimier et Papineau, Saint-Laurent et Saint-Urbain, Frontenac et D'Iberville. Ces liens est-ouest sont des raccourcis partiels (en jaune), comptés à moitié. Décochée, ils sont rouges.</p>
     <div class="gf-sidebar-list">
       <label class="gf-sidebar-item">
         <input type="checkbox" id="filtresToggle" checked>
@@ -781,7 +781,7 @@
       vert: { label: "Sens unique, sans parcours traversant", color: cssVar('--su-vert'), weight: 3.2, opacity: 0.95 },
       orange: { label: "Double sens, parcours traversant", color: cssVar('--su-orange'), weight: 2.4, opacity: 0.9, dashArray: '6 5' },
       // Parcours partiel : traversant seulement en tournant à droite (filtre dans le terre-plein de l'artère) ; compte à moitié
-      partiel: { label: "Sens unique, parcours traversant partiel (virage à droite seulement)", color: cssVar('--su-partiel'), weight: 3.2, opacity: 0.95 },
+      partiel: { label: "Sens unique, parcours traversant partiel (paire artérielle ou virage à droite seulement)", color: cssVar('--su-partiel'), weight: 3.2, opacity: 0.95 },
       partielDS: { label: "Double sens, parcours traversant partiel", color: cssVar('--su-partiel'), weight: 2.4, opacity: 0.9, dashArray: '6 5' },
       // Double sens sans parcours traversant : vert comme les sens uniques, en pointillé comme l'orange
       gris: { label: "Double sens, sans parcours traversant", color: cssVar('--su-vert'), weight: 2.4, opacity: 0.9, dashArray: '6 5' },
@@ -1195,7 +1195,8 @@
         for (const x of nomsCell) for (const y of nomsCell) {
           if (x === y) continue;
           if (state.paralleles && !paralleles(x, y)) continue;
-          if (state.pairesArterielles && estPaire(x, y)) continue;
+          // Paire artérielle : la relier n'est qu'un raccourci partiel (compté à moitié)
+          const paire = state.pairesArterielles && estPaire(x, y);
           const entrees = new Set([...portesArt].filter(n => arteresAu.get(n).has(x) && !arteresAu.get(n).has(y)));
           const sorties = new Set([...portesArt].filter(n => arteresAu.get(n).has(y) && !arteresAu.get(n).has(x)));
           if (!entrees.size || !sorties.size) continue;
@@ -1225,7 +1226,7 @@
           if (!sur) continue;
           // Sans les portes à virage à droite seulement : ce qui reste traversant l'est pleinement (sinon : partiel)
           const aDroite = [...entrees, ...sorties].some(n => portesDroite.has(n));
-          const libre = !aDroite ? sur : arcsSur(new Set([...entrees].filter(n => !portesDroite.has(n))), new Set([...sorties].filter(n => !portesDroite.has(n))));
+          const libre = paire ? null : !aDroite ? sur : arcsSur(new Set([...entrees].filter(n => !portesDroite.has(n))), new Set([...sorties].filter(n => !portesDroite.has(n))));
           arcs.forEach(([, , r], i) => {
             if (sur[i]) marquer(r);
             if (libre && libre[i]) pleinement.add(r);
@@ -1547,7 +1548,7 @@
         html += '<p class="gf-pop-note">' + (estRuelle(r) ? 'Rue locale comptée comme une ruelle (réglage du panneau) : elle ne sert pas de passage dans le calcul et n\'est pas comptée.' : estPietonne(r) ? 'Scénario piéton : ce tronçon est fermé aux autos. On peut seulement le traverser du nord au sud aux carrefours.' : c === 5 && !estArtere(r) ? 'Collectrice : elle fait partie de sa cellule. On peut la traverser tout droit, mais un parcours qui y tourne s\'arrête (c\'est une sortie vers le réseau supérieur).' : c === 5 ? 'Collectrice comptée comme artère (réglage du panneau) : elle délimite les cellules et compte comme entrée ou sortie d\'un parcours traversant.' : c >= 6 && c <= 8 ? 'Artère : elle délimite les cellules.' : 'Voie qui ne sert pas de passage dans l\'analyse.') + '</p>';
       } else {
         const paires = r._p, total = r._n;
-        if (s === 4 || s === 5) html += '<p class="gf-pop-note"><b>Parcours partiel</b> : il n\'est traversant qu\'en entrant ou en sortant par une rue où l\'on ne peut que tourner à droite (filtre dans le terre-plein de l\'artère), donc seulement pour les autos qui viennent d\'un côté. Il compte à moitié dans la part de sens uniques verts de la cellule.</p>';
+        if (s === 4 || s === 5) html += '<p class="gf-pop-note"><b>Parcours partiel</b> : il n\'est traversant qu\'entre les deux artères d\'une paire (une vers le nord, l\'autre vers le sud), ou qu\'en entrant ou en sortant par une rue où l\'on ne peut que tourner à droite (filtre dans le terre-plein de l\'artère). Il compte à moitié dans la part de sens uniques verts de la cellule.</p>';
         if (paires.length) {
           html += '<p class="gf-pop-note">Ce tronçon fait partie d\'un parcours en auto qui permet, par les rues locales, de passer d\'une artère à une autre&nbsp;:</p><ul class="gf-pop-list">' +
             paires.map(([x, y]) => '<li>de <b>' + esc(x) + '</b> à <b>' + esc(y) + '</b></li>').join('') + '</ul>' +

@@ -67,26 +67,26 @@
  "troncons_exportes": 2268,
  "troncons_plateau": 1465,
  "troncons_locaux_par_statut": {
-  "0": 355,
+  "0": 320,
   "1": 225,
-  "2": 96,
+  "2": 88,
   "3": 53,
-  "4": 19,
-  "5": 5
+  "4": 54,
+  "5": 13
  },
  "cellules": 15,
- "cellules_traversantes": 9,
+ "cellules_traversantes": 11,
  "mont_royal_pieton": {
   "troncons_retires": 32,
   "troncons_locaux_par_statut": {
-   "0": 355,
+   "0": 320,
    "1": 225,
-   "2": 96,
+   "2": 88,
    "3": 53,
-   "4": 19,
-   "5": 5
+   "4": 54,
+   "5": 13
   },
   "cellules": 15,
-  "cellules_traversantes": 9
+  "cellules_traversantes": 11
  }
 }
