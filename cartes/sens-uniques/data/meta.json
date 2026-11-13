@@ -1,12 +1,16 @@
 {
  "donneesMisesAJour": "2026-11-12",
- "versionSource": "2026-11-04",
+ "versionSource": "2026-11-12",
  "collectricesCommeArteres": [],
  "arteresParallelesSeulement": true,
  "viragesMaximaux": 3,
+ "parcoursCorrigeables": true,
  "arteresLocales": [
   "Rue Jeanne-Mance",
   "Rue Léo-Pariseau"
+ ],
+ "arteresCollectrices": [
+  "Rue Saint-Grégoire"
  ],
  "pairesArterielles": [
   [
@@ -32,6 +36,7 @@
   "Rue Latreille",
   "Rue Lionais",
   "Rue Saint-Christophe",
-  "Rue Simard"
+  "Rue Simard",
+  "Ruelle Lavers"
  ]
 }

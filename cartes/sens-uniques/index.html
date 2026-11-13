@@ -587,9 +587,11 @@
         <li>Une artère est identifiée par son nom (l'avenue du Mont-Royal Est et Ouest comptent comme la même). Entrer et ressortir par la même artère n'est pas un parcours traversant.</li>
         <li><em>Artères parallèles</em>&nbsp;: relier deux artères parallèles est le rôle d'une collectrice, pas d'une rue locale. Une rue locale qui relie une artère est-ouest à une artère nord-sud ne fait que couper le coin, sans vrai raccourci&nbsp;: elle n'est pas comptée comme traversante. L'orientation d'une artère est mesurée là où elle touche la cellule&nbsp;; au Plateau, les artères est-ouest sont orientées à environ 57° et les nord-sud à environ 147° (la grille de Montréal est inclinée). Deux artères sont parallèles si leur écart est de moins de 45°. Cette règle peut être décochée dans le panneau.</li>
         <li><em>Paires artérielles</em>&nbsp;: De Lorimier et Papineau, Saint-Laurent et Saint-Urbain, Frontenac et D'Iberville forment des paires (une artère vers le nord, l'autre vers le sud). Il est normal qu'une rue locale les relie d'est en ouest&nbsp;: un parcours d'une artère à l'autre de la même paire n'est pas compté comme traversant. Cette exception peut être décochée dans le panneau.</li>
+        <li><em>Artères comptées comme collectrices</em>&nbsp;: par défaut, la rue Saint-Grégoire est traitée comme une collectrice&nbsp;: elle ne délimite plus les cellules et on la traverse tout droit. On peut la remettre en artère dans le panneau.</li>
         <li><em>Artères comptées comme rues locales</em>&nbsp;: par défaut, la rue Jeanne-Mance et la rue Léo-Pariseau (artères dans la Géobase entre Sherbrooke et des Pins) sont traitées comme des rues locales&nbsp;; on peut les remettre en artères dans le panneau.</li>
+        <li><em>Parcours qu'on peut corriger</em>&nbsp;: un parcours traversant ne compte que s'il passe par un carrefour où l'on pourrait le détourner (croisement avec une autre rue locale, ou d'une collectrice, où l'on peut faire sortir les autos). Une rue qui file d'une artère à l'autre sans rien croiser n'a pas de solution par les sens uniques&nbsp;: elle reste verte. Cette règle peut être décochée dans le panneau.</li>
         <li><em>Virages maximaux</em>&nbsp;: un parcours ne compte que s'il change de rue au plus 3 fois (par défaut) entre l'artère d'entrée et l'artère de sortie (entrer et ressortir ne comptent pas). Dans une grille, un zigzag par les rues locales n'est pas plus long qu'un détour par les artères&nbsp;: c'est le nombre de virages et d'arrêts qui le rend improbable. Le curseur du panneau change ce maximum, ou l'enlève.</li>
-        <li>Les voies piétonnières, privées ou projetées ne servent pas de passage. Quelques rues locales qui sont en pratique des ruelles (Généreux, De Varennes, Simard, Barrette, La Mennais, Latreille, De Courville, Bureau, Lionais, Saint-Christophe) sont traitées de la même façon par défaut&nbsp;; on peut les remettre dans le panneau.</li>
+        <li>Les voies piétonnières, privées ou projetées ne servent pas de passage. Quelques rues locales qui sont en pratique des ruelles (Généreux, De Varennes, Simard, Barrette, La Mennais, Latreille, De Courville, Bureau, Lionais, Saint-Christophe, ruelle Lavers) sont traitées de la même façon par défaut&nbsp;; on peut les remettre dans le panneau.</li>
         <li><em>Scénario « Mont-Royal piétonne »</em>&nbsp;: de Saint-Laurent à De Lorimier, l'avenue est retirée du réseau routier (on ne peut ni y rouler ni y tourner, et un parcours ne s'y arrête plus), mais les rues qui la croisent restent reliées au carrefour&nbsp;: on la traverse du nord au sud. Un carrefour avec une artère reste une limite.</li>
         <li>Le calcul couvre tout le réseau de l'île, pour que les cellules à la limite de l'arrondissement soient complètes. Seules les rues du Plateau sont affichées.</li>
       </ul>
@@ -670,6 +672,13 @@
     </div>
     <p class="gf-sidebar-note">Cochée (par défaut), une rue locale peut relier les deux artères d'une paire (une vers le nord, l'autre vers le sud)&nbsp;: De Lorimier et Papineau, Saint-Laurent et Saint-Urbain, Frontenac et D'Iberville. Ces liens est-ouest ne rendent pas rouge.</p>
     <div class="gf-sidebar-list">
+      <label class="gf-sidebar-item">
+        <input type="checkbox" id="corrigeablesToggle" checked>
+        <span class="gf-sidebar-label">Seulement les parcours qu'on peut corriger</span>
+      </label>
+    </div>
+    <p class="gf-sidebar-note">Cochée (par défaut), un parcours ne compte que s'il passe par un carrefour où l'on pourrait le détourner&nbsp;: croisement avec une autre rue locale, ou d'une collectrice. Une rue qui va tout droit d'une artère à l'autre sans rien croiser n'a pas de solution par les sens uniques&nbsp;: elle reste verte.</p>
+    <div class="gf-sidebar-list">
       <label class="gf-sidebar-item su-virages" for="viragesRange">
         <span class="gf-sidebar-label">Virages maximaux&nbsp;: <b id="viragesValeur">3 virages</b></span>
         <input type="range" id="viragesRange" min="0" max="11" step="1" value="3" aria-describedby="viragesNote">
@@ -679,8 +688,13 @@
 
     <div class="gf-sidebar-divider"></div>
     <div class="gf-sidebar-header"><h2>Artères comptées comme rues locales</h2></div>
-    <p class="gf-sidebar-note">Cochée (par défaut), l'artère est traitée comme une rue locale au Plateau&nbsp;: elle ne délimite plus les cellules, on peut y rouler dans un parcours et elle est colorée comme les autres rues locales.</p>
+    <p class="gf-sidebar-note">Cochée (par défaut), l'artère est traitée comme une rue locale au Plateau (et jusqu'au premier carrefour hors du Plateau)&nbsp;: elle ne délimite plus les cellules, on peut y rouler dans un parcours et elle est colorée comme les autres rues locales.</p>
     <div class="gf-sidebar-list" id="gfArteresLocales"></div>
+
+    <div class="gf-sidebar-divider"></div>
+    <div class="gf-sidebar-header"><h2>Artères comptées comme collectrices</h2></div>
+    <p class="gf-sidebar-note">Cochée (par défaut), l'artère est traitée comme une collectrice&nbsp;: elle ne délimite plus les cellules, on la traverse tout droit, et en sortir reste acceptable. Avec Saint-Grégoire, le Petit Laurier rejoint la cellule au nord, jusqu'à Rosemont.</p>
+    <div class="gf-sidebar-list" id="gfArteresCollectrices"></div>
 
     <div class="gf-sidebar-divider"></div>
     <div class="gf-sidebar-header"><h2>Rues locales comptées comme ruelles</h2></div>
@@ -769,10 +783,10 @@
     // mrPieton : scénario « Mont-Royal piétonne » (tronçons retirés du réseau, traversée nord-sud permise)
     // ruelles : rues locales traitées comme des ruelles (retirées du calcul) ; par défaut, choix de Gabriel
     // (mêmes noms que DEFAUT_RUELLES dans le script)
-    const state = { vue: 'rues', hidden: new Set(), focusCell: null, commeArteres: new Set(), mrPieton: false, paralleles: true, pairesArterielles: true, virages: 3, arteresLocales: new Set(['Rue Jeanne-Mance', 'Rue Léo-Pariseau']),
+    const state = { vue: 'rues', hidden: new Set(), focusCell: null, commeArteres: new Set(), mrPieton: false, paralleles: true, pairesArterielles: true, corrigeables: true, virages: 3, arteresLocales: new Set(['Rue Jeanne-Mance', 'Rue Léo-Pariseau']), arteresCollectrices: new Set(['Rue Saint-Grégoire']),
                     ruelles: new Set(['Rue Généreux', 'Rue De Varennes', 'Rue Simard', 'Rue Barrette',
                                        'Rue La Mennais', 'Rue Latreille', 'Rue De Courville', 'Avenue Bureau',
-                                       'Rue Lionais', 'Rue Saint-Christophe']) };
+                                       'Rue Lionais', 'Rue Saint-Christophe', 'Ruelle Lavers']) };
     // Paires artérielles (une artère vers le nord, l'autre vers le sud) : une rue locale peut les relier
     // (même liste que PAIRES_ARTERIELLES dans le script)
     const PAIRES_ARTERIELLES = [['Avenue De Lorimier', 'Avenue Papineau'], ['Boulevard Saint-Laurent', 'Rue Saint-Urbain'],
@@ -781,11 +795,23 @@
     // Artères traitées comme des rues locales au Plateau (cochées par défaut, choix de Gabriel ;
     // mêmes noms que DEFAUT_ARTERES_LOCALES dans le script)
     const ARTERES_LOCALES = ['Rue Jeanne-Mance', 'Rue Léo-Pariseau'];
+    // Artères qu'on peut compter comme collectrices (Saint-Grégoire cochée par défaut, choix de Gabriel ;
+    // ARTERES_COLLECTRICES_POSSIBLES et DEFAUT_ARTERES_COLLECTRICES dans le script)
+    const ARTERES_COLLECTRICES = ['Rue Saint-Grégoire'];
     // Applique le réglage : la classe d'origine est gardée dans r._c0
+    // Tronçons concernés : ceux du Plateau, et ceux qui touchent un nœud du Plateau (sinon le bout de
+    // Jeanne-Mance au sud de Sherbrooke resterait une artère et ferait une porte « Jeanne-Mance »)
+    let noeudsPlateau = null;
     function appliquerArteresLocales() {
+      if (!noeudsPlateau) {
+        noeudsPlateau = new Set();
+        for (const r of data.troncons) if (r[T.PLATEAU]) { noeudsPlateau.add(r[T.A]); noeudsPlateau.add(r[T.B]); }
+      }
       for (const r of data.troncons) {
         if (r._c0 === undefined) r._c0 = r[T.CLASSE];
-        r[T.CLASSE] = r[T.PLATEAU] && r._c0 >= 6 && r._c0 <= 8 && state.arteresLocales.has(nomDe(r)) ? 0 : r._c0;
+        const pres = r[T.PLATEAU] || noeudsPlateau.has(r[T.A]) || noeudsPlateau.has(r[T.B]);
+        const artere = pres && r._c0 >= 6 && r._c0 <= 8;
+        r[T.CLASSE] = artere && state.arteresLocales.has(nomDe(r)) ? 0 : artere && state.arteresCollectrices.has(nomDe(r)) ? 5 : r._c0;
       }
     }
     const estPietonne = r => state.mrPieton && r[T.PIETON] === 1;
@@ -836,19 +862,21 @@
       }
       return vus;
     }
-    function virages(arcs, suivants, estDepart, estPorte, cDepart, cSuivant) {
+    function virages(arcs, suivants, estDepart, estPorte, carrefours, cDepart, cSuivant) {
       // Virages minimaux, par arc, depuis un nœud de départ (entrée en avant, sortie en arrière).
       // cDepart / cSuivant : extrémité de l'arc côté départ / côté suivant (0 = u, 1 = v).
       // Un parcours ne dépasse pas une porte qui n'est pas un départ (comme parcourir()).
-      const best = new Array(arcs.length).fill(Infinity), file = [];
-      arcs.forEach((a, i) => { if (estDepart(a[cDepart])) { best[i] = 0; file.push(i); } });
-      // File 0-1 : deque simple (unshift pour un coût 0, push pour un coût 1)
+      // Deux valeurs par arc : [0] sans, [1] après avoir traversé un des `carrefours` (nœud où l'on
+      // pourrait détourner le parcours). Parcours en largeur 0-1 sur (arc, carrefour traversé).
+      const best = [new Array(arcs.length).fill(Infinity), new Array(arcs.length).fill(Infinity)], file = [];
+      arcs.forEach((a, i) => { if (estDepart(a[cDepart])) { best[0][i] = 0; file.push([i, 0]); } });
       while (file.length) {
-        const i = file.shift(), n = arcs[i][cSuivant];
+        const [i, f] = file.shift(), n = arcs[i][cSuivant], b = best[f][i];
         if (estPorte(n)) continue;
+        const g = f || (carrefours.has(n) ? 1 : 0);
         for (const j of suivants.get(n) || []) {
-          const c = best[i] + (nomDe(arcs[j][2]) === nomDe(arcs[i][2]) && nomDe(arcs[i][2]) !== null ? 0 : 1);
-          if (c < best[j]) { best[j] = c; if (c === best[i]) file.unshift(j); else file.push(j); }
+          const c = b + (nomDe(arcs[j][2]) === nomDe(arcs[i][2]) && nomDe(arcs[i][2]) !== null ? 0 : 1);
+          if (c < best[g][j]) { best[g][j] = c; if (c === b) file.unshift([j, g]); else file.push([j, g]); }
         }
       }
       return best;
@@ -1029,6 +1057,11 @@
         // Arcs (par index) qui partent de / arrivent à chaque nœud, pour compter les virages
         const sortantsI = new Map(), entrantsI = new Map();
         arcs.forEach(([u, v], i) => { add(sortantsI, u, i); add(entrantsI, v, i); });
+        // Carrefours où l'on pourrait détourner un parcours : nœud intérieur où se rejoignent au moins trois
+        // tronçons de rues locales, ou croisement d'une collectrice non cochée (on peut y faire sortir les autos)
+        const degre = new Map(), carrefours = new Set();
+        for (const r of membres) for (const n of new Set([noeud(r[T.A], r), noeud(r[T.B], r)])) degre.set(n, (degre.get(n) || 0) + 1);
+        for (const [n, d] of degre) if (typeof n === 'string' || (d >= 3 && !portes.has(n))) carrefours.add(n);
         const portesArt = new Set();
         for (const r of membres) for (const n of [r[T.A], r[T.B]]) if (arteresAu.has(n)) portesArt.add(n);
         const nomsCell = [...new Set([...portesArt].flatMap(n => [...arteresAu.get(n)]))].sort();
@@ -1054,28 +1087,25 @@
           if (!entrees.size || !sorties.size) continue;
           const avant = parcourir(entrees, sortants, portes);
           if (![...sorties].some(n => avant.has(n))) continue;
-          const arriere = parcourir(sorties, entrants, portes);
           const marquer = r => {
             if (!trav.has(r)) trav.set(r, []);
             const l = trav.get(r);
             if (!l.some(([a, b]) => a === x && b === y)) l.push([x, y]);
           };
-          if (state.virages === null) {
-            // Un arc part d'une entrée ou d'un nœud intérieur et arrive à une sortie ou à un nœud intérieur
-            for (const [u, v, r] of arcs) {
-              const okU = avant.has(u) && (entrees.has(u) || !portes.has(u));
-              const okV = arriere.has(v) && (sorties.has(v) || !portes.has(v));
-              if (okU && okV) marquer(r);
-            }
-            continue;
-          }
           // Virages maximaux : un virage = passer d'une rue locale à une autre (nom différent) ; entrer et
-          // sortir ne comptent pas. avantV[i] = virages minimaux depuis une entrée jusqu'à l'arc i compris ;
-          // apresV[i] = virages minimaux de l'arc i jusqu'à une sortie. L'arc compte si avantV + apresV ≤ max.
-          // Parcours en largeur 0-1 sur les arcs (coût 1 quand le nom change).
-          const avantV = virages(arcs, sortantsI, (u) => entrees.has(u), (u) => portes.has(u), 0, 1);
-          const apresV = virages(arcs, entrantsI, (v) => sorties.has(v), (v) => portes.has(v), 1, 0);
-          arcs.forEach(([, , r], i) => { if (avantV[i] + apresV[i] <= state.virages) marquer(r); });
+          // sortir ne comptent pas. av[f][i] = virages minimaux depuis une entrée jusqu'à l'arc i compris ;
+          // ap[f][i] = virages minimaux de l'arc i jusqu'à une sortie (f = 1 : un carrefour est traversé).
+          // L'arc compte si av + ap ≤ max (sans limite : Infinity, même résultat que parcourir()).
+          // Parcours corrigeables : il faut en plus traverser un carrefour avant ou après l'arc.
+          const av = virages(arcs, sortantsI, u => entrees.has(u), u => portes.has(u), carrefours, 0, 1);
+          const ap = virages(arcs, entrantsI, v => sorties.has(v), v => portes.has(v), carrefours, 1, 0);
+          const max = state.virages === null ? Infinity : state.virages;
+          arcs.forEach(([, , r], i) => {
+            const v = state.corrigeables
+              ? Math.min(av[1][i] + Math.min(ap[0][i], ap[1][i]), av[0][i] + ap[1][i])
+              : Math.min(av[0][i], av[1][i]) + Math.min(ap[0][i], ap[1][i]);
+            if (v <= max) marquer(r);
+          });
         }
         for (const r of membres) {
           const l = trav.get(r) || [];
@@ -1549,6 +1579,20 @@
         box.appendChild(row);
       });
     }
+    function renderArteresCollectrices() {
+      const box = document.getElementById('gfArteresCollectrices');
+      ARTERES_COLLECTRICES.forEach(nom => {
+        const row = document.createElement('label');
+        row.className = 'gf-sidebar-item';
+        row.innerHTML = '<input type="checkbox"' + (state.arteresCollectrices.has(nom) ? ' checked' : '') + '><span class="gf-sidebar-label">' + esc(nom) + '</span>';
+        row.querySelector('input').addEventListener('change', function () {
+          if (this.checked) state.arteresCollectrices.add(nom); else state.arteresCollectrices.delete(nom);
+          map.closePopup(); state.focusCell = null;
+          recalculer();
+        });
+        box.appendChild(row);
+      });
+    }
     function renderRuelles() {
       const box = document.getElementById('gfRuelles');
       [...state.ruelles].sort((a, b) => a.localeCompare(b, 'fr')).forEach(nom => {
@@ -1576,6 +1620,11 @@
     });
     document.getElementById('pairesToggle').addEventListener('change', function () {
       state.pairesArterielles = this.checked;
+      map.closePopup(); state.focusCell = null;
+      recalculer();
+    });
+    document.getElementById('corrigeablesToggle').addEventListener('change', function () {
+      state.corrigeables = this.checked;
       map.closePopup(); state.focusCell = null;
       recalculer();
     });
@@ -1642,6 +1691,7 @@
         });
         renderCollectrices();
         renderArteresLocales();
+        renderArteresCollectrices();
         renderRuelles();
         recalculer();
         if (layer) {

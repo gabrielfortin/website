@@ -3,9 +3,13 @@
   "collectrices_comme_arteres": [],
   "arteres_paralleles_seulement": true,
   "virages_maximaux": 3,
+  "parcours_corrigeables": true,
   "arteres_locales": [
    "Rue Jeanne-Mance",
    "Rue Léo-Pariseau"
+  ],
+  "arteres_collectrices": [
+   "Rue Saint-Grégoire"
   ],
   "paires_arterielles": [
    [
@@ -31,28 +35,29 @@
    "Rue Latreille",
    "Rue Lionais",
    "Rue Saint-Christophe",
-   "Rue Simard"
+   "Rue Simard",
+   "Ruelle Lavers"
   ]
  },
  "troncons_exportes": 2268,
  "troncons_plateau": 1465,
  "troncons_locaux_par_statut": {
-  "0": 336,
-  "1": 263,
-  "2": 88,
-  "3": 67
+  "0": 371,
+  "1": 228,
+  "2": 91,
+  "3": 63
  },
- "cellules": 18,
- "cellules_traversantes": 11,
+ "cellules": 15,
+ "cellules_traversantes": 10,
  "mont_royal_pieton": {
   "troncons_retires": 32,
   "troncons_locaux_par_statut": {
-   "0": 336,
-   "1": 263,
-   "2": 88,
-   "3": 67
+   "0": 371,
+   "1": 228,
+   "2": 91,
+   "3": 63
   },
-  "cellules": 18,
-  "cellules_traversantes": 11
+  "cellules": 15,
+  "cellules_traversantes": 10
  }
 }

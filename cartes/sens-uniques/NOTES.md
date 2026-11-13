@@ -95,7 +95,7 @@ le nord ; rue Saint-Urbain : -1, vers le sud).
    défaut, choix de Gabriel) : rue Généreux, rue De Varennes, rue Simard,
    rue Barrette, rue La Mennais, rue Latreille, rue De Courville, avenue
    Bureau, rue Lionais (ajoutée le 12 novembre 2026), rue Saint-Christophe (ajoutée
-   le 12 novembre 2026). Ce sont des rues locales (CLASSE 0) dans la Géobase, mais
+   le 12 novembre 2026), ruelle Lavers (ajoutée le 12 novembre 2026). Ce sont des rues locales (CLASSE 0) dans la Géobase, mais
    des ruelles en pratique : retirées du calcul comme les voies qui ne
    servent pas de passage, et non comptées dans les totaux. Les décocher les
    remet dans le calcul. Le script s'arrête si un de ces noms n'existe plus
@@ -166,7 +166,12 @@ artérielles (9 ruelles, sans exception) :
 12. **Artères comptées comme rues locales** (cases du panneau, **cochées par
    défaut**, 12 novembre 2026, choix de Gabriel) : rue Jeanne-Mance et rue
    Léo-Pariseau. Leurs tronçons d'artère (CLASSE 7, entre Sherbrooke et des
-   Pins) **au Plateau seulement** deviennent des rues locales : ils ne
+   Pins) **au Plateau, et ceux qui touchent un nœud du Plateau** deviennent
+   des rues locales (correction du 12 novembre 2026 : le bout de Jeanne-Mance
+   au sud de Sherbrooke restait une artère, d'où une porte « Jeanne-Mance » et
+   des paires Jeanne-Mance → du Parc / Saint-Urbain acceptées comme
+   parallèles ; les statuts n'ont pas changé, mais le nom automatique de
+   Milton-Parc est, oui : clé corrigée dans `noms-cellules.json`) : ils ne
    délimitent plus les cellules, on y roule et ils sont colorés. Page :
    `appliquerArteresLocales()` change `r[T.CLASSE]` avant `analyser()` (classe
    d'origine dans `r._c0`) ; script : `comme_locales()`. L'export prend les
@@ -211,6 +216,40 @@ artérielles (9 ruelles, sans exception) :
    12 novembre 2026. Effet : 22 → 19 cellules, 9 → 7 sans parcours
    traversant (41 % → 37 %).
 
+16. **Parcours corrigeables** (case du panneau, **cochée par défaut**,
+   12 novembre 2026, choix de Gabriel) : un parcours traversant ne compte que
+   s'il traverse un *carrefour* où l'on pourrait le détourner : nœud
+   intérieur où se rejoignent au moins trois tronçons de rues locales, ou
+   croisement d'une collectrice non cochée (on peut y faire sortir les autos).
+   Une rue qui va tout droit d'une artère à l'autre sans rien croiser n'a pas
+   de solution par les sens uniques : elle reste verte. `virages()` suit deux
+   états par arc (carrefour traversé ou non) ; un arc compte si
+   min(av₁ + ap, av₀ + ap₁) ≤ maximum de virages. Sans limite de virages, on
+   prend maintenant `virages()` avec une limite infinie (même résultat que
+   `parcourir()`). Exemple : Square Saint-Louis, De Bullion et
+   de l'Hôtel-de-Ville passent au vert ; Coloniale et Saint-Dominique restaient
+   rouges (reliées par la ruelle Lavers) jusqu'à ce que la ruelle Lavers soit
+   comptée comme ruelle (même jour) ; Laval reste rouge (croisée par la rue du Square-Saint-Louis, sens unique vers
+   Saint-Denis). Marquette reste rouge dans le Petit Laurier (croisement de
+   Laurier, collectrice). Effet : 263 / 336 → 254 / 345 sens uniques rouges /
+   verts ; cellules inchangées.
+
+17. **Artères comptées comme collectrices** (case du panneau, **cochée par
+   défaut** depuis le 12 novembre 2026 au soir, choix de Gabriel ; cellule
+   fusionnée nommée « Petit Laurier », les clés de l'ancien Petit Laurier et
+   de Parc Ludger Duvernay restent dans `noms-cellules.json` pour l'option
+   décochée ; le script vérifie l'export avec l'option décochée) : Saint-Grégoire
+   (`ARTERES_COLLECTRICES` dans la page, `ARTERES_COLLECTRICES_POSSIBLES` et
+   `comme_collectrices()` dans le script ; mêmes tronçons que pour les artères
+   locales : au Plateau et ceux qui touchent un nœud du Plateau). Elle ne
+   délimite plus les cellules et on la traverse tout droit. L'export prend les
+   cellules avec cette option (les plus grandes possibles) et le script
+   vérifie qu'il suffit aussi au calcul avec elle. Effet : le Petit Laurier
+   rejoint la cellule au nord (Parc Ludger-Duvernay, jusqu'à Rosemont et
+   Jean-Talon), à 100 % de sens uniques verts ; Plateau : 228 / 371,
+   15 cellules (5 sans parcours traversant). Le nom choisi « Petit Laurier »
+   ne s'applique plus à la cellule fusionnée (autre nom automatique).
+
 Indicateur : part des cellules (qui ont au moins une rue locale au Plateau)
 dont aucune rue locale du Plateau n'est de statut 1 ou 3.
 
@@ -226,12 +265,15 @@ Prince-Arthur (pas à Milton), et Milton est une rue locale à sens unique vers
 l'ouest jusqu'à University. Sherbrooke → Aylmer → Milton → University est donc
 un parcours d'artère à artère par des rues locales.
 
-## Chiffres de contrôle (Géobase du 4 novembre 2026)
+## Chiffres de contrôle (Géobase du 4 novembre 2026, identiques avec celle du 12 novembre)
 
 | Réglage | Cellules (sans parcours traversant) | Sens uniques rouges / verts | Double sens traversants / non |
 |---|---|---|---|
-| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, raccords, rues isolées hors indicateur, cellules de même nom regroupées, aucune collectrice cochée, 10 ruelles (`resume.json`) | 18 (7, 39 %) | 263 / 336 | 67 / 88 |
-| Défaut + Mont-Royal piétonne (`resume.json`, `mont_royal_pieton`) | 18 (7, 39 %) | 263 / 336 | 67 / 88 |
+| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, Saint-Grégoire collectrice, raccords, rues isolées hors indicateur, cellules de même nom regroupées, parcours corrigeables, aucune collectrice cochée, 11 ruelles (`resume.json`) | 15 (5, 33 %) | 228 / 371 | 63 / 91 |
+| Défaut + Mont-Royal piétonne (`resume.json`, `mont_royal_pieton`) | 15 (5, 33 %) | 228 / 371 | 63 / 91 |
+| Défaut sans Saint-Grégoire collectrice | 18 (7, 39 %) | 247 / 352 | 65 / 89 |
+| Défaut sans la ruelle Lavers ni Saint-Grégoire collectrice (10 ruelles) | 18 (7, 39 %) | 254 / 345 | 66 / 89 |
+| Défaut sans « parcours corrigeables » | 18 (7, 39 %) | 263 / 336 | 67 / 88 |
 | Défaut sans regroupement par nom | 22 (9, 41 %) | 263 / 336 | 67 / 88 |
 | Défaut sans artères locales, sans regroupement par nom | 22 (9, 41 %) | 259 / 335 | 66 / 89 |
 | Défaut à 5 virages | 22 (9, 41 %) | 320 / 279 | 91 / 64 |
@@ -344,6 +386,26 @@ en dépendent). `plateau` = 1 : tronçon affiché et compté.
 - La Ville avertit que la Géobase n'est pas nécessairement à jour partout.
 - La carte montre les parcours possibles, pas les débits.
 
+## Régénération du 12 novembre 2026
+
+Données refaites avec la Géobase du 12 novembre 2026 (ressource GeoJSON
+modifiée le jour même) : `reseau.json` identique à celui de la version du
+4 novembre, totaux identiques. Correction du script au passage : dans la règle
+des parcours corrigeables, les nœuds dédoublés (croisement d'une collectrice)
+étaient reconnus parce que leur identifiant était un tuple ; or avec la
+Géobase brute, tous les nœuds sont des tuples de coordonnées, donc tous
+comptaient comme carrefours (258 / 341 au lieu de 247 / 352). Ils sont
+maintenant marqués explicitement (`virtuels`). La page, qui lit l'export
+(nœuds numérotés), n'était pas touchée.
+
+## Utilisé par securite-plateau
+
+`~/Developer/securite-plateau/scripts/preparer_donnees.py` importe ce script
+et appelle `analyse_par_defaut()` (et `troncons_de_reseau()`) sur
+`data/reseau.json` : tout le réglage par défaut, noms de cellules compris.
+Il vérifie ses totaux contre `resume.json`. Après un changement de règle ou
+de `noms-cellules.json`, relancer aussi ce script-là.
+
 ## Régénérer les données
 
 ```
@@ -357,8 +419,8 @@ ne suffit pas au calcul. Comparer `resume.json` avec ce que la page affiche
 (réglage par défaut), mettre à jour le tableau ci-dessus, puis refaire
 `apercu.png`. Le réglage par défaut est écrit à deux endroits :
 `DEFAUT_COMME_ARTERES`, `DEFAUT_RUELLES`, `DEFAUT_PARALLELES`,
-`DEFAUT_VIRAGES`, `DEFAUT_PAIRES` et `DEFAUT_ARTERES_LOCALES` dans le script, `state.commeArteres`,
+`DEFAUT_VIRAGES`, `DEFAUT_PAIRES`, `DEFAUT_ARTERES_LOCALES`, `DEFAUT_ARTERES_COLLECTRICES` et `DEFAUT_CORRIGEABLES` dans le script, `state.commeArteres`,
 `state.ruelles`, `state.paralleles`, `state.virages` et
-`state.pairesArterielles`, `state.arteresLocales` dans `index.html` (plus l'attribut `checked` de
+`state.pairesArterielles`, `state.arteresLocales`, `state.arteresCollectrices`, `state.corrigeables` dans `index.html` (plus l'attribut `checked` de
 `#parallelesToggle` et de `#pairesToggle`, la `value` de `#viragesRange` et le texte
 de `#viragesValeur`).

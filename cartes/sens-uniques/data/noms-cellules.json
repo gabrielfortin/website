@@ -1,11 +1,11 @@
 {
- "_lisezmoi": "Noms choisis des cellules. Clé : nom automatique affiché dans la liste des cellules de la page (réglage par défaut) ; valeur : nom à afficher. Laisser la valeur vide pour garder le nom automatique.",
+ "_lisezmoi": "Noms choisis des cellules. Clé : nom automatique affiché dans la liste des cellules de la page ; valeur : nom à afficher (vide : nom automatique). Deux cellules du même nom sont regroupées. Certaines clés ne servent que si l'on décoche une option du panneau (ex. Saint-Grégoire comptée comme collectrice) : les garder.",
  "noms": {
   "De Lorimier / Saint-Joseph / Papineau": "Parc de Lorimier",
   "des Pins / du Parc / Sherbrooke / University": "Milton-Parc ouest",
   "des Pins / Saint-Denis / Sherbrooke / Saint-Laurent": "Square Saint-Louis",
   "des Pins / Saint-Laurent / Sherbrooke / Saint-Urbain": "Milton-Parc est",
-  "des Pins / Saint-Urbain / Sherbrooke / Jeanne-Mance / du Parc": "Milton-Parc est",
+  "des Pins / Saint-Urbain / Sherbrooke / du Parc": "Milton-Parc est",
   "Pauline-Julien (Saint-Grégoire)": "",
   "Rosemont / D'Iberville / Saint-Joseph / De Lorimier": "Centre du Plateau",
   "Saint-Denis / Saint-Joseph / Saint-Laurent": "Mile-End est",
@@ -18,7 +18,8 @@
   "Saint-Joseph / Saint-Denis / Roy / des Pins / Saint-Laurent": "Hôtel-de-Ville",
   "Saint-Joseph / Saint-Laurent / des Pins / Saint-Urbain": "Parc Jeanne-Mance",
   "Saint-Joseph / Saint-Urbain / du Parc": "Parc Jeanne-Mance",
-  "Saint-Laurent / Jean-Talon / Papineau / De Lorimier / Rosemont / Christophe-Colomb / Saint-Grégoire / Saint-Denis": "",
+  "Saint-Laurent / Jean-Talon / Papineau / De Lorimier / Rosemont / Christophe-Colomb / Saint-Grégoire / Saint-Denis": "Parc Ludger Duvernay",
+  "Saint-Laurent / Jean-Talon / Rosemont / De Lorimier / Papineau / Christophe-Colomb / Saint-Joseph / Saint-Denis": "Petit Laurier",
   "Saint-Laurent / Saint-Joseph / Saint-Urbain": "Mile-End ouest",
   "Van Horne / du Parc / de la Côte-Sainte-Catherine": "Limite Outremont",
   "Van Horne / Saint-Urbain / Saint-Joseph / du Parc": "Mile-End ouest"
