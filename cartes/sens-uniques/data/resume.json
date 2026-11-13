@@ -74,8 +74,8 @@
   "4": 54,
   "5": 13
  },
- "cellules": 15,
- "cellules_traversantes": 11,
+ "cellules": 13,
+ "cellules_traversantes": 10,
  "mont_royal_pieton": {
   "troncons_retires": 32,
   "troncons_locaux_par_statut": {
@@ -86,7 +86,7 @@
    "4": 54,
    "5": 13
   },
-  "cellules": 15,
-  "cellules_traversantes": 11
+  "cellules": 13,
+  "cellules_traversantes": 10
  }
 }

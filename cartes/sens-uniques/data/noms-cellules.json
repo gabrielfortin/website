@@ -31,7 +31,9 @@
  },
  "fusions": {
   "Milton-Parc est": "Milton-Parc",
-  "Milton-Parc ouest": "Milton-Parc"
+  "Milton-Parc ouest": "Milton-Parc",
+  "Centre du Plateau": "Parc de Lorimier",
+  "Parc des Compagnons": "Parc Baldwin"
  },
  "hors_indicateur": [
   "Parc Ludger Duvernay"

@@ -378,6 +378,14 @@ artérielles (9 ruelles, sans exception) :
    Parc de Lorimier et Parc Jeanne-Mance ont maintenant des liens partiels.
    Milton-Parc 10 %, Mile-End ouest 21 %.
 
+25. **Fusions de cellules de part et d'autre de la paire De Lorimier /
+   Papineau** (13 novembre 2026, essai de Gabriel) : « fusions » de
+   `noms-cellules.json` : Centre du Plateau → Parc de Lorimier (nom choisi
+   par Gabriel), Parc des Compagnons → Parc Baldwin. Regroupement
+   par nom seulement : les parcours restent ceux de chaque cellule. Effet :
+   13 cellules, 10 traversantes (3 sans, 23 %) ; Parc de Lorimier 94 %
+   (ses liens partiels rendent l'ensemble traversant), Parc Baldwin 79 %.
+
 Indicateur : part des cellules (qui ont au moins une rue locale au Plateau)
 dont aucune rue locale du Plateau n'est de statut 1 ou 3.
 
@@ -397,7 +405,8 @@ un parcours d'artère à artère par des rues locales.
 
 | Réglage | Cellules (sans parcours traversant) | Sens uniques rouges / verts | Double sens traversants / non |
 |---|---|---|---|
-| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, Parc (des Pins – Sherbrooke, Van Horne – Côte-Sainte-Catherine) collectrice, Saint-Joseph (bout de collectrice) artère, Saint-Grégoire artère, raccords, rues isolées et Parc Ludger Duvernay hors indicateur, cellules de même nom regroupées, parcours corrigeables, filtres modaux connus, 11 ruelles (`resume.json`) | 15 (4, 27 %) | 225 + 54 partiels / 320 | 53 + 13 partiels / 88 |
+| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, Parc (des Pins – Sherbrooke, Van Horne – Côte-Sainte-Catherine) collectrice, Saint-Joseph (bout de collectrice) artère, Saint-Grégoire artère, raccords, rues isolées et Parc Ludger Duvernay hors indicateur, cellules de même nom regroupées, parcours corrigeables, filtres modaux connus, 11 ruelles (`resume.json`) | 13 (3, 23 %) | 225 + 54 partiels / 320 | 53 + 13 partiels / 88 |
+| Défaut sans les fusions De Lorimier / Papineau (avant le 13 novembre, règle 25) | 15 (4, 27 %) | 225 + 54 partiels / 320 | 53 + 13 partiels / 88 |
 | Défaut + Saint-Grégoire collectrice (défaut du 12 au 13 novembre) | 14 (5, 36 %) | 228 / 371 | 63 / 91 |
 | Défaut sans Parc collectrice (avant le 13 novembre) | 15 (5, 33 %) | 228 / 371 | 63 / 91 |
 | Défaut sans Saint-Grégoire collectrice | 18 (7, 39 %) | 247 / 352 | 65 / 89 |
