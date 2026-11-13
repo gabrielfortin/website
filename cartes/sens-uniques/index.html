@@ -474,12 +474,12 @@
 
   /* ---------- Propre à cette carte ---------- */
   :root {
-    --su-rouge: #dc2626; --su-vert: #16a34a; --su-orange: #f59e0b; --su-gris: #94a3b8;
+    --su-rouge: #dc2626; --su-vert: #16a34a; --su-orange: #f59e0b; --su-gris: #94a3b8; --su-partiel: #ca8a04;
     --su-superieur: #1e293b; --su-collectrice: #64748b; --su-autre: #a8a29e; --su-pieton: #7c3aed;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --su-rouge: #f87171; --su-vert: #4ade80; --su-orange: #fbbf24; --su-gris: #64748b;
+      --su-rouge: #f87171; --su-vert: #4ade80; --su-orange: #fbbf24; --su-gris: #64748b; --su-partiel: #fde047;
       --su-superieur: #e2e8f0; --su-collectrice: #94a3b8; --su-autre: #78716c; --su-pieton: #c4b5fd;
     }
   }
@@ -492,6 +492,11 @@
   .leaflet-popup-content-wrapper { cursor: grab; touch-action: none; }
   .gf-popup-dragging .leaflet-popup-content-wrapper { cursor: grabbing; user-select: none; box-shadow: var(--shadow-pop); }
   .gf-popup-moved .leaflet-popup-tip-container { display: none; }   /* la pointe ne vise plus la rue */
+  /* Filtre modal ajouté à la main : petite pastille discrète (barre sur un rond) */
+  .su-filtre span { display: block; width: 12px; height: 12px; border-radius: 50%; box-sizing: border-box; position: relative;
+    background: #fff; border: 2px solid #475569; opacity: .85; }
+  .su-filtre-texte { display: inline-block; vertical-align: -2px; }
+  .su-filtre span::after { content: ''; position: absolute; left: 1px; right: 1px; top: 50%; height: 2px; margin-top: -1px; background: #475569; }
   .gf-pop-drag { display: block; margin: -6px auto 8px; width: 34px; height: 4px; border-radius: 999px; background: var(--track); }
   .gf-pop-list { margin: 6px 0 8px; padding-left: 18px; font-size: .8rem; line-height: 1.5; color: var(--ink-700); }
   .gf-pop-eyebrow { background: var(--track); }
@@ -576,6 +581,7 @@
       <ul>
         <li><strong style="color:var(--su-rouge)">En rouge</strong>, les rues locales à sens unique qui font partie d'au moins un parcours permettant d'entrer par une artère et de ressortir par une <em>autre</em> artère parallèle à la première (deux artères est-ouest ou deux nord-sud), en ne roulant que sur des rues locales.</li>
         <li><strong style="color:var(--su-vert)">En vert</strong>, les rues locales à sens unique qui ne font partie d'aucun parcours de ce genre&nbsp;: on en ressort par l'artère d'entrée, par une artère perpendiculaire ou par une collectrice (par exemple une rue tête-bêche qui oblige à tourner sur une collectrice).</li>
+        <li><em>Parcours partiel</em>&nbsp;: une rue qui n'est traversante qu'en entrant ou en sortant par un carrefour où l'on ne peut que tourner à droite (filtre modal dans le terre-plein de l'artère, ex. Saint-André au boulevard Saint-Joseph) est en <strong style="color:var(--su-partiel)">jaune</strong>&nbsp;: seules les autos qui viennent d'un côté de l'artère peuvent la prendre comme raccourci. Elle compte à moitié dans la part de sens uniques verts, et sa cellule n'est pas «&nbsp;sans parcours traversant&nbsp;».</li>
         <li>Les rues locales à double sens suivent la même règle, en pointillé&nbsp;: <strong style="color:var(--su-orange)">orange</strong> si elles font partie d'un parcours traversant, <strong style="color:var(--su-vert)">vert</strong> sinon.</li>
       </ul>
 
@@ -677,7 +683,7 @@
         <span class="gf-sidebar-label">Filtres modaux connus</span>
       </label>
     </div>
-    <p class="gf-sidebar-note">Cochée (par défaut), les filtres modaux que la Géobase n'a pas sont appliqués&nbsp;: au boulevard Saint-Joseph, Saint-André, Mentana, De Brébeuf et Clark. La rue y est coupée&nbsp;: on n'y entre ni n'en sort en auto, et on n'y traverse pas. Liste à compléter.</p>
+    <p class="gf-sidebar-note">Cochée (par défaut), les filtres modaux que la Géobase n'a pas sont appliqués&nbsp;: au boulevard Saint-Joseph, Saint-André, Mentana, De Brébeuf et Clark, dans le terre-plein&nbsp;: on ne traverse pas Saint-Joseph, mais on y arrive et on y tourne à droite. On n'y entre et on n'en sort qu'en tournant à droite&nbsp;: un parcours traversant seulement par ces rues est <strong style="color:var(--su-partiel)">partiel</strong> (en jaune), et compte à moitié dans la part de sens uniques verts. Un filtre sur la rue elle-même la couperait au carrefour. Sur la carte&nbsp;: <span class="su-filtre su-filtre-texte"><span></span></span>. Liste à compléter.</p>
     <div class="gf-sidebar-list">
       <label class="gf-sidebar-item">
         <input type="checkbox" id="corrigeablesToggle" checked>
@@ -774,6 +780,9 @@
       rouge: { label: "Sens unique, parcours traversant", color: cssVar('--su-rouge'), weight: 3.2, opacity: 0.95 },
       vert: { label: "Sens unique, sans parcours traversant", color: cssVar('--su-vert'), weight: 3.2, opacity: 0.95 },
       orange: { label: "Double sens, parcours traversant", color: cssVar('--su-orange'), weight: 2.4, opacity: 0.9, dashArray: '6 5' },
+      // Parcours partiel : traversant seulement en tournant à droite (filtre dans le terre-plein de l'artère) ; compte à moitié
+      partiel: { label: "Sens unique, parcours traversant partiel (virage à droite seulement)", color: cssVar('--su-partiel'), weight: 3.2, opacity: 0.95 },
+      partielDS: { label: "Double sens, parcours traversant partiel", color: cssVar('--su-partiel'), weight: 2.4, opacity: 0.9, dashArray: '6 5' },
       // Double sens sans parcours traversant : vert comme les sens uniques, en pointillé comme l'orange
       gris: { label: "Double sens, sans parcours traversant", color: cssVar('--su-vert'), weight: 2.4, opacity: 0.9, dashArray: '6 5' },
       principale: { label: "Artère principale", color: cssVar('--su-superieur'), weight: 5, opacity: 0.85 },
@@ -784,7 +793,7 @@
       collectrice: { label: "Collectrice", color: cssVar('--su-collectrice'), weight: 3.2, opacity: 0.8 },
       autre: { label: "Autres voies (piétonnières, privées…)", color: cssVar('--su-autre'), weight: 1.4, opacity: 0.7, dashArray: '2 4' }
     };
-    const LEGEND_ORDER = ['rouge', 'vert', 'orange', 'gris', 'principale', 'secondaire', 'promue', 'collectrice', 'pieton', 'ruelle', 'autre'];
+    const LEGEND_ORDER = ['rouge', 'partiel', 'vert', 'orange', 'partielDS', 'gris', 'principale', 'secondaire', 'promue', 'collectrice', 'pieton', 'ruelle', 'autre'];
 
     // commeArteres : collectrices (par nom) traitées comme des artères ; par défaut, Saint-Joseph (son bout de collectrice,
     // à l'ouest de Parc, sépare Limite Outremont entre Mile-End ouest et Parc Jeanne-Mance ; choix de Gabriel)
@@ -859,6 +868,8 @@
         if (r._a0 === undefined) { r._a0 = r[T.A]; r._b0 = r[T.B]; }
         r[T.A] = r._a0; r[T.B] = r._b0;
       }
+      coupesFiltres.length = 0;
+      portesDroite.clear();
       if (!state.filtresModaux) return;
       const noeudsDe = new Map();
       for (const r of data.troncons) {
@@ -866,18 +877,49 @@
         if (!noeudsDe.has(n)) noeudsDe.set(n, new Set());
         noeudsDe.get(n).add(r._a0).add(r._b0);
       }
-      for (const [rue, trans] of FILTRES_MODAUX) {
+      for (const [rue, trans, genre] of FILTRES_MODAUX) {
         const nt = noeudsDe.get(trans) || new Set();
+        if (genre === 'terre-plein') {
+          // Symbole au milieu du carrefour (moyenne des nœuds communs : chaussées séparées)
+          const com = [...(noeudsDe.get(rue) || [])].filter(n => nt.has(n)).map(n => coordNoeud.get(n)).filter(Boolean);
+          [...(noeudsDe.get(rue) || [])].filter(n => nt.has(n)).forEach(n => portesDroite.add(n));   // virage à droite seulement
+          if (com.length) coupesFiltres.push({ pos: [com.reduce((s, c) => s + c[0], 0) / com.length, com.reduce((s, c) => s + c[1], 0) / com.length], rue, trans, genre });
+          continue;
+        }
         for (const r of data.troncons) {
           if (nomDe(r) !== rue) continue;
-          if (nt.has(r._a0)) r[T.A] = -(2 * r[T.ID] + 1);
-          if (nt.has(r._b0)) r[T.B] = -(2 * r[T.ID] + 2);
+          if (nt.has(r._a0)) { r[T.A] = -(2 * r[T.ID] + 1); coupesFiltres.push({ r, bout: 'a', rue, trans }); }
+          if (nt.has(r._b0)) { r[T.B] = -(2 * r[T.ID] + 2); coupesFiltres.push({ r, bout: 'b', rue, trans }); }
         }
       }
     }
+    // Bouts de rue coupés par un filtre modal, et leur symbole discret sur la carte (dans les deux vues)
+    const coupesFiltres = [];
+    const portesDroite = new Set();   // nœuds où l'on n'entre et ne sort qu'en tournant à droite (filtre de terre-plein)
+    let calqueFiltres = null;
+    function dessinerFiltres() {
+      if (!calqueFiltres) calqueFiltres = L.layerGroup().addTo(map);
+      calqueFiltres.clearLayers();
+      for (const { r, bout, rue, trans, genre, pos } of coupesFiltres) {
+        // Terre-plein : au milieu du carrefour ; rue : à ~8 m du carrefour, sur le tronçon coupé
+        const cs = pos ? [pos] : bout === 'a' ? r[T.COORDS] : r[T.COORDS].slice().reverse();
+        let reste = 8, p = cs[0];
+        for (let i = 1; i < cs.length; i++) {
+          const d = lengthKm([cs[i - 1], cs[i]]) * 1000;
+          if (d >= reste) { const k = reste / d; p = [cs[i - 1][0] + (cs[i][0] - cs[i - 1][0]) * k, cs[i - 1][1] + (cs[i][1] - cs[i - 1][1]) * k]; break; }
+          reste -= d; p = cs[i];
+        }
+        L.marker([p[1], p[0]], { pane: 'fleches', keyboard: false, icon: L.divIcon({ className: 'su-filtre', html: '<span></span>', iconSize: [12, 12] }) })
+          .bindTooltip('Filtre modal (ajouté à la main) : ' + esc(nomCourt(rue)) + ' / ' + esc(nomCourt(trans)) +
+            (genre === 'terre-plein' ? ', dans le terre-plein (on ne traverse pas ; virage à droite permis)' : ''), { direction: 'top', offset: [0, -6] })
+          .addTo(calqueFiltres);
+      }
+    }
     // Filtres modaux connus (la Géobase ne les a pas ; donnés par Gabriel ; FILTRES_MODAUX dans le script)
-    const FILTRES_MODAUX = [['Rue Saint-André', 'Boulevard Saint-Joseph'], ['Rue de Mentana', 'Boulevard Saint-Joseph'],
-      ['Rue De Brébeuf', 'Boulevard Saint-Joseph'], ['Rue Clark', 'Boulevard Saint-Joseph']];
+    // Genre « rue » : la rue est coupée au carrefour ; « terre-plein » : on ne traverse pas la transversale, mais on y
+    // arrive et on y tourne à droite. Le calcul ne traverse jamais une artère : un filtre de terre-plein est seulement montré.
+    const FILTRES_MODAUX = [['Rue Saint-André', 'Boulevard Saint-Joseph', 'terre-plein'], ['Rue de Mentana', 'Boulevard Saint-Joseph', 'terre-plein'],
+      ['Rue De Brébeuf', 'Boulevard Saint-Joseph', 'terre-plein'], ['Rue Clark', 'Boulevard Saint-Joseph', 'terre-plein']];
     const estPietonne = r => state.mrPieton && r[T.PIETON] === 1;
     const estRuelle = r => r[T.CLASSE] === 0 && state.ruelles.has(nomDe(r));
     let data = null, noms = [];
@@ -905,7 +947,7 @@
       const c = r[T.CLASSE], s = r._s;
       if (estPietonne(r)) return 'pieton';
       if (estRuelle(r)) return 'ruelle';
-      if (c === 0) return s === 1 ? 'rouge' : s === 0 ? 'vert' : s === 3 ? 'orange' : 'gris';
+      if (c === 0) return s === 1 ? 'rouge' : s === 0 ? 'vert' : s === 3 ? 'orange' : s === 4 ? 'partiel' : s === 5 ? 'partielDS' : 'gris';
       if (c === 7 || c === 8) return 'principale';
       if (c === 6) return 'secondaire';
       if (c === 5) return estArtere(r) ? 'promue' : 'collectrice';
@@ -1149,6 +1191,7 @@
           return d < Math.PI / 2;    // angle doublé : π/2 = 45° d'écart réel
         };
         const trav = new Map();   // rangée -> [[X, Y], ...]
+        const pleinement = new Set();   // rangées traversantes sans passer par une porte à virage à droite seulement
         for (const x of nomsCell) for (const y of nomsCell) {
           if (x === y) continue;
           if (state.paralleles && !paralleles(x, y)) continue;
@@ -1156,8 +1199,6 @@
           const entrees = new Set([...portesArt].filter(n => arteresAu.get(n).has(x) && !arteresAu.get(n).has(y)));
           const sorties = new Set([...portesArt].filter(n => arteresAu.get(n).has(y) && !arteresAu.get(n).has(x)));
           if (!entrees.size || !sorties.size) continue;
-          const avant = parcourir(entrees, sortants, portes);
-          if (![...sorties].some(n => avant.has(n))) continue;
           const marquer = r => {
             if (!trav.has(r)) trav.set(r, []);
             const l = trav.get(r);
@@ -1168,19 +1209,32 @@
           // ap[f][i] = virages minimaux de l'arc i jusqu'à une sortie (f = 1 : un carrefour est traversé).
           // L'arc compte si av + ap ≤ max (sans limite : Infinity, même résultat que parcourir()).
           // Parcours corrigeables : il faut en plus traverser un carrefour avant ou après l'arc.
-          const av = virages(arcs, sortantsI, u => entrees.has(u), u => portes.has(u), carrefours, 0, 1);
-          const ap = virages(arcs, entrantsI, v => sorties.has(v), v => portes.has(v), carrefours, 1, 0);
           const max = state.virages === null ? Infinity : state.virages;
-          arcs.forEach(([, , r], i) => {
-            const v = state.corrigeables
+          // Arcs sur un parcours de ces entrées à ces sorties (tableau de booléens)
+          const arcsSur = (E, S) => {
+            if (!E.size || !S.size) return null;
+            const avant = parcourir(E, sortants, portes);
+            if (![...S].some(n => avant.has(n))) return null;
+            const av = virages(arcs, sortantsI, u => E.has(u), u => portes.has(u), carrefours, 0, 1);
+            const ap = virages(arcs, entrantsI, v => S.has(v), v => portes.has(v), carrefours, 1, 0);
+            return arcs.map((_, i) => (state.corrigeables
               ? Math.min(av[1][i] + Math.min(ap[0][i], ap[1][i]), av[0][i] + ap[1][i])
-              : Math.min(av[0][i], av[1][i]) + Math.min(ap[0][i], ap[1][i]);
-            if (v <= max) marquer(r);
+              : Math.min(av[0][i], av[1][i]) + Math.min(ap[0][i], ap[1][i])) <= max);
+          };
+          const sur = arcsSur(entrees, sorties);
+          if (!sur) continue;
+          // Sans les portes à virage à droite seulement : ce qui reste traversant l'est pleinement (sinon : partiel)
+          const aDroite = [...entrees, ...sorties].some(n => portesDroite.has(n));
+          const libre = !aDroite ? sur : arcsSur(new Set([...entrees].filter(n => !portesDroite.has(n))), new Set([...sorties].filter(n => !portesDroite.has(n))));
+          arcs.forEach(([, , r], i) => {
+            if (sur[i]) marquer(r);
+            if (libre && libre[i]) pleinement.add(r);
           });
         }
         for (const r of membres) {
           const l = trav.get(r) || [];
-          r._s = r[T.UNIQUE] ? (l.length ? 1 : 0) : (l.length ? 3 : 2);
+          // 0/1 sens unique sans/avec parcours traversant, 2/3 double sens, 4/5 partiel (virage à droite seulement)
+          r._s = !l.length ? (r[T.UNIQUE] ? 0 : 2) : pleinement.has(r) ? (r[T.UNIQUE] ? 1 : 3) : (r[T.UNIQUE] ? 4 : 5);
           r._p = l.slice(0, MAX_PAIRES); r._n = l.length;
         }
       }
@@ -1210,7 +1264,7 @@
       layer = L.layerGroup();
       if (state.vue === 'cellules') { renderCellules(); return; }
       // Ordre de dessin : contexte d'abord, rouges et verts au-dessus
-      const order = { autre: 0, ruelle: 0, gris: 1, pieton: 2, collectrice: 2, promue: 3, secondaire: 3, principale: 4, orange: 5, vert: 6, rouge: 7 };
+      const order = { autre: 0, ruelle: 0, gris: 1, pieton: 2, collectrice: 2, promue: 3, secondaire: 3, principale: 4, orange: 5, partielDS: 5, vert: 6, partiel: 6.5, rouge: 7 };
       const rows = data.troncons.filter(r => r[T.PLATEAU]).sort((a, b) => order[catOf(a)] - order[catOf(b)]);
       rows.forEach(r => {
         const cat = catOf(r);
@@ -1250,14 +1304,15 @@
       const cells = new Map();
       for (const r of data.troncons) {
         if (r._s === -1 || !r[T.PLATEAU] || r[T.CLASSE] !== 0 || exclue(r._c)) continue;
-        if (!cells.has(r._c)) cells.set(r._c, { id: r._c, km: [0, 0, 0, 0], trav: false });
+        if (!cells.has(r._c)) cells.set(r._c, { id: r._c, km: [0, 0, 0, 0, 0, 0], trav: false });
         const c = cells.get(r._c);
         c.km[r._s] += r._km;
-        if (r._s === 1 || r._s === 3) c.trav = true;
+        if (r._s !== 0 && r._s !== 2) c.trav = true;
       }
+      // Part des sens uniques en vert : un sens unique partiel compte à moitié
       for (const c of cells.values()) {
-        const su = c.km[0] + c.km[1];
-        c.part = su > 0 ? c.km[0] / su : null;
+        const su = c.km[0] + c.km[1] + c.km[4];
+        c.part = su > 0 ? (c.km[0] + c.km[4] / 2) / su : null;
       }
       return cells;
     }
@@ -1423,7 +1478,8 @@
       const html = '<span class="gf-pop-drag" aria-hidden="true"></span><div class="gf-pop-eyebrow" style="color:' + teinte(c.part) + '">Cellule</div>' +
         '<h3 class="gf-pop-name">' + (c.part === null ? 'Aucun sens unique local' : pf.format(c.part * 100) + ' % des sens uniques en vert') + '</h3>' +
         ligne('Sens uniques verts', km(c.km[0])) + ligne('Sens uniques rouges', km(c.km[1])) +
-        ligne('Double sens', km(c.km[2] + c.km[3])) +
+        (c.km[4] ? ligne('Sens uniques partiels (comptés à moitié)', km(c.km[4])) : '') +
+        ligne('Double sens', km(c.km[2] + c.km[3] + c.km[5])) +
         ligne('Parcours traversant', c.trav ? 'oui' : 'non') +
         ligne('Nom', '<b>' + esc(nomCellule(c.id)) + '</b>') +
         (nc && nc.nom !== nc.auto ? ligne('Artères', nc.autos.map(esc).join('<br>')) : '') +
@@ -1491,6 +1547,7 @@
         html += '<p class="gf-pop-note">' + (estRuelle(r) ? 'Rue locale comptée comme une ruelle (réglage du panneau) : elle ne sert pas de passage dans le calcul et n\'est pas comptée.' : estPietonne(r) ? 'Scénario piéton : ce tronçon est fermé aux autos. On peut seulement le traverser du nord au sud aux carrefours.' : c === 5 && !estArtere(r) ? 'Collectrice : elle fait partie de sa cellule. On peut la traverser tout droit, mais un parcours qui y tourne s\'arrête (c\'est une sortie vers le réseau supérieur).' : c === 5 ? 'Collectrice comptée comme artère (réglage du panneau) : elle délimite les cellules et compte comme entrée ou sortie d\'un parcours traversant.' : c >= 6 && c <= 8 ? 'Artère : elle délimite les cellules.' : 'Voie qui ne sert pas de passage dans l\'analyse.') + '</p>';
       } else {
         const paires = r._p, total = r._n;
+        if (s === 4 || s === 5) html += '<p class="gf-pop-note"><b>Parcours partiel</b> : il n\'est traversant qu\'en entrant ou en sortant par une rue où l\'on ne peut que tourner à droite (filtre dans le terre-plein de l\'artère), donc seulement pour les autos qui viennent d\'un côté. Il compte à moitié dans la part de sens uniques verts de la cellule.</p>';
         if (paires.length) {
           html += '<p class="gf-pop-note">Ce tronçon fait partie d\'un parcours en auto qui permet, par les rues locales, de passer d\'une artère à une autre&nbsp;:</p><ul class="gf-pop-list">' +
             paires.map(([x, y]) => '<li>de <b>' + esc(x) + '</b> à <b>' + esc(y) + '</b></li>').join('') + '</ul>' +
@@ -1559,7 +1616,7 @@
         if (s === -1 || !r[T.PLATEAU] || exclue(r._c)) continue;   // rues isolées, hors indicateur : pas une cellule
         const id = r._c;
         const c = cells.get(id) || { n: 0, trav: false };
-        c.n++; if (s === 1 || s === 3) c.trav = true;
+        c.n++; if (s === 1 || s === 3 || s === 4 || s === 5) c.trav = true;
         cells.set(id, c);
       }
       return cells;
@@ -1572,26 +1629,29 @@
     function renderStats() {
       const cells = cellStats();
       const total = cells.size, trav = [...cells.values()].filter(c => c.trav).length, sans = total - trav;
-      const cnt = { rouge: 0, vert: 0, orange: 0, gris: 0 }, km = { rouge: 0, vert: 0, orange: 0, gris: 0 };
+      const cnt = { rouge: 0, vert: 0, orange: 0, gris: 0, partiel: 0, partielDS: 0 }, km = { rouge: 0, vert: 0, orange: 0, gris: 0, partiel: 0, partielDS: 0 };
       for (const r of data.troncons) {
         if (r[T.CLASSE] !== 0 || !r[T.PLATEAU] || r._s === -1) continue;   // ruelles exclues
         const k = catOf(r); cnt[k]++; km[k] += r._km;
       }
-      const uniques = cnt.rouge + cnt.vert;
+      const uniques = cnt.rouge + cnt.vert + cnt.partiel;
       const pct = (a, b) => b ? pf.format(a / b * 100) + ' %' : '–';
       let html = '<div class="su-big"><b>' + pct(sans, total) + '</b><span>des cellules n\'ont aucun parcours traversant</span></div>' +
         '<p class="gf-stats-total">' + nf.format(sans) + ' cellule' + (sans > 1 ? 's' : '') + ' sur ' + nf.format(total) +
         '. Les ' + nf.format(trav) + ' autres permettent de passer d\'une artère à une autre artère' + (state.paralleles ? ' parallèle' : '') + ' par les rues locales.</p>' +
         '<div class="gf-bar" role="img" aria-label="Sens uniques locaux : ' + pct(cnt.rouge, uniques) + ' sur un parcours traversant">' +
         '<span style="width:' + (uniques ? cnt.rouge / uniques * 100 : 0) + '%;background:' + CATS.rouge.color + '"></span>' +
+        '<span style="width:' + (uniques ? cnt.partiel / uniques * 100 : 0) + '%;background:' + CATS.partiel.color + '"></span>' +
         '<span style="width:' + (uniques ? cnt.vert / uniques * 100 : 0) + '%;background:' + CATS.vert.color + '"></span></div>';
-      ['rouge', 'vert', 'orange', 'gris'].forEach(k => {
-        const base = (k === 'rouge' || k === 'vert') ? uniques : (cnt.orange + cnt.gris);
+      ['rouge', 'partiel', 'vert', 'orange', 'partielDS', 'gris'].forEach(k => {
+        if ((k === 'partiel' || k === 'partielDS') && !cnt[k]) return;
+        const su = k === 'rouge' || k === 'vert' || k === 'partiel';
+        const base = su ? uniques : (cnt.orange + cnt.gris + cnt.partielDS);
         html += '<div class="gf-stat-row"><span class="gf-legend-dot" style="background:' + CATS[k].color + '"></span>' +
           '<span class="gf-stat-label">' + CATS[k].label + '</span>' +
           '<span class="gf-stat-pct">' + nf.format(cnt[k]) + '</span>' +
           '<span class="gf-stat-sub">tronçon' + (cnt[k] > 1 ? 's' : '') + ' · ' + kmf.format(km[k]) + ' km · ' + pct(cnt[k], base) +
-          ((k === 'rouge' || k === 'vert') ? ' des sens uniques locaux' : ' des rues locales à double sens') + '</span></div>';
+          (su ? ' des sens uniques locaux' : ' des rues locales à double sens') + '</span></div>';
       });
       document.getElementById('gfStats').innerHTML = html;
       document.getElementById('gfSummaryRow').innerHTML =
@@ -1741,7 +1801,7 @@
       state.focusCell = c.id; render();
     }
     function recalculer() {
-      appliquerArteresLocales(); analyser(); nommerCellules(); versionCalcul++; render(); renderStats(); renderListeCellules();
+      appliquerArteresLocales(); dessinerFiltres(); analyser(); nommerCellules(); versionCalcul++; render(); renderStats(); renderListeCellules();
     }
     document.getElementById('suGradient').style.background =
       'linear-gradient(to right, ' + [0, 0.25, 0.5, 0.75, 1].map(teinte).join(', ') + ')';

@@ -23,7 +23,7 @@ Source :
 
 Règle (choix de Gabriel, détails dans ../NOTES.md) :
   - « Artères » = CLASSE 6 à 8, plus les collectrices cochées dans la page
-    (aucune par défaut). Une voie est identifiée par TYP_VOIE + LIE_VOIE + NOM_VOIE
+    (DEFAUT_COMME_ARTERES : le bout de collectrice de Saint-Joseph à l'ouest de Parc). Une voie est identifiée par TYP_VOIE + LIE_VOIE + NOM_VOIE
     (sans DIR_VOIE : « Mont-Royal Est » et « Ouest » sont la même avenue).
   - Cellule = îlot délimité par les artères seulement : rues locales et
     autres collectrices reliées par des nœuds qui ne touchent pas une artère.
@@ -54,9 +54,17 @@ Règle (choix de Gabriel, détails dans ../NOTES.md) :
     locales (CLASSE 0).
   - Artères comptées comme collectrices (ARTERES_COLLECTRICES_POSSIBLES ; cases
     dans la page, cochées par défaut pour DEFAUT_ARTERES_COLLECTRICES) :
-    Saint-Grégoire. Ses tronçons d'artère
-    deviennent des collectrices : elle ne délimite plus les cellules, on la
-    traverse tout droit. L'export prend les cellules avec cette option aussi.
+    Saint-Grégoire (décochée), et des portions de l'avenue du Parc
+    (PORTIONS_COLLECTRICES, troncons_de_portion() : entre des Pins et
+    Sherbrooke, entre Van Horne et Côte-Sainte-Catherine ; cochées). Leurs
+    tronçons d'artère deviennent des collectrices : elles ne délimitent plus
+    les cellules, on les traverse tout droit. L'export prend les cellules
+    avec ces options aussi.
+  - Filtres modaux connus (FILTRES_MODAUX, appliquer_filtres() ; la Géobase
+    n'en a pas) : genre « rue », la rue est coupée au carrefour ; genre
+    « terre-plein » (Saint-Joseph : Saint-André, Mentana, De Brébeuf, Clark),
+    on ne traverse pas l'artère mais on y tourne à droite : le carrefour
+    reste une porte, à virage à droite seulement (portes_terre_plein()).
   - Paires artérielles (DEFAUT_PAIRES, case dans la page) : une paire (X, Y)
     de PAIRES_ARTERIELLES (une artère vers le nord, l'autre vers le sud)
     n'est pas examinée : une rue locale peut les relier d'est en ouest.
@@ -70,13 +78,19 @@ Règle (choix de Gabriel, détails dans ../NOTES.md) :
     fois ; entrer et ressortir ne comptent pas. Un arc compte si virages
     minimaux depuis une entrée jusqu'à lui + virages minimaux de lui jusqu'à
     une sortie ≤ maximum.
+  - Parcours partiels : pour chaque paire, le calcul est refait sans les
+    portes à virage à droite seulement ; un arc traversant seulement avec
+    elles est « partiel » (compte à moitié dans la part de verts).
   - Statut d'une rue locale : 0 sens unique sans parcours traversant (vert),
     1 sens unique traversant (rouge), 2 double sens sans parcours
-    traversant, 3 double sens traversant.
+    traversant, 3 double sens traversant, 4 / 5 sens unique / double sens
+    partiel (jaune).
 
 Noms des cellules (noms_automatiques(), même méthode que la page) : les
   cellules qui portent le même nom choisi dans data/noms-cellules.json sont
-  regroupées, pour le compte et l'affichage.
+  regroupées, pour le compte et l'affichage ; « fusions » (noms_affiches())
+  et « hors_indicateur » (cellules gardées mais non évaluées : totaux()) du
+  même fichier.
 
 Rues isolées : une cellule qui ne contient qu'une seule rue locale (un seul
   nom) est regroupée avec les autres sous ISOLEES, qui ne compte pas comme
@@ -153,10 +167,15 @@ PORTIONS_COLLECTRICES = {"Avenue du Parc (entre des Pins et Sherbrooke)": ("Aven
 ARTERES_COLLECTRICES_POSSIBLES = {"Rue Saint-Grégoire"} | set(PORTIONS_COLLECTRICES)
 DEFAUT_ARTERES_COLLECTRICES = {"Avenue du Parc (entre des Pins et Sherbrooke)", "Avenue du Parc (entre Van Horne et Côte-Sainte-Catherine)"}   # cochées par défaut (choix de Gabriel ; Saint-Grégoire redevenue artère le 13 novembre 2026)
 DEFAUT_PAIRES = True           # exception des paires artérielles (case cochée par défaut)
-# Filtres modaux connus (la Géobase ne les a pas ; donnés par Gabriel le 13 novembre 2026) : (rue, transversale).
-# La rue est coupée au carrefour, des deux côtés : elle n'y entre ni n'en sort, et on n'y traverse pas.
-FILTRES_MODAUX = [("Rue Saint-André", "Boulevard Saint-Joseph"), ("Rue de Mentana", "Boulevard Saint-Joseph"),
-                  ("Rue De Brébeuf", "Boulevard Saint-Joseph"), ("Rue Clark", "Boulevard Saint-Joseph")]
+# Filtres modaux connus (la Géobase ne les a pas ; donnés par Gabriel le 13 novembre 2026) : (rue, transversale, genre).
+# Genre « rue » : la rue est coupée au carrefour (elle n'y entre ni n'en sort). Genre « terre-plein » : filtre dans le
+# terre-plein de la transversale ; on ne la traverse pas, mais on y arrive et on y tourne à droite. Le calcul ne fait
+# jamais traverser une artère (chaque rue y est une porte) : un filtre de terre-plein ne change donc rien au calcul
+# (il est montré sur la carte).
+FILTRES_MODAUX = [("Rue Saint-André", "Boulevard Saint-Joseph", "terre-plein"),
+                  ("Rue de Mentana", "Boulevard Saint-Joseph", "terre-plein"),
+                  ("Rue De Brébeuf", "Boulevard Saint-Joseph", "terre-plein"),
+                  ("Rue Clark", "Boulevard Saint-Joseph", "terre-plein")]
 DEFAUT_FILTRES = True          # case cochée par défaut
 # Paires artérielles (une vers le nord, l'autre vers le sud) : une rue locale peut les relier
 PAIRES_ARTERIELLES = [("Avenue De Lorimier", "Avenue Papineau"), ("Boulevard Saint-Laurent", "Rue Saint-Urbain"),
@@ -255,7 +274,9 @@ def appliquer_filtres(troncons, filtres=FILTRES_MODAUX):
     for t in troncons:
         noeuds[t["voie"]].update((t["a"], t["b"]))
     coupes = {}
-    for rue, trans in filtres:
+    for rue, trans, genre in filtres:
+        if genre != "rue":
+            continue   # terre-plein : sans effet sur le calcul (voir FILTRES_MODAUX)
         com = noeuds[rue] & noeuds[trans]
         for t in troncons:
             if t["voie"] == rue and (t["a"] in com or t["b"] in com):
@@ -267,6 +288,16 @@ def appliquer_filtres(troncons, filtres=FILTRES_MODAUX):
         return dict(t, a=("filtre", t["id"], "a") if t["a"] in com else t["a"],
                     b=("filtre", t["id"], "b") if t["b"] in com else t["b"])
     return [coupe(t) for t in troncons]
+
+
+def portes_terre_plein(troncons, filtres=FILTRES_MODAUX):
+    """Nœuds où une rue rejoint une artère dont le terre-plein a un filtre : on n'y entre et n'en sort qu'en
+    tournant à droite (seulement depuis un sens de l'artère) ; un parcours qui n'est traversant que par eux est
+    « partiel »."""
+    noeuds = collections.defaultdict(set)
+    for t in troncons:
+        noeuds[t["voie"]].update((t["a"], t["b"]))
+    return frozenset(n for rue, trans, genre in filtres if genre == "terre-plein" for n in noeuds[rue] & noeuds[trans])
 
 
 def comme_locales(troncons, noms=DEFAUT_ARTERES_LOCALES):
@@ -379,8 +410,11 @@ def virages(arcs, suivants, est_depart, portes, carrefours, c_depart, c_suivant)
 
 
 def analyser(troncons, comme_arteres, paralleles=DEFAUT_PARALLELES, max_virages=DEFAUT_VIRAGES,
-             paires_arterielles=DEFAUT_PAIRES, liens=(), corrigeables=DEFAUT_CORRIGEABLES):
-    """{index: (statut, cellule, paires limitées, nombre de paires)} ; statut -1 pour les collectrices de cellule."""
+             paires_arterielles=DEFAUT_PAIRES, liens=(), corrigeables=DEFAUT_CORRIGEABLES, portes_droite=frozenset()):
+    """{index: (statut, cellule, paires limitées, nombre de paires)} ; statut -1 pour les collectrices de cellule.
+    Statuts : 0/1 sens unique sans/avec parcours traversant, 2/3 double sens sans/avec, 4/5 sens unique/double sens
+    sur un parcours « partiel » : traversant seulement par une porte de `portes_droite` (virage à droite
+    seulement, ex. filtre dans le terre-plein de l'artère) ; refait sans ces portes, il ne l'est plus."""
     portes = set()
     arteres_au = collections.defaultdict(set)
     # Orientation des artères à chaque nœud, en angle doublé (les deux sens d'une droite s'additionnent)
@@ -460,6 +494,7 @@ def analyser(troncons, comme_arteres, paralleles=DEFAUT_PARALLELES, max_virages=
             return min(d, 2 * math.pi - d) < math.pi / 2   # angle doublé : π/2 = 45° d'écart réel
 
         traversant = collections.defaultdict(list)
+        pleinement = set()
         for x in noms:
             for y in noms:
                 if x == y or (paralleles and not sont_paralleles(x, y)):
@@ -473,20 +508,34 @@ def analyser(troncons, comme_arteres, paralleles=DEFAUT_PARALLELES, max_virages=
                 avant = parcourir(entrees, sortants, portes)
                 if not avant & sorties:
                     continue
-                av = virages(arcs, sortants_i, entrees.__contains__, portes, carrefours, 0, 1)
-                ap = virages(arcs, entrants_i, sorties.__contains__, portes, carrefours, 1, 0)
                 limite = math.inf if max_virages is None else max_virages
-                if corrigeables:   # il faut traverser un carrefour avant ou après l'arc
-                    sur = [min(av[1][k] + min(ap[0][k], ap[1][k]), av[0][k] + ap[1][k]) <= limite
-                           for k in range(len(arcs))]
-                else:
-                    sur = [min(av[0][k], av[1][k]) + min(ap[0][k], ap[1][k]) <= limite for k in range(len(arcs))]
-                for (u, v, i, _), ok in zip(arcs, sur):
+
+                def arcs_sur(entrees, sorties):
+                    if not entrees or not sorties or not parcourir(entrees, sortants, portes) & sorties:
+                        return [False] * len(arcs)
+                    av = virages(arcs, sortants_i, entrees.__contains__, portes, carrefours, 0, 1)
+                    ap = virages(arcs, entrants_i, sorties.__contains__, portes, carrefours, 1, 0)
+                    if corrigeables:   # il faut traverser un carrefour avant ou après l'arc
+                        return [min(av[1][k] + min(ap[0][k], ap[1][k]), av[0][k] + ap[1][k]) <= limite
+                                for k in range(len(arcs))]
+                    return [min(av[0][k], av[1][k]) + min(ap[0][k], ap[1][k]) <= limite for k in range(len(arcs))]
+                sur = arcs_sur(entrees, sorties)
+                # Sans les portes à virage à droite seulement : ce qui reste traversant l'est pleinement
+                libre = sur if not (entrees | sorties) & portes_droite else arcs_sur(entrees - portes_droite, sorties - portes_droite)
+                for (u, v, i, _), ok, ok_libre in zip(arcs, sur, libre):
                     if ok and (x, y) not in traversant[i]:
                         traversant[i].append((x, y))
+                    if ok_libre:
+                        pleinement.add(i)
         for i in membres:
             sur = bool(traversant.get(i))
-            statut = (1 if sur else 0) if troncons[i]["sens"] != 0 else (3 if sur else 2)
+            unique = troncons[i]["sens"] != 0
+            if not sur:
+                statut = 0 if unique else 2
+            elif i in pleinement:
+                statut = 1 if unique else 3
+            else:   # traversant seulement par une porte à virage à droite seulement
+                statut = 4 if unique else 5
             paires = traversant.get(i, [])
             resultat[i] = (statut, num, paires[:MAX_PAIRES], len(paires))
     return resultat
@@ -651,12 +700,14 @@ def analyse_par_defaut(liste, pieton=False, collectrices=DEFAUT_ARTERES_COLLECTR
     analyse, noms des cellules et regroupement des cellules de même nom.
     Rend (tronçons analysés, résultat d'analyser() regroupé, {cellule: (nom automatique, nom affiché)})."""
     liste = comme_collectrices(comme_locales(liste), collectrices)
+    portes_droite = frozenset()
     if filtres:
         liste = appliquer_filtres(liste)
+        portes_droite = portes_terre_plein(liste)
     garde = [t for t in liste if not (t["classe"] == LOCALE and t["voie"] in DEFAUT_RUELLES)
              and not (pieton and t.get("pieton"))]
     liens = liens_cellules(liste)
-    res = analyser(garde, DEFAUT_COMME_ARTERES, liens=liens)
+    res = analyser(garde, DEFAUT_COMME_ARTERES, liens=liens, portes_droite=portes_droite)
     autos = noms_automatiques(garde, res, DEFAUT_COMME_ARTERES, liens)
     choisis, fusions = charger_noms_choisis(), charger_fusions()
     res = regrouper_par_nom(res, autos, choisis, fusions)
@@ -690,7 +741,7 @@ def totaux(troncons, resultat, noms=None):
         if r[1] == ISOLEES or r[1] in exclues:   # rues isolées, hors indicateur : tronçons comptés, pas la cellule
             continue
         cells.add(r[1])
-        if r[0] in (1, 3):
+        if r[0] in (1, 3, 4, 5):   # partiel compris : la cellule n'est pas « sans parcours traversant »
             traversantes.add(r[1])
     return {
         "troncons_locaux_par_statut": {str(s): n for s, n in sorted(statuts.items())},

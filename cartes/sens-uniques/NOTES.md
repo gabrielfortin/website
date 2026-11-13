@@ -10,6 +10,42 @@ proposé : la part des cellules sans parcours traversant.
 Plateau seulement (choix de Gabriel). Le calcul tient compte des cellules qui
 débordent de l'arrondissement.
 
+## En bref : le réglage par défaut (13 novembre 2026)
+
+Les règles sont numérotées plus bas (1 à 23), dans l'ordre où elles ont été
+ajoutées ; certaines ont été remplacées. Ce qui s'applique aujourd'hui :
+
+| Règle | Où | Réglage |
+|---|---|---|
+| Cellule = îlot délimité par les artères (CLASSE 6 à 8) | `cellules()` / `analyser()` | — |
+| Rouge = parcours d'une artère à une autre **parallèle**, par les rues locales | règle 10 | case cochée |
+| Au plus **3 virages** (changement de rue locale) | règle 11 | curseur |
+| Il faut traverser un **carrefour où l'on pourrait détourner** le parcours | règle 16 (« corrigeables ») | case cochée |
+| **Paires artérielles** (De Lorimier-Papineau, Saint-Laurent-Saint-Urbain, Frontenac-D'Iberville) : les relier ne rend pas rouge | règle 12 | case cochée |
+| Jeanne-Mance et Léo-Pariseau = rues locales | règle 13 | cases cochées |
+| Avenue du Parc, entre des Pins et Sherbrooke et entre Van Horne et Côte-Sainte-Catherine = collectrices (Milton-Parc d'un seul tenant ; Limite Outremont partagée) | règles 18 et 21 | cases cochées |
+| Saint-Grégoire = artère | règle 19 | case décochée |
+| Bout de collectrice de Saint-Joseph à l'ouest de Parc = artère | règle 21 | case cochée |
+| 11 rues comptées comme ruelles (dont Saint-Christophe, Lavers) | règles 8 et 15 | cases cochées |
+| Filtres modaux connus (Saint-André, Mentana, De Brébeuf, Clark : terre-plein de Saint-Joseph) | règle 22 | case cochée |
+| **Parcours partiels** (virage à droite seulement) en jaune, comptés à moitié | règle 23 | suit les filtres |
+| Rues isolées et Parc Ludger Duvernay hors indicateur ; cellules de même nom regroupées ; fusions de noms | règles 14, 17, 20 et « Noms des cellules » | `noms-cellules.json` |
+
+Statuts d'une rue locale (page `r._s`, script et `securite-plateau`) :
+0 / 1 sens unique sans / avec parcours traversant, 2 / 3 double sens sans /
+avec, 4 / 5 sens unique / double sens **partiel**.
+
+`data/noms-cellules.json` : `noms` (nom automatique → nom choisi ; deux
+cellules du même nom sont regroupées), `fusions` (nom → autre nom, appliqué
+seulement si une cellule porte déjà l'autre nom : sert aux options qui
+fusionnent des cellules) et `hors_indicateur` (ensembles gardés mais non
+évalués). Une règle qui change les artères d'une cellule change son nom
+automatique : ajouter la nouvelle clé (vérifier la liste du panneau).
+
+Toute règle est écrite **deux fois**, dans `analyser()` (page) et dans le
+script, et contrôlée : le script vérifie l'export, et la page doit afficher
+les chiffres de `resume.json` (vérifié dans un navigateur sans écran).
+
 ## Fichiers
 
 - `index.html` : la carte. Le calcul des parcours se fait **dans le
@@ -298,8 +334,14 @@ artérielles (9 ruelles, sans exception) :
    la Géobase n'en a pas) : `FILTRES_MODAUX` et `appliquer_filtres()` dans
    le script, `FILTRES_MODAUX` et la fin d'`appliquerArteresLocales()` dans
    la page. Au boulevard Saint-Joseph : Saint-André, Mentana, De Brébeuf et
-   Clark. La rue est coupée au carrefour, des deux côtés (hypothèse) : le
-   bout du tronçon devient un nœud à lui seul (nœud négatif dans la page).
+   Clark, **dans le terre-plein** (précision de Gabriel) : on ne traverse
+   pas Saint-Joseph, mais on y arrive et on y tourne à droite. Le calcul ne
+   fait jamais traverser une artère (chaque rue y est une porte) : ces
+   filtres ne changent rien au calcul, ils sont montrés au milieu du
+   carrefour. Le genre « rue » (rue coupée au carrefour : le bout du tronçon
+   devient un nœud à lui seul, négatif dans la page) reste prêt pour d'autres
+   filtres. Ce qui suit décrit l'essai du genre « rue » à Saint-Joseph,
+   abandonné :
    Deux morceaux ne touchent plus Saint-Joseph et changent de nom
    automatique : « Clark (Saint-Laurent / Saint-Urbain) » → Mile-End ouest,
    « Saint-Laurent / des Pins / Saint-Urbain » → Parc Jeanne-Mance
@@ -308,6 +350,23 @@ artérielles (9 ruelles, sans exception) :
    Fontaine 67 → 77 %. À vérifier : avec les sens de la Géobase, des bouts à
    sens unique de ces rues finissent sur le filtre (une auto ne peut plus en
    sortir) ; soit le filtre n'est que d'un côté, soit les sens ont changé.
+   Sur la carte (les deux vues) : une petite pastille grise sur chaque bout
+   coupé, à 8 m du carrefour, avec une info-bulle (`dessinerFiltres()`).
+
+23. **Parcours partiels** (13 novembre 2026, choix de Gabriel : compter à
+   moitié) : une porte où une rue rejoint une artère dont le terre-plein a un
+   filtre (Saint-André, Mentana, De Brébeuf, Clark au boulevard Saint-Joseph)
+   ne permet que le virage à droite, donc seulement aux autos qui viennent
+   d'un côté. Pour chaque paire d'artères, le calcul est refait sans ces
+   portes (`portes_terre_plein()`, paramètre `portes_droite` d'`analyser()` ;
+   `portesDroite` dans la page) : ce qui reste traversant est rouge (1 / 3),
+   ce qui ne l'était que par elles est **partiel** (statuts 4 / 5, en jaune ;
+   l'orange sert déjà aux double sens traversants). Un sens unique partiel
+   compte à moitié dans la part de sens uniques verts d'une cellule ; une
+   cellule avec du partiel n'est pas « sans parcours traversant ». Effet :
+   225 rouges + 19 partiels (au lieu de 244 rouges), 5 double sens partiels ;
+   Petit Laurier 56 → 64 %, Parc La Fontaine 67 → 72 %. Partiels : Saint-André,
+   Mentana, Boucher, Bousquet, Resther.
 
 Indicateur : part des cellules (qui ont au moins une rue locale au Plateau)
 dont aucune rue locale du Plateau n'est de statut 1 ou 3.
@@ -328,7 +387,7 @@ un parcours d'artère à artère par des rues locales.
 
 | Réglage | Cellules (sans parcours traversant) | Sens uniques rouges / verts | Double sens traversants / non |
 |---|---|---|---|
-| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, Parc (des Pins – Sherbrooke, Van Horne – Côte-Sainte-Catherine) collectrice, Saint-Joseph (bout de collectrice) artère, Saint-Grégoire artère, raccords, rues isolées et Parc Ludger Duvernay hors indicateur, cellules de même nom regroupées, parcours corrigeables, filtres modaux connus, 11 ruelles (`resume.json`) | 15 (6, 40 %) | 225 / 374 | 53 / 101 |
+| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, Parc (des Pins – Sherbrooke, Van Horne – Côte-Sainte-Catherine) collectrice, Saint-Joseph (bout de collectrice) artère, Saint-Grégoire artère, raccords, rues isolées et Parc Ludger Duvernay hors indicateur, cellules de même nom regroupées, parcours corrigeables, filtres modaux connus, 11 ruelles (`resume.json`) | 15 (6, 40 %) | 225 + 19 partiels / 355 | 53 + 5 partiels / 96 |
 | Défaut + Saint-Grégoire collectrice (défaut du 12 au 13 novembre) | 14 (5, 36 %) | 228 / 371 | 63 / 91 |
 | Défaut sans Parc collectrice (avant le 13 novembre) | 15 (5, 33 %) | 228 / 371 | 63 / 91 |
 | Défaut sans Saint-Grégoire collectrice | 18 (7, 39 %) | 247 / 352 | 65 / 89 |
@@ -442,7 +501,9 @@ en dépendent). `plateau` = 1 : tronçon affiché et compté.
 
 - Pas d'interdictions de virage ni d'accès réservés dans la Géobase ; des
   fermetures récentes (saillies, filtres modaux, inversions) peuvent manquer.
-  Un rouge peut être fermé en réalité.
+  Un rouge peut être fermé en réalité. Les filtres modaux connus sont ajoutés
+  à la main (`FILTRES_MODAUX`, règle 22 ; liste à compléter avec Gabriel :
+  pour chacun, rue, transversale et genre « rue » ou « terre-plein »).
 - La Ville avertit que la Géobase n'est pas nécessairement à jour partout.
 - La carte montre les parcours possibles, pas les débits.
 
@@ -461,10 +522,21 @@ maintenant marqués explicitement (`virtuels`). La page, qui lit l'export
 ## Utilisé par securite-plateau
 
 `~/Developer/securite-plateau/scripts/preparer_donnees.py` importe ce script
-et appelle `analyse_par_defaut()` (et `troncons_de_reseau()`) sur
-`data/reseau.json` : tout le réglage par défaut, noms de cellules compris.
-Il vérifie ses totaux contre `resume.json`. Après un changement de règle ou
-de `noms-cellules.json`, relancer aussi ce script-là.
+et appelle `analyse_par_defaut()` (et `troncons_de_reseau()`, `totaux()`,
+`charger_hors_indicateur()`) sur `data/reseau.json` : tout le réglage par
+défaut, noms de cellules compris. Il vérifie ses totaux contre `resume.json`.
+`securite-plateau/scripts/pistes_super_ilots.py` l'importe aussi (filtres
+proposés pour les quartiers prioritaires) ; il applique `comme_locales()`,
+`comme_collectrices()` et `appliquer_filtres()` à tout le réseau avant d'en
+découper des morceaux (une portion de Parc dont les carrefours sont hors du
+morceau resterait sinon une artère). Après un changement de règle ou de
+`noms-cellules.json`, relancer ces deux scripts-là :
+
+```
+cd ~/Developer/securite-plateau
+python3 scripts/preparer_donnees.py
+python3 scripts/pistes_super_ilots.py --filtres --faisceau 20 --json
+```
 
 ## Régénérer les données
 

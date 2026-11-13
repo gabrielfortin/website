@@ -32,19 +32,23 @@
  "filtresModaux": [
   [
    "Rue Saint-André",
-   "Boulevard Saint-Joseph"
+   "Boulevard Saint-Joseph",
+   "terre-plein"
   ],
   [
    "Rue de Mentana",
-   "Boulevard Saint-Joseph"
+   "Boulevard Saint-Joseph",
+   "terre-plein"
   ],
   [
    "Rue De Brébeuf",
-   "Boulevard Saint-Joseph"
+   "Boulevard Saint-Joseph",
+   "terre-plein"
   ],
   [
    "Rue Clark",
-   "Boulevard Saint-Joseph"
+   "Boulevard Saint-Joseph",
+   "terre-plein"
   ]
  ],
  "ruelles": [
