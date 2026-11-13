@@ -583,11 +583,11 @@
       <ul>
         <li><em>Réseau supérieur</em>&nbsp;: collectrices, artères et autoroutes (classes de la Géobase, les mêmes que sur la carte du réseau artériel). Seules les artères (et autoroutes, et les collectrices cochées) comptent comme entrée ou sortie d'un parcours traversant&nbsp;; tourner sur une autre collectrice termine le parcours sans le rendre traversant. On peut toutefois la traverser tout droit, dans le prolongement de la même rue.</li>
         <li><em>Rues isolées</em>&nbsp;: une cellule qui ne contient qu'une seule rue locale (par exemple un bout de rue entre deux artères) ne correspond pas à ce modèle&nbsp;: ces rues sont regroupées sous «&nbsp;Rues isolées&nbsp;», qui ne compte pas comme une cellule. Elles restent colorées et comptées parmi les tronçons.</li>
-        <li><em>Cellule</em>&nbsp;: îlot délimité par les artères seulement. Les voies où l'on ne roule pas (rues piétonnes comme Prince-Arthur, ruelles) relient les rues d'une même cellule, sans servir de passage. Les collectrices qu'il contient en font partie&nbsp;: on peut les traverser tout droit (la rue continue sous le même nom de l'autre côté), mais un parcours qui y tourne s'arrête. Dans le panneau, on peut compter certaines collectrices comme des artères (par exemple la rue Rachel).</li>
+        <li><em>Cellule</em>&nbsp;: îlot délimité par les artères seulement. Les voies où l'on ne roule pas (rues piétonnes comme Prince-Arthur, ruelles) relient les rues d'une même cellule, sans servir de passage. Les collectrices qu'il contient en font partie&nbsp;: on peut les traverser tout droit (la rue continue sous le même nom de l'autre côté), mais un parcours qui y tourne s'arrête. Dans le panneau, on peut compter certaines collectrices comme des artères (par exemple la rue Rachel ; par défaut, le bout du boulevard Saint-Joseph à l'ouest de l'avenue du Parc).</li>
         <li>Une artère est identifiée par son nom (l'avenue du Mont-Royal Est et Ouest comptent comme la même). Entrer et ressortir par la même artère n'est pas un parcours traversant.</li>
         <li><em>Artères parallèles</em>&nbsp;: relier deux artères parallèles est le rôle d'une collectrice, pas d'une rue locale. Une rue locale qui relie une artère est-ouest à une artère nord-sud ne fait que couper le coin, sans vrai raccourci&nbsp;: elle n'est pas comptée comme traversante. L'orientation d'une artère est mesurée là où elle touche la cellule&nbsp;; au Plateau, les artères est-ouest sont orientées à environ 57° et les nord-sud à environ 147° (la grille de Montréal est inclinée). Deux artères sont parallèles si leur écart est de moins de 45°. Cette règle peut être décochée dans le panneau.</li>
         <li><em>Paires artérielles</em>&nbsp;: De Lorimier et Papineau, Saint-Laurent et Saint-Urbain, Frontenac et D'Iberville forment des paires (une artère vers le nord, l'autre vers le sud). Il est normal qu'une rue locale les relie d'est en ouest&nbsp;: un parcours d'une artère à l'autre de la même paire n'est pas compté comme traversant. Cette exception peut être décochée dans le panneau.</li>
-        <li><em>Artères comptées comme collectrices</em>&nbsp;: par défaut, la rue Saint-Grégoire est traitée comme une collectrice&nbsp;: elle ne délimite plus les cellules et on la traverse tout droit. On peut la remettre en artère dans le panneau.</li>
+        <li><em>Artères comptées comme collectrices</em>&nbsp;: par défaut, l'avenue du Parc entre des Pins et Sherbrooke est traitée comme une collectrice&nbsp;: elle ne délimite plus les cellules et on la traverse tout droit. On peut aussi y compter la rue Saint-Grégoire (décochée par défaut) ou remettre Parc en artère, dans le panneau.</li>
         <li><em>Artères comptées comme rues locales</em>&nbsp;: par défaut, la rue Jeanne-Mance et la rue Léo-Pariseau (artères dans la Géobase entre Sherbrooke et des Pins) sont traitées comme des rues locales&nbsp;; on peut les remettre en artères dans le panneau.</li>
         <li><em>Parcours qu'on peut corriger</em>&nbsp;: un parcours traversant ne compte que s'il passe par un carrefour où l'on pourrait le détourner (croisement avec une autre rue locale, ou d'une collectrice, où l'on peut faire sortir les autos). Une rue qui file d'une artère à l'autre sans rien croiser n'a pas de solution par les sens uniques&nbsp;: elle reste verte. Cette règle peut être décochée dans le panneau.</li>
         <li><em>Virages maximaux</em>&nbsp;: un parcours ne compte que s'il change de rue au plus 3 fois (par défaut) entre l'artère d'entrée et l'artère de sortie (entrer et ressortir ne comptent pas). Dans une grille, un zigzag par les rues locales n'est pas plus long qu'un détour par les artères&nbsp;: c'est le nombre de virages et d'arrêts qui le rend improbable. Le curseur du panneau change ce maximum, ou l'enlève.</li>
@@ -673,6 +673,13 @@
     <p class="gf-sidebar-note">Cochée (par défaut), une rue locale peut relier les deux artères d'une paire (une vers le nord, l'autre vers le sud)&nbsp;: De Lorimier et Papineau, Saint-Laurent et Saint-Urbain, Frontenac et D'Iberville. Ces liens est-ouest ne rendent pas rouge.</p>
     <div class="gf-sidebar-list">
       <label class="gf-sidebar-item">
+        <input type="checkbox" id="filtresToggle" checked>
+        <span class="gf-sidebar-label">Filtres modaux connus</span>
+      </label>
+    </div>
+    <p class="gf-sidebar-note">Cochée (par défaut), les filtres modaux que la Géobase n'a pas sont appliqués&nbsp;: au boulevard Saint-Joseph, Saint-André, Mentana, De Brébeuf et Clark. La rue y est coupée&nbsp;: on n'y entre ni n'en sort en auto, et on n'y traverse pas. Liste à compléter.</p>
+    <div class="gf-sidebar-list">
+      <label class="gf-sidebar-item">
         <input type="checkbox" id="corrigeablesToggle" checked>
         <span class="gf-sidebar-label">Seulement les parcours qu'on peut corriger</span>
       </label>
@@ -693,7 +700,7 @@
 
     <div class="gf-sidebar-divider"></div>
     <div class="gf-sidebar-header"><h2>Artères comptées comme collectrices</h2></div>
-    <p class="gf-sidebar-note">Cochée (par défaut), l'artère est traitée comme une collectrice&nbsp;: elle ne délimite plus les cellules, on la traverse tout droit, et en sortir reste acceptable. Avec Saint-Grégoire, le Petit Laurier rejoint la cellule au nord, jusqu'à Rosemont.</p>
+    <p class="gf-sidebar-note">Cochée, l'artère est traitée comme une collectrice&nbsp;: elle ne délimite plus les cellules, on la traverse tout droit, et en sortir reste acceptable. Par défaut, seule l'avenue du Parc est cochée. Avec Saint-Grégoire, le Petit Laurier rejoint la cellule au nord, jusqu'à Rosemont. Avec l'avenue du Parc entre des Pins et Sherbrooke (essai), Milton-Parc est et ouest ne font qu'une cellule.</p>
     <div class="gf-sidebar-list" id="gfArteresCollectrices"></div>
 
     <div class="gf-sidebar-divider"></div>
@@ -703,7 +710,7 @@
 
     <div class="gf-sidebar-divider"></div>
     <div class="gf-sidebar-header"><h2>Collectrices comptées comme artères</h2></div>
-    <p class="gf-sidebar-note">Les artères délimitent les cellules. Une collectrice cochée est traitée comme une artère&nbsp;: elle délimite les cellules et compte comme entrée ou sortie d'un parcours traversant. Le calcul se refait aussitôt.</p>
+    <p class="gf-sidebar-note">Les artères délimitent les cellules. Une collectrice cochée est traitée comme une artère&nbsp;: elle délimite les cellules et compte comme entrée ou sortie d'un parcours traversant. Le calcul se refait aussitôt. Par défaut, le boulevard Saint-Joseph (son bout de collectrice à l'ouest de l'avenue du Parc) : avec l'avenue du Parc collectrice entre Van Horne et Côte-Sainte-Catherine, la limite d'Outremont se partage entre Mile-End ouest, au nord, et Parc Jeanne-Mance, au sud (essai).</p>
     <div class="gf-sidebar-list" id="gfCollectrices"></div>
 
     <div class="gf-sidebar-divider"></div>
@@ -779,11 +786,12 @@
     };
     const LEGEND_ORDER = ['rouge', 'vert', 'orange', 'gris', 'principale', 'secondaire', 'promue', 'collectrice', 'pieton', 'ruelle', 'autre'];
 
-    // commeArteres : collectrices (par nom) traitées comme des artères ; aucune par défaut (choix de Gabriel)
+    // commeArteres : collectrices (par nom) traitées comme des artères ; par défaut, Saint-Joseph (son bout de collectrice,
+    // à l'ouest de Parc, sépare Limite Outremont entre Mile-End ouest et Parc Jeanne-Mance ; choix de Gabriel)
     // mrPieton : scénario « Mont-Royal piétonne » (tronçons retirés du réseau, traversée nord-sud permise)
     // ruelles : rues locales traitées comme des ruelles (retirées du calcul) ; par défaut, choix de Gabriel
     // (mêmes noms que DEFAUT_RUELLES dans le script)
-    const state = { vue: 'rues', hidden: new Set(), focusCell: null, commeArteres: new Set(), mrPieton: false, paralleles: true, pairesArterielles: true, corrigeables: true, virages: 3, arteresLocales: new Set(['Rue Jeanne-Mance', 'Rue Léo-Pariseau']), arteresCollectrices: new Set(['Rue Saint-Grégoire']),
+    const state = { vue: 'rues', hidden: new Set(), focusCell: null, filtresModaux: true, commeArteres: new Set(['Boulevard Saint-Joseph']), mrPieton: false, paralleles: true, pairesArterielles: true, corrigeables: true, virages: 3, arteresLocales: new Set(['Rue Jeanne-Mance', 'Rue Léo-Pariseau']), arteresCollectrices: new Set(['Avenue du Parc (entre des Pins et Sherbrooke)', 'Avenue du Parc (entre Van Horne et Côte-Sainte-Catherine)']),
                     ruelles: new Set(['Rue Généreux', 'Rue De Varennes', 'Rue Simard', 'Rue Barrette',
                                        'Rue La Mennais', 'Rue Latreille', 'Rue De Courville', 'Avenue Bureau',
                                        'Rue Lionais', 'Rue Saint-Christophe', 'Ruelle Lavers']) };
@@ -795,9 +803,34 @@
     // Artères traitées comme des rues locales au Plateau (cochées par défaut, choix de Gabriel ;
     // mêmes noms que DEFAUT_ARTERES_LOCALES dans le script)
     const ARTERES_LOCALES = ['Rue Jeanne-Mance', 'Rue Léo-Pariseau'];
-    // Artères qu'on peut compter comme collectrices (Saint-Grégoire cochée par défaut, choix de Gabriel ;
+    // Artères qu'on peut compter comme collectrices (Parc entre des Pins et Sherbrooke cochée par défaut, Saint-Grégoire décochée, choix de Gabriel ;
     // ARTERES_COLLECTRICES_POSSIBLES et DEFAUT_ARTERES_COLLECTRICES dans le script)
-    const ARTERES_COLLECTRICES = ['Rue Saint-Grégoire'];
+    // Portions d'artère (nom de l'option → [rue, borne, borne]) : PORTIONS_COLLECTRICES dans le script
+    const PORTIONS_COLLECTRICES = {
+      'Avenue du Parc (entre des Pins et Sherbrooke)': ['Avenue du Parc', 'Avenue des Pins', 'Rue Sherbrooke'],
+      'Avenue du Parc (entre Van Horne et Côte-Sainte-Catherine)': ['Avenue du Parc', 'Avenue Van Horne', 'Chemin de la Côte-Sainte-Catherine']
+    };
+    const ARTERES_COLLECTRICES = ['Rue Saint-Grégoire', ...Object.keys(PORTIONS_COLLECTRICES)];
+    // Ids des tronçons d'artère d'une portion : entre les carrefours avec les deux bornes (les deux plus proches
+    // l'un de l'autre) ; bouts projetés entre eux (±2 %) à moins de 40 m de la droite (troncons_de_portion)
+    const idsPortion = new Map();
+    function tronconsDePortion([rue, b1, b2]) {
+      const pos = new Map(), noeuds = nom => new Set(data.troncons.filter(r => nomDe(r) === nom).flatMap(r => [r[T.A], r[T.B]]));
+      for (const r of data.troncons) { const c = r[T.COORDS]; pos.set(r[T.A], c[0]); pos.set(r[T.B], c[c.length - 1]); }
+      const nr = noeuds(rue), n1 = noeuds(b1), n2 = noeuds(b2);
+      const s1 = [...nr].filter(n => n1.has(n)), s2 = [...nr].filter(n => n2.has(n));
+      const kx = 111320 * Math.cos(45.52 * Math.PI / 180), ky = 110574;
+      const xy = n => [pos.get(n)[0] * kx, pos.get(n)[1] * ky];
+      let p1 = null, p2 = null, best = Infinity;
+      for (const a of s1) for (const b of s2) { const A = xy(a), B = xy(b), d = Math.hypot(A[0] - B[0], A[1] - B[1]); if (d < best) { best = d; p1 = A; p2 = B; } }
+      const ids = new Set();
+      if (!p1) return ids;
+      const dx = p2[0] - p1[0], dy = p2[1] - p1[1], L2 = dx * dx + dy * dy;
+      const dedans = n => { const [x, y] = xy(n), u = ((x - p1[0]) * dx + (y - p1[1]) * dy) / L2;
+        return u >= -0.02 && u <= 1.02 && Math.abs((x - p1[0]) * dy - (y - p1[1]) * dx) / Math.sqrt(L2) <= 40; };
+      for (const r of data.troncons) if (nomDe(r) === rue && r._c0 >= 6 && r._c0 <= 8 && dedans(r[T.A]) && dedans(r[T.B])) ids.add(r[T.ID]);
+      return ids;
+    }
     // Applique le réglage : la classe d'origine est gardée dans r._c0
     // Tronçons concernés : ceux du Plateau, et ceux qui touchent un nœud du Plateau (sinon le bout de
     // Jeanne-Mance au sud de Sherbrooke resterait une artère et ferait une porte « Jeanne-Mance »)
@@ -807,19 +840,52 @@
         noeudsPlateau = new Set();
         for (const r of data.troncons) if (r[T.PLATEAU]) { noeudsPlateau.add(r[T.A]); noeudsPlateau.add(r[T.B]); }
       }
+      for (const r of data.troncons) if (r._c0 === undefined) r._c0 = r[T.CLASSE];
+      const enPortion = new Set();
+      for (const [nom, spec] of Object.entries(PORTIONS_COLLECTRICES)) {
+        if (!state.arteresCollectrices.has(nom)) continue;
+        if (!idsPortion.has(nom)) idsPortion.set(nom, tronconsDePortion(spec));
+        idsPortion.get(nom).forEach(id => enPortion.add(id));
+      }
       for (const r of data.troncons) {
-        if (r._c0 === undefined) r._c0 = r[T.CLASSE];
         const pres = r[T.PLATEAU] || noeudsPlateau.has(r[T.A]) || noeudsPlateau.has(r[T.B]);
         const artere = pres && r._c0 >= 6 && r._c0 <= 8;
-        r[T.CLASSE] = artere && state.arteresLocales.has(nomDe(r)) ? 0 : artere && state.arteresCollectrices.has(nomDe(r)) ? 5 : r._c0;
+        r[T.CLASSE] = artere && state.arteresLocales.has(nomDe(r)) ? 0
+          : (artere && state.arteresCollectrices.has(nomDe(r))) || (r._c0 >= 6 && r._c0 <= 8 && enPortion.has(r[T.ID])) ? 5 : r._c0;
+      }
+      // Filtres modaux : la rue est coupée au carrefour (son bout y devient un nœud à lui seul, négatif) ;
+      // nœuds d'origine gardés dans r._a0 / r._b0 (appliquer_filtres() dans le script)
+      for (const r of data.troncons) {
+        if (r._a0 === undefined) { r._a0 = r[T.A]; r._b0 = r[T.B]; }
+        r[T.A] = r._a0; r[T.B] = r._b0;
+      }
+      if (!state.filtresModaux) return;
+      const noeudsDe = new Map();
+      for (const r of data.troncons) {
+        const n = nomDe(r);
+        if (!noeudsDe.has(n)) noeudsDe.set(n, new Set());
+        noeudsDe.get(n).add(r._a0).add(r._b0);
+      }
+      for (const [rue, trans] of FILTRES_MODAUX) {
+        const nt = noeudsDe.get(trans) || new Set();
+        for (const r of data.troncons) {
+          if (nomDe(r) !== rue) continue;
+          if (nt.has(r._a0)) r[T.A] = -(2 * r[T.ID] + 1);
+          if (nt.has(r._b0)) r[T.B] = -(2 * r[T.ID] + 2);
+        }
       }
     }
+    // Filtres modaux connus (la Géobase ne les a pas ; donnés par Gabriel ; FILTRES_MODAUX dans le script)
+    const FILTRES_MODAUX = [['Rue Saint-André', 'Boulevard Saint-Joseph'], ['Rue de Mentana', 'Boulevard Saint-Joseph'],
+      ['Rue De Brébeuf', 'Boulevard Saint-Joseph'], ['Rue Clark', 'Boulevard Saint-Joseph']];
     const estPietonne = r => state.mrPieton && r[T.PIETON] === 1;
     const estRuelle = r => r[T.CLASSE] === 0 && state.ruelles.has(nomDe(r));
     let data = null, noms = [];
     // Noms des cellules : automatiques (artères qui les bordent) ou choisis (data/noms-cellules.json,
     // { "noms": { "<nom automatique>": "<nom choisi>" } })
-    let nomsChoisis = {};
+    let nomsChoisis = {}, fusionsNoms = {}, horsIndicateurNoms = new Set();
+    let horsIndicateur = new Set();        // cellules gardées comme ensembles, non évaluées (noms-cellules.json)
+    const exclue = c => c === ISOLEES || horsIndicateur.has(c);
     const coordNoeud = new Map();          // nœud -> [lng, lat]
     let nomsCellules = new Map();          // cellule -> { auto, nom }
 
@@ -970,13 +1036,18 @@
       // les parcours restent calculés dans chaque vraie cellule)
       nomsCellules = new Map();
       const parNom = new Map(), vers = new Map();
+      // « fusions » de noms-cellules.json ({nom: autre nom}) : seulement si une cellule porte déjà l'autre nom
+      const choisi = auto => nomsChoisis[auto] || auto;
+      const presents = new Set([...autos.values()].map(choisi));
       for (const [cell, auto] of autos) {
-        const nom = nomsChoisis[auto] || auto;
+        let nom = choisi(auto);
+        if (fusionsNoms[nom] && presents.has(fusionsNoms[nom])) nom = fusionsNoms[nom];
         if (parNom.has(nom)) { vers.set(cell, parNom.get(nom)); nomsCellules.get(parNom.get(nom)).autos.push(auto); continue; }
         parNom.set(nom, cell);
         nomsCellules.set(cell, { auto, autos: [auto], nom });
       }
       if (vers.size) for (const r of data.troncons) if (vers.has(r._c)) r._c = vers.get(r._c);
+      horsIndicateur = new Set([...nomsCellules].filter(([, v]) => horsIndicateurNoms.has(v.nom)).map(([c]) => c));
     }
     const nomCellule = cell => (nomsCellules.get(cell) || {}).nom || 'Cellule';
     function analyser() {
@@ -1178,7 +1249,7 @@
     function cellulesVue() {
       const cells = new Map();
       for (const r of data.troncons) {
-        if (r._s === -1 || !r[T.PLATEAU] || r[T.CLASSE] !== 0 || r._c === ISOLEES) continue;
+        if (r._s === -1 || !r[T.PLATEAU] || r[T.CLASSE] !== 0 || exclue(r._c)) continue;
         if (!cells.has(r._c)) cells.set(r._c, { id: r._c, km: [0, 0, 0, 0], trav: false });
         const c = cells.get(r._c);
         c.km[r._s] += r._km;
@@ -1432,6 +1503,7 @@
         if (cs) html += '<div class="gf-pop-row"><span class="k">Sa cellule</span><span class="v">' + cs.n + ' tronçon' + (cs.n > 1 ? 's' : '') + ' de rues locales, ' + (cs.trav ? 'traversante' : 'sans parcours traversant') + '</span></div>' +
           '<div class="gf-pop-row"><span class="k">Cellule</span><span class="v">' + esc(nomCellule(cell)) + '</span></div>';
         else if (cell === ISOLEES) html += '<div class="gf-pop-row"><span class="k">Cellule</span><span class="v">Rue isolée (hors indicateur)</span></div>';
+        else if (horsIndicateur.has(cell)) html += '<div class="gf-pop-row"><span class="k">Cellule</span><span class="v">' + esc(nomCellule(cell)) + ' (ensemble hors indicateur)</span></div>';
       }
       const headerEl = document.querySelector('.gf-header');
       const topPad = (headerEl ? headerEl.offsetHeight : 76) + 16;
@@ -1484,7 +1556,7 @@
       // Cellules qui ont au moins une rue locale au Plateau (comme resume.json)
       for (const r of data.troncons) {
         const s = r._s;
-        if (s === -1 || !r[T.PLATEAU] || r._c === ISOLEES) continue;   // rues isolées : pas une cellule
+        if (s === -1 || !r[T.PLATEAU] || exclue(r._c)) continue;   // rues isolées, hors indicateur : pas une cellule
         const id = r._c;
         const c = cells.get(id) || { n: 0, trav: false };
         c.n++; if (s === 1 || s === 3) c.trav = true;
@@ -1550,7 +1622,7 @@
     // ---------- Collectrices comptées comme artères ----------
     function renderCollectrices() {
       const box = document.getElementById('gfCollectrices');
-      const liste = [...new Set(data.troncons.filter(r => r[T.PLATEAU] && r[T.CLASSE] === 5).map(nomDe).filter(Boolean))]
+      const liste = [...new Set(data.troncons.filter(r => r[T.PLATEAU] && (r._c0 ?? r[T.CLASSE]) === 5).map(nomDe).filter(Boolean))]   // classe d'origine
         .sort((a, b) => a.localeCompare(b, 'fr'));
       box.innerHTML = '';
       liste.forEach(nom => {
@@ -1618,6 +1690,11 @@
       map.closePopup(); state.focusCell = null;
       recalculer();
     });
+    document.getElementById('filtresToggle').addEventListener('change', function () {
+      state.filtresModaux = this.checked;
+      map.closePopup(); state.focusCell = null;
+      recalculer();
+    });
     document.getElementById('pairesToggle').addEventListener('change', function () {
       state.pairesArterielles = this.checked;
       map.closePopup(); state.focusCell = null;
@@ -1681,7 +1758,7 @@
     loading.classList.add('show');
     // Noms choisis des cellules (facultatif : sans ce fichier, les noms automatiques)
     const chargementNoms = fetch('./data/noms-cellules.json').then(r => r.ok ? r.json() : {})
-      .then(j => { if (j && typeof j.noms === 'object') nomsChoisis = j.noms; }).catch(() => {});
+      .then(j => { if (j && typeof j.noms === 'object') nomsChoisis = j.noms; if (j && typeof j.fusions === 'object') fusionsNoms = j.fusions; if (j && Array.isArray(j.hors_indicateur)) horsIndicateurNoms = new Set(j.hors_indicateur); }).catch(() => {});
     Promise.all([fetch('./data/reseau.json').then(res => { if (!res.ok) throw new Error(res.status); return res.json(); }), chargementNoms])
       .then(([json]) => {
         data = json; noms = json.noms;

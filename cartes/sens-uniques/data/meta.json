@@ -1,7 +1,9 @@
 {
- "donneesMisesAJour": "2026-11-12",
+ "donneesMisesAJour": "2026-11-13",
  "versionSource": "2026-11-12",
- "collectricesCommeArteres": [],
+ "collectricesCommeArteres": [
+  "Boulevard Saint-Joseph"
+ ],
  "arteresParallelesSeulement": true,
  "viragesMaximaux": 3,
  "parcoursCorrigeables": true,
@@ -10,7 +12,8 @@
   "Rue Léo-Pariseau"
  ],
  "arteresCollectrices": [
-  "Rue Saint-Grégoire"
+  "Avenue du Parc (entre Van Horne et Côte-Sainte-Catherine)",
+  "Avenue du Parc (entre des Pins et Sherbrooke)"
  ],
  "pairesArterielles": [
   [
@@ -24,6 +27,24 @@
   [
    "Rue Frontenac",
    "Rue D'Iberville"
+  ]
+ ],
+ "filtresModaux": [
+  [
+   "Rue Saint-André",
+   "Boulevard Saint-Joseph"
+  ],
+  [
+   "Rue de Mentana",
+   "Boulevard Saint-Joseph"
+  ],
+  [
+   "Rue De Brébeuf",
+   "Boulevard Saint-Joseph"
+  ],
+  [
+   "Rue Clark",
+   "Boulevard Saint-Joseph"
   ]
  ],
  "ruelles": [

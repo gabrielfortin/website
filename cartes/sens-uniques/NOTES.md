@@ -250,6 +250,65 @@ artérielles (9 ruelles, sans exception) :
    15 cellules (5 sans parcours traversant). Le nom choisi « Petit Laurier »
    ne s'applique plus à la cellule fusionnée (autre nom automatique).
 
+18. **Avenue du Parc entre des Pins et Sherbrooke comptée comme collectrice**
+   (essai du 13 novembre 2026, case du panneau **cochée par défaut** dans la
+   même liste que Saint-Grégoire) : seulement cette portion
+   (`PORTIONS_COLLECTRICES` et `troncons_de_portion()` dans le script,
+   `tronconsDePortion()` dans la page : tronçons d'artère de la rue dont les
+   deux bouts sont entre les carrefours avec des Pins et Sherbrooke, à 40 m
+   près ; 6 tronçons). Milton-Parc est et ouest ne font plus qu'une cellule,
+   nommée « Milton-Parc » (12 % de sens uniques verts). La partie entre
+   Saint-Urbain et Saint-Laurent, qui n'était jointe à Milton-Parc est que par
+   son nom, la rejoint par la nouvelle section `fusions` de
+   `noms-cellules.json` : `{"Milton-Parc est": "Milton-Parc"}` ne s'applique
+   que si une cellule s'appelle déjà « Milton-Parc », donc seulement avec
+   l'option cochée. Effet : 15 → 14 cellules (5 sans parcours traversant,
+   36 %) ; sens uniques rouges / verts inchangés (228 / 371). Pour revenir en
+   arrière : retirer la portion de `DEFAUT_ARTERES_COLLECTRICES` et de
+   `state.arteresCollectrices`.
+
+19. **Saint-Grégoire redevient une artère par défaut** (13 novembre 2026,
+   choix de Gabriel) : sa case reste dans le panneau, décochée. Parc entre
+   des Pins et Sherbrooke reste cochée. Effet : 17 cellules (7 sans parcours
+   traversant), 247 / 352 sens uniques rouges / verts ; Petit Laurier et Parc
+   Ludger Duvernay sont de nouveau séparés.
+
+20. **Ensembles hors indicateur** (13 novembre 2026, choix de Gabriel) :
+   `hors_indicateur` de `noms-cellules.json` (« Parc Ludger Duvernay »). La
+   cellule reste un ensemble (nom, rues, couleurs des rues), mais n'est pas
+   évaluée comme un îlot : hors de l'indicateur, de la vue Cellules et de la
+   liste, comme les rues isolées (`exclue()` dans la page, `totaux(…, noms)`
+   dans le script). Effet : 16 cellules (6 sans parcours traversant, 38 %) ;
+   tronçons inchangés (247 / 352).
+
+21. **Limite Outremont partagée** (essai du 13 novembre 2026, par défaut) :
+   l'avenue du Parc entre Van Horne et Côte-Sainte-Catherine est comptée
+   comme collectrice (deuxième portion de `PORTIONS_COLLECTRICES`, 16
+   tronçons) et le boulevard Saint-Joseph comme artère (`DEFAUT_COMME_ARTERES`
+   et `state.commeArteres` : seul son bout de collectrice, à l'ouest de Parc,
+   est touché). Sans Saint-Joseph, les trois cellules n'en feraient qu'une ;
+   avec lui, la partie nord de Limite Outremont rejoint Mile-End ouest et la
+   partie sud rejoint Parc Jeanne-Mance (clés ajoutées dans
+   `noms-cellules.json`). Effet : 15 cellules (6 sans parcours traversant,
+   40 %) ; 244 / 355 sens uniques rouges / verts ; Mile-End ouest 29 %.
+   La liste « Collectrices comptées comme artères » de la page prend la
+   classe d'origine (`_c0`), pour ne pas y montrer Parc ou Saint-Grégoire.
+
+22. **Filtres modaux connus** (13 novembre 2026, case cochée par défaut ;
+   la Géobase n'en a pas) : `FILTRES_MODAUX` et `appliquer_filtres()` dans
+   le script, `FILTRES_MODAUX` et la fin d'`appliquerArteresLocales()` dans
+   la page. Au boulevard Saint-Joseph : Saint-André, Mentana, De Brébeuf et
+   Clark. La rue est coupée au carrefour, des deux côtés (hypothèse) : le
+   bout du tronçon devient un nœud à lui seul (nœud négatif dans la page).
+   Deux morceaux ne touchent plus Saint-Joseph et changent de nom
+   automatique : « Clark (Saint-Laurent / Saint-Urbain) » → Mile-End ouest,
+   « Saint-Laurent / des Pins / Saint-Urbain » → Parc Jeanne-Mance
+   (`noms-cellules.json`). Effet : 15 cellules (6 sans parcours traversant) ;
+   225 / 374 sens uniques rouges / verts ; Petit Laurier 56 → 72 %, Parc La
+   Fontaine 67 → 77 %. À vérifier : avec les sens de la Géobase, des bouts à
+   sens unique de ces rues finissent sur le filtre (une auto ne peut plus en
+   sortir) ; soit le filtre n'est que d'un côté, soit les sens ont changé.
+
 Indicateur : part des cellules (qui ont au moins une rue locale au Plateau)
 dont aucune rue locale du Plateau n'est de statut 1 ou 3.
 
@@ -269,8 +328,9 @@ un parcours d'artère à artère par des rues locales.
 
 | Réglage | Cellules (sans parcours traversant) | Sens uniques rouges / verts | Double sens traversants / non |
 |---|---|---|---|
-| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, Saint-Grégoire collectrice, raccords, rues isolées hors indicateur, cellules de même nom regroupées, parcours corrigeables, aucune collectrice cochée, 11 ruelles (`resume.json`) | 15 (5, 33 %) | 228 / 371 | 63 / 91 |
-| Défaut + Mont-Royal piétonne (`resume.json`, `mont_royal_pieton`) | 15 (5, 33 %) | 228 / 371 | 63 / 91 |
+| **Défaut** : artères parallèles, 3 virages, paires artérielles, Jeanne-Mance et Léo-Pariseau locales, Parc (des Pins – Sherbrooke, Van Horne – Côte-Sainte-Catherine) collectrice, Saint-Joseph (bout de collectrice) artère, Saint-Grégoire artère, raccords, rues isolées et Parc Ludger Duvernay hors indicateur, cellules de même nom regroupées, parcours corrigeables, filtres modaux connus, 11 ruelles (`resume.json`) | 15 (6, 40 %) | 225 / 374 | 53 / 101 |
+| Défaut + Saint-Grégoire collectrice (défaut du 12 au 13 novembre) | 14 (5, 36 %) | 228 / 371 | 63 / 91 |
+| Défaut sans Parc collectrice (avant le 13 novembre) | 15 (5, 33 %) | 228 / 371 | 63 / 91 |
 | Défaut sans Saint-Grégoire collectrice | 18 (7, 39 %) | 247 / 352 | 65 / 89 |
 | Défaut sans la ruelle Lavers ni Saint-Grégoire collectrice (10 ruelles) | 18 (7, 39 %) | 254 / 345 | 66 / 89 |
 | Défaut sans « parcours corrigeables » | 18 (7, 39 %) | 263 / 336 | 67 / 88 |

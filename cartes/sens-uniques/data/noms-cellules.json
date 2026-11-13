@@ -1,7 +1,9 @@
 {
- "_lisezmoi": "Noms choisis des cellules. Clé : nom automatique affiché dans la liste des cellules de la page ; valeur : nom à afficher (vide : nom automatique). Deux cellules du même nom sont regroupées. Certaines clés ne servent que si l'on décoche une option du panneau (ex. Saint-Grégoire comptée comme collectrice) : les garder.",
+ "_lisezmoi": "Noms choisis des cellules. Clé : nom automatique affiché dans la liste des cellules de la page ; valeur : nom à afficher (vide : nom automatique). Deux cellules du même nom sont regroupées. Certaines clés ne servent que si l'on décoche une option du panneau (ex. Saint-Grégoire comptée comme collectrice) : les garder. « fusions » : {nom : autre nom} ; la cellule prend l'autre nom (et lui est regroupée) seulement si une cellule le porte déjà. « hors_indicateur » : noms de cellules gardées comme ensembles mais pas évaluées comme des îlots (hors indicateur, comme les rues isolées).",
  "noms": {
+  "Clark (Saint-Laurent / Saint-Urbain)": "Mile-End ouest",
   "De Lorimier / Saint-Joseph / Papineau": "Parc de Lorimier",
+  "des Pins / du Parc / Saint-Urbain / Sherbrooke / University": "Milton-Parc",
   "des Pins / du Parc / Sherbrooke / University": "Milton-Parc ouest",
   "des Pins / Saint-Denis / Sherbrooke / Saint-Laurent": "Square Saint-Louis",
   "des Pins / Saint-Laurent / Sherbrooke / Saint-Urbain": "Milton-Parc est",
@@ -18,10 +20,20 @@
   "Saint-Joseph / Saint-Denis / Roy / des Pins / Saint-Laurent": "Hôtel-de-Ville",
   "Saint-Joseph / Saint-Laurent / des Pins / Saint-Urbain": "Parc Jeanne-Mance",
   "Saint-Joseph / Saint-Urbain / du Parc": "Parc Jeanne-Mance",
+  "Saint-Joseph / Saint-Urbain / du Parc / de la Côte-Sainte-Catherine": "Parc Jeanne-Mance",
+  "Saint-Laurent / des Pins / Saint-Urbain": "Parc Jeanne-Mance",
   "Saint-Laurent / Jean-Talon / Papineau / De Lorimier / Rosemont / Christophe-Colomb / Saint-Grégoire / Saint-Denis": "Parc Ludger Duvernay",
   "Saint-Laurent / Jean-Talon / Rosemont / De Lorimier / Papineau / Christophe-Colomb / Saint-Joseph / Saint-Denis": "Petit Laurier",
   "Saint-Laurent / Saint-Joseph / Saint-Urbain": "Mile-End ouest",
   "Van Horne / du Parc / de la Côte-Sainte-Catherine": "Limite Outremont",
+  "Van Horne / Saint-Urbain / Saint-Joseph / de la Côte-Sainte-Catherine": "Mile-End ouest",
   "Van Horne / Saint-Urbain / Saint-Joseph / du Parc": "Mile-End ouest"
- }
+ },
+ "fusions": {
+  "Milton-Parc est": "Milton-Parc",
+  "Milton-Parc ouest": "Milton-Parc"
+ },
+ "hors_indicateur": [
+  "Parc Ludger Duvernay"
+ ]
 }

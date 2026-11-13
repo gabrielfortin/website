@@ -1,6 +1,8 @@
 {
  "reglage_par_defaut": {
-  "collectrices_comme_arteres": [],
+  "collectrices_comme_arteres": [
+   "Boulevard Saint-Joseph"
+  ],
   "arteres_paralleles_seulement": true,
   "virages_maximaux": 3,
   "parcours_corrigeables": true,
@@ -9,7 +11,8 @@
    "Rue Léo-Pariseau"
   ],
   "arteres_collectrices": [
-   "Rue Saint-Grégoire"
+   "Avenue du Parc (entre Van Horne et Côte-Sainte-Catherine)",
+   "Avenue du Parc (entre des Pins et Sherbrooke)"
   ],
   "paires_arterielles": [
    [
@@ -23,6 +26,24 @@
    [
     "Rue Frontenac",
     "Rue D'Iberville"
+   ]
+  ],
+  "filtres_modaux": [
+   [
+    "Rue Saint-André",
+    "Boulevard Saint-Joseph"
+   ],
+   [
+    "Rue de Mentana",
+    "Boulevard Saint-Joseph"
+   ],
+   [
+    "Rue De Brébeuf",
+    "Boulevard Saint-Joseph"
+   ],
+   [
+    "Rue Clark",
+    "Boulevard Saint-Joseph"
    ]
   ],
   "ruelles": [
@@ -42,22 +63,22 @@
  "troncons_exportes": 2268,
  "troncons_plateau": 1465,
  "troncons_locaux_par_statut": {
-  "0": 371,
-  "1": 228,
-  "2": 91,
-  "3": 63
+  "0": 374,
+  "1": 225,
+  "2": 101,
+  "3": 53
  },
  "cellules": 15,
- "cellules_traversantes": 10,
+ "cellules_traversantes": 9,
  "mont_royal_pieton": {
   "troncons_retires": 32,
   "troncons_locaux_par_statut": {
-   "0": 371,
-   "1": 228,
-   "2": 91,
-   "3": 63
+   "0": 374,
+   "1": 225,
+   "2": 101,
+   "3": 53
   },
   "cellules": 15,
-  "cellules_traversantes": 10
+  "cellules_traversantes": 9
  }
 }
