@@ -1,0 +1,12 @@
+{
+  "fichiers": {
+    "fonts/inter-latin.woff2": "polices/inter-latin.woff2",
+    "fonts/inter-latin-ext.woff2": "polices/inter-latin-ext.woff2",
+    "fonts/OFL.txt": "polices/OFL-Inter.txt",
+    "cartes/vendor/carte/maplibre-gl.js": "carte/maplibre-gl.js",
+    "cartes/vendor/carte/maplibre-gl.css": "carte/maplibre-gl.css",
+    "cartes/vendor/carte/carte.js": "carte/carte.js",
+    "cartes/vendor/carte/carte.css": "carte/carte.css",
+    "cartes/vendor/carte/LICENSE-maplibre.txt": "carte/LICENSE-maplibre.txt"
+  }
+}
