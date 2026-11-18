@@ -70,7 +70,7 @@ Aucun cookie ni compte.
 | Quand | Ce qui est envoyé | À qui |
 |---|---|---|
 | Chaque visite | Page, site d'origine, appareil, pays | GoatCounter (mesure d'audience anonyme) |
-| Ouverture d'une carte interactive | Bibliothèques et tuiles de la carte | Selon la carte (CDN, OpenStreetMap) |
+| Ouverture d'une carte interactive | Fond de carte de la zone affichée (et bibliothèques pour la carte par district) | OpenFreeMap (et jsDelivr, cdnjs, jQuery) |
 
 La page [/confidentialite/](confidentialite/index.html) décrit ce que le site
 collecte : **la mettre à jour (avec sa date)** si on ajoute un outil ou un

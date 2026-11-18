@@ -26,7 +26,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<!-- Composant de carte commun (API de Leaflet dessinée par MapLibre, fond OpenFreeMap) : ../vendor/carte/ -->
+<link rel="stylesheet" href="../vendor/carte/maplibre-gl.css">
+<link rel="stylesheet" href="../vendor/carte/carte.css">
 <style>
   :root {
     --brand: #16a34a;
@@ -533,10 +535,8 @@
     <span>Gabriel Fortin · <a href="https://donnees.montreal.ca/dataset/reseau-arteriel-administratif" target="_blank" rel="noopener">Données ouvertes, Ville de Montréal</a></span>
   </div>
 
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
+  <script src="../vendor/carte/maplibre-gl.js"></script>
+  <script src="../vendor/carte/carte.js"></script>
   <script>
     const MANIFEST = [
       {"name": "Ahuntsic-Cartierville", "slug": "ahuntsic-cartierville"},
@@ -615,10 +615,7 @@
       // Zone de clic élargie autour des rues (en px de chaque côté du trait)
       renderer: L.canvas({ tolerance: L.Browser.mobile ? 12 : 8 })
     });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+    // Fond de carte : OpenFreeMap (Positron, ou Dark en mode sombre), posé par ../vendor/carte/carte.js
     map.setView([45.55, -73.6], 12);
 
     let currentLayer = null;

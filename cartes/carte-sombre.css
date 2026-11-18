@@ -28,13 +28,11 @@
     --surface-hover: rgba(255, 255, 255, 0.07);
     --hairline: rgba(255, 255, 255, 0.08);
     --map-bg: #0b1310;
-    --tile-filter: invert(1) hue-rotate(180deg) saturate(0.35) brightness(0.88) contrast(0.92);
   }
 
   :root:not([data-theme="light"]) body,
   :root:not([data-theme="light"]) #map,
   :root:not([data-theme="light"]) .leaflet-container { background: var(--map-bg); }
-  :root:not([data-theme="light"]) .leaflet-tile-pane { filter: var(--tile-filter); }
 
   /* Textes de marque (--brand-dark est trop foncé sur le verre sombre) */
   :root:not([data-theme="light"]) .gf-brand-word span,
