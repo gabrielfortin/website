@@ -7,6 +7,7 @@
     "cartes/vendor/carte/maplibre-gl.css": "carte/maplibre-gl.css",
     "cartes/vendor/carte/carte.js": "carte/carte.js",
     "cartes/vendor/carte/carte.css": "carte/carte.css",
-    "cartes/vendor/carte/LICENSE-maplibre.txt": "carte/LICENSE-maplibre.txt"
+    "cartes/vendor/carte/LICENSE-maplibre.txt": "carte/LICENSE-maplibre.txt",
+    "cartes/vendor/don.js": "don.js"
   }
 }

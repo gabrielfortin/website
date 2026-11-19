@@ -191,6 +191,41 @@ nav {
   background: var(--surface);
 }
 
+/* Bouton « Faire un don » : hors de .nav-links pour rester visible sur
+   mobile (la liste y défile). Contour vert plutôt que fond vert : le texte
+   garde le contraste de --text. Sur mobile, le cœur seul. */
+.nav-don {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 6px 14px 6px 11px;
+  border-radius: 999px;
+  border: 1.5px solid var(--brand);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.nav-don .i {
+  width: 16px;
+  height: 16px;
+  fill: var(--brand);
+  stroke: var(--brand);
+}
+
+.nav-don:hover {
+  background: var(--brand-soft);
+}
+
+.nav-don:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+
 /* HERO (sous-pages) */
 .hero {
   padding: 4.5rem 2rem 1.5rem;
@@ -788,6 +823,19 @@ footer {
 
   .nav-pill {
     display: none;
+  }
+
+  .nav-don {
+    padding: 7px;
+  }
+
+  .nav-don-texte {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .hero {

@@ -209,6 +209,7 @@
 
   @media (max-width: 760px) {
     .gf-header { top: 10px; left: 10px; right: 10px; padding: 10px 14px; gap: 8px 10px; }
+    .gf-brand { flex: 1 1 0; } .gf-header-spacer { display: none; } .gf-brand-sub { overflow: hidden; text-overflow: ellipsis; } /* titre qui rétrécit : le bouton « Faire un don » et le « i » restent sur la ligne */
     .arrond-control { order: 10; flex: 1 1 100%; }
     .arrond-control select { flex: 1 1 0; width: 0; min-width: 0; max-width: none; }
   }
@@ -476,6 +477,7 @@
         <path d="M12 11v6.2" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
       </svg>
     </button>
+    <script src="../vendor/don.js"></script>
   </div>
 
   <div class="gf-info-overlay" id="gfInfoOverlay" role="dialog" aria-modal="true" aria-labelledby="gfInfoTitle">
