@@ -35,6 +35,12 @@ Chaque déclaration/résolution doit aussi être ajoutée de façon permanente d
 </a>
 ```
 
+## Nouvel article
+
+1. L'ajouter en tête de `articles/index.html` et dans `articles/feed.xml`.
+2. Sur l'accueil (`index.html`, section « Derniers articles ») : mettre le nouvel article en premier et retirer le dernier des trois. La section montre les 3 plus récents **sans celui qui est à la une** dans « Explorer ». Sans image, la vignette affiche une icône de crayon (`recent-thumb-vide`).
+3. Faire la liste SEO ci-dessous.
+
 ## SEO : à faire pour chaque nouvelle page ou article
 
 Règles communes à tous les projets : [SEO-ET-PUBLICATION.md](../SEO-ET-PUBLICATION.md). Propre à gabfortin.com :

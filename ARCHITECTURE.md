@@ -49,13 +49,14 @@ Vue d'ensemble : [README.md](README.md) ; procédures : [CONTENU.md](CONTENU.md)
 ## Pages et navigation
 
 ### Accueil (`/index.html`)
-Page principale avec présentation et navigation (section "Explorer") vers:
-- **Compteurs Vélo Montréal** (featured) → https://compteurvelo.com
-- **Avant / Après** (featured, badge "Nouveau") → https://avant-apres.ca — comparaison avant/après des améliorations de l'espace public réalisées par Projet Montréal
-- **Blogue** → Analyses et propositions sur la mobilité, le transport collectif et l'espace public
-- **Cartes Interactives** → Élections 2025, réseau artériel, modes rapides et fréquents
-- **Données Ouvertes** → Ensembles de données publiques et visualisations
-- **Parcours** → Formation, carrière chez Bell et dossiers portés comme conseiller
+Page principale : présentation, puis
+- **Explorer** : l'article à la une (`featured-main`), **Compteurs Vélo Montréal** → https://compteurvelo.com et **Avant / Après** → https://avant-apres.ca ;
+- **Derniers articles** : les 3 articles les plus récents de `articles/index.html`, sans celui qui est à la une (écrits à la main : voir CONTENU.md, « Nouvel article ») ; les cartes Blogue, Cartes, Données et Parcours, qui répétaient le menu, ont été retirées en novembre 2026 ;
+- **Engagements** (Projet Montréal, conseil d'arrondissement) et **Reels populaires** (le titre de chaque reel est déjà sur sa vignette : il reste dans la page pour les lecteurs d'écran seulement).
+
+Les sections ne sont jamais cachées en attendant le défilement (robots, aperçus de lien, impression) : seule une section encore sous l'écran au chargement s'anime en y entrant (`.section.apparait`).
+
+Barre du haut, sur toutes les pages : à gauche la marque (photo ronde `img/avatar.jpg` + « Gabriel Fortin », la photo seule sous 600 px), menu centré, « Me supporter » à droite.
 
 Navigation principale: Blogue, Cartes, Données, Parcours.
 
@@ -65,11 +66,11 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 
 1. **Avant / Après** → https://avant-apres.ca
 2. **Carte accessibilité universelle** — encore grisée, non cliquable (`<div class="carte-item is-disabled">`, pas un `<a>`), alors que le projet `carte-au` est en ligne sur https://montrealaccessible.ca (novembre 2026 : à relier). Icône : `img/carte-au.svg`.
-3. **Réseau Artériel de Montréal** → `./reseau-arteriel/carte.html`
+3. **Réseau artériel de Montréal** → `./reseau-arteriel/carte.html`
 4. **Collisions et réseau artériel** → `./collisions-reseau-arteriel/` (réutilise les tronçons de `reseau-arteriel/data/` ; méthode dans son `NOTES.md`)
 5. **Pistes cyclables Plateau** → https://pistes.gabfortin.com
-6. **Résultats Élections 2025** → `./elections-2025/ParSectionDeVote.html`
-7. **Modes Rapides et Fréquents**
+6. **Résultats des élections 2025** → `./elections-2025/ParSectionDeVote.html`
+7. **Modes rapides et fréquents**
 8. **Stationnement Plateau** → https://parking.gabfortin.com
 
 La carte « Sens uniques et parcours traversants » a été retirée (novembre 2026) : elle est devenue l'onglet « Simulateur » de l'outil privé `securite-plateau` (pld.gabfortin.com), avec son script et ses données. `cartes/sens-uniques/index.html` ne fait que renvoyer vers `/cartes/`.

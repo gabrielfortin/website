@@ -378,6 +378,125 @@
     letter-spacing: -0.01em;
   }
 
+  /* DERNIERS ARTICLES */
+  .recent-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .recent-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .recent-item {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.3s ease;
+  }
+
+  .recent-item:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow);
+  }
+
+  .recent-thumb {
+    aspect-ratio: 16 / 9;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+
+  .recent-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s var(--ease);
+  }
+
+  .recent-item:hover .recent-thumb img {
+    transform: scale(1.03);
+  }
+
+  .recent-thumb-vide {
+    display: grid;
+    place-items: center;
+    color: var(--faint);
+  }
+
+  .recent-thumb-vide .i {
+    width: 28px;
+    height: 28px;
+  }
+
+  .recent-body {
+    padding: 1rem 1.25rem 1.25rem;
+  }
+
+  .recent-meta {
+    display: flex;
+    gap: 0.6rem;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .recent-meta span + span::before {
+    content: "·";
+    margin-right: 0.6rem;
+  }
+
+  .recent-item h3 {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  @media (max-width: 860px) {
+    .recent-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .recent-item {
+      flex-direction: row;
+    }
+
+    .recent-thumb {
+      flex: 0 0 120px;
+      aspect-ratio: 1;
+    }
+
+    .recent-body {
+      padding: 0.9rem 1rem;
+      align-self: center;
+    }
+  }
+
+  /* Reels : le titre est déjà écrit sur la vignette Instagram ; le texte reste pour les lecteurs d'écran */
+  .reel-card::after {
+    content: none;
+  }
+
+  .reel-card h3 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   /* RESPONSIVE */
   @media (max-width: 860px) {
     .reel-card {
@@ -543,7 +662,7 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-home" href="/" aria-current="page">Accueil</a>
+  <a class="nav-home" href="/" aria-current="page" aria-label="Gabriel Fortin, accueil"><img src="./img/avatar.jpg" alt="" width="28" height="28"><span class="nav-home-texte">Gabriel Fortin</span></a>
   <div class="nav-links">
     <a href="./articles/index.html">Blogue</a>
     <a href="./cartes/index.html">Cartes</a>
@@ -560,7 +679,7 @@
       <img src="./img/banner.png" alt="Gabriel Fortin" class="hero-banner">
       <p class="hero-desc">Conseiller d'arrondissement au Plateau-Mont-Royal, notamment en charge des dossiers de mobilité durable et de voirie. Je travaille pour une ville plus verte, plus durable et plus accessible à toutes et tous.</p>
       <div class="hero-ctas">
-        <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="btn-primary">Mon Profil Officiel <svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+        <a href="https://montreal.ca/elus/gabriel-fortin-100477" class="btn-primary">Mon profil officiel <svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
         <a href="#projets" class="btn-secondary">Voir mes projets</a>
       </div>
       <a href="https://projetmontreal.org/page/cocktail2026?solliciteur=GabrielFortin" target="_blank" rel="noopener" class="btn-cocktail" style="display:none;">
@@ -606,37 +725,36 @@
     </a>
   </div>
 
-  <div class="cards-grid">
+</section>
 
-    <a href="./articles/index.html" class="card">
-      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
-      <h3>Blogue</h3>
-      <p>Analyses et propositions sur la mobilité, le transport collectif et l'espace public.</p>
-      <span class="link-arrow">Lire les articles <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+<!-- DERNIERS ARTICLES : les 3 plus récents de articles/index.html, sans celui à la une (voir CONTENU.md) -->
+<section class="section" id="derniers-articles">
+  <div class="recent-head">
+    <h2 class="section-label">Derniers articles</h2>
+    <a href="./articles/index.html" class="link-arrow">Tout le blogue <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+  </div>
+  <div class="recent-grid">
+    <a href="./articles/velo-hiver/index.html" class="recent-item">
+      <div class="recent-thumb"><img loading="lazy" src="./articles/velo-hiver/velohome.jpg" alt="Onglet Vélo d'hiver de compteurvelo.com"></div>
+      <div class="recent-body">
+        <div class="recent-meta"><span>23 oct. 2026</span><span>Vélo</span></div>
+        <h3>Le vélo d'hiver et les données</h3>
+      </div>
     </a>
-
-    <a href="./cartes/index.html" class="card">
-      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg></div>
-      <h3>Cartes Interactives</h3>
-      <p>Élections 2025, réseau artériel de Montréal, et modes rapides et fréquents.</p>
-      <span class="link-arrow">Voir les cartes <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    <a href="./articles/avant-apres/index.html" class="recent-item">
+      <div class="recent-thumb"><img loading="lazy" src="./articles/avant-apres/avantapres.jpg" alt="Carte Avant / Après sur le Plateau-Mont-Royal"></div>
+      <div class="recent-body">
+        <div class="recent-meta"><span>20 oct. 2026</span><span>Espace public</span></div>
+        <h3>Avant / Après : voir comment l'espace public se transforme</h3>
+      </div>
     </a>
-
-    <a href="./donnees/index.html" class="card">
-      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div>
-      <h3>Données Ouvertes</h3>
-      <p>Ensembles de données publiques analysés et visualisés pour la communauté.</p>
-      <span class="link-arrow">Explorer <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    <a href="./articles/resolution-petrole-sables-bitumineux/index.html" class="recent-item">
+      <div class="recent-thumb recent-thumb-vide" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <div class="recent-body">
+        <div class="recent-meta"><span>8 sept. 2026</span><span>Environnement</span></div>
+        <h3>Une résolution pour réduire la consommation de pétrole au Québec</h3>
+      </div>
     </a>
-
-
-    <a href="./parcours/index.html" class="card">
-      <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
-      <h3>Parcours</h3>
-      <p>Du génie logiciel à la politique municipale : formation, carrière chez Bell et dossiers portés comme conseiller.</p>
-      <span class="link-arrow">Découvrir mon parcours <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-    </a>
-
   </div>
 </section>
 
@@ -651,13 +769,12 @@
       <p>Membre actif du parti politique Projet Montréal, travaillant pour une ville plus verte et plus accessible.</p>
       <div class="card-actions">
         <a href="https://projetmontreal.org/" target="_blank" rel="noopener" class="card-btn">Plus d'infos</a>
-        <a href="https://monelection.org/form/donation/ph3NOVdJvWkoW5Jdckfa2uIXecmKGo?solliciteur_id=70497" target="_blank" rel="noopener" class="card-btn card-btn-primary">Me supporter</a>
       </div>
     </div>
 
     <a href="https://montreal.ca/conseils-decisionnels/conseil-darrondissement-du-plateau-mont-royal" class="card">
       <div class="card-icon"><svg class="i" viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg></div>
-      <h3>Conseil d'Arrondissement</h3>
+      <h3>Conseil d'arrondissement</h3>
       <p>Conseiller d'arrondissement au Plateau-Mont-Royal depuis 2025, représentant le district de Jeanne-Mance.</p>
       <span class="link-arrow">Voir le conseil <svg class="i i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
@@ -667,7 +784,7 @@
 <!-- REELS -->
 <section class="section">
   <div class="reels-head">
-    <h2 class="section-label">Reels Populaires</h2>
+    <h2 class="section-label">Reels populaires</h2>
     <div class="reels-controls">
       <button type="button" class="reels-nav" aria-label="Reels précédents" onclick="document.getElementById('reelsGrid').scrollBy({left:-320,behavior:'smooth'})"><svg class="i" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
       <button type="button" class="reels-nav" aria-label="Reels suivants" onclick="document.getElementById('reelsGrid').scrollBy({left:320,behavior:'smooth'})"><svg class="i" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
@@ -985,25 +1102,22 @@
 
 <!-- SCROLL ANIMATION SCRIPT -->
 <script>
-  // Observe sections for fade-in animation
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
+  // Apparition des sections : rien n'est caché par défaut (robots, aperçus de lien, impression,
+  // captures pleine page voient tout). Une section encore sous l'écran au chargement s'anime
+  // quand elle y entre ; pas d'animation si l'appareil demande moins de mouvement.
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('apparait');
+          observer.unobserve(entry.target);
+        }
+      });
     });
-  }, observerOptions);
-
-  // Observe all sections
-  document.querySelectorAll('.section').forEach(section => {
-    section.classList.add('hidden');
-    observer.observe(section);
-  });
+    document.querySelectorAll('.section').forEach(section => {
+      if (section.getBoundingClientRect().top > window.innerHeight) observer.observe(section);
+    });
+  }
 
   // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
