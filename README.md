@@ -14,7 +14,7 @@ Montréal. C'est aussi la porte d'entrée vers tous ses autres sites.
 | **Accueil** (`/`) | Présentation, projets en vedette (Compteurs Vélo Montréal, Avant / Après), déclaration « à la une » si besoin, accès aux sections |
 | **Blogue** (`/articles/`) | Articles et plans, avec recherche et filtre par catégorie ; flux RSS (`articles/feed.xml`) |
 | **Cartes** (`/cartes/`) | Cartes hébergées ici (réseau artériel, élections 2025, modes rapides et fréquents) et liens vers les cartes autonomes |
-| **Données** (`/donnees/`) | Tableaux de bord (Compteurs Vélo Montréal, ARTM, Déchets, 311) et résultats des élections 2025 |
+| **Données** (`/donnees/`) | Tableaux de bord (Compteurs Vélo Montréal, ARTM, Déchets) et résultats des élections 2025 |
 | **Applications** (`/applications/`) | Outils autonomes (Compteurs Vélo Montréal, Pistes, Stationnement, Déchets) |
 | **Parcours** (`/parcours/`) | Formation, carrière, dossiers portés comme conseiller, déclarations et résolutions |
 | **Projets intéressants** (`/projets/`) | Projets créés par des ami·es |

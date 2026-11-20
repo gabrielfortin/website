@@ -88,7 +88,6 @@ Pour ajouter une carte « à venir » (grisée, non cliquable) : utiliser un `<d
 2. **Mobilité Montréal (ARTM)** → https://artm.gabfortin.com
 3. **Déchets Montréal** → https://dechets.gabfortin.com
 4. **Résultats élections municipales Montréal 2025** → `./elections-2025/resultats.html`
-5. **Requêtes 311** → https://311.gabfortin.com
 
 #### Blogue (`/articles/`) : articles et plans
 
