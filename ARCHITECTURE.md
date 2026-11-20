@@ -173,3 +173,10 @@ Les cartes interactives ouvertes dans une fenêtre modale sont comptées comme d
 - **Police** : Inter variable hébergée localement dans `fonts/` (licence SIL OFL, `fonts/OFL.txt`), déclarée en haut de `css/site.css`. Les cartes de `cartes/` lient `fonts/polices.css` (Inter + Poppins, modèle commun `outils/communs/polices/`). Ne pas remettre le lien Google Fonts.
 - **Images** : les balises `<img>` utilisent des fichiers `.webp` redimensionnés à la taille d'affichage (×2 à ×3 pour les écrans Retina). Les originaux PNG/JPG sont conservés pour `og:image`, le JSON-LD et le flux RSS, car certains réseaux sociaux acceptent mal le WebP. Pour une nouvelle image : la convertir en WebP (qualité 85) et garder l'original à côté si elle sert d'aperçu de partage.
 - **Images de partage de l'accueil et de `/don`** : `img/og-accueil.jpg` et `img/og-don.jpg` (1200 × 630, même famille que celles d'avantapres et de montrealaccessible.ca) sont faites à partir du gabarit `scripts/og-image.html` (`?page=don` pour la seconde). Pour les modifier, éditer le gabarit, puis suivre les étapes en commentaire en tête du fichier.
+
+## Numéro de version et cache
+
+`.version.json` + `version.txt` (novembre 2026) : le hook `pre-commit` (`outils/version.py`) numérote chaque
+commit et écrit `?v=x.y.z` sur `css/site.css` (et les autres CSS/JS locaux) dans les pages listées. Sans ça,
+un navigateur qui garde l'ancien `site.css` en cache (GitHub Pages / Cloudflare : jusqu'à 4 h) l'affiche avec
+le nouveau HTML. Les pages de cartes de `cartes/` y sont aussi (composant de carte, attente, don.js). Nouvelle page qui charge des CSS/JS locaux : l'ajouter à `pages` dans `.version.json`.

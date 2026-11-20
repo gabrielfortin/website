@@ -1,0 +1,39 @@
+{
+  "fichier": "version.txt",
+  "donnees": [
+    "cartes/*/data/*",
+    "donnees/*/data/*",
+    "*.geojson",
+    "fichiers/"
+  ],
+  "pages": [
+    "404.html",
+    "applications/index.html",
+    "articles/avant-apres/index.html",
+    "articles/carte-elections-2025/index.html",
+    "articles/declaration-reseau-cyclable/index.html",
+    "articles/index.html",
+    "articles/le-rem-et-le-plateau/index.html",
+    "articles/parc-1/index.html",
+    "articles/refonte-stm-2026/index.html",
+    "articles/resolution-petrole-sables-bitumineux/index.html",
+    "articles/velo-hiver/index.html",
+    "cartes/artm-map/artm-map.html",
+    "cartes/collisions-reseau-arteriel/index.html",
+    "cartes/elections-2025/ParDistrict.html",
+    "cartes/elections-2025/ParSectionDeVote.html",
+    "cartes/index.html",
+    "cartes/modes-rapides-et-frequents/map.html",
+    "cartes/reseau-arteriel/carte.html",
+    "confidentialite/index.html",
+    "don/index.html",
+    "donnees/elections-2025/resultats.html",
+    "donnees/index.html",
+    "index.html",
+    "parcours/index.html",
+    "plans/metro-2025/index.html",
+    "plans/pum-2050/index.html",
+    "plans/reb-2025/index.html",
+    "projets/index.html"
+  ]
+}
