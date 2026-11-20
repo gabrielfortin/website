@@ -17,18 +17,18 @@
 <meta property="og:title" content="Collisions et réseau artériel de Montréal">
 <meta property="og:description" content="Carte des collisions routières de Montréal (2012-2021) sur le réseau artériel : part des collisions sur les artères, les collectrices et les rues locales, par arrondissement.">
 <meta property="og:url" content="https://gabfortin.com/cartes/collisions-reseau-arteriel/">
-<meta property="og:image" content="https://gabfortin.com/cartes/collisions-reseau-arteriel/apercu.png">
+<meta property="og:image" content="https://gabfortin.com/cartes/collisions-reseau-arteriel/apercu.jpg">
 <meta property="og:locale" content="fr_CA">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Collisions et réseau artériel de Montréal">
 <meta name="twitter:description" content="Carte des collisions routières de Montréal (2012-2021) sur le réseau artériel : part des collisions sur les artères, les collectrices et les rues locales, par arrondissement.">
-<meta name="twitter:image" content="https://gabfortin.com/cartes/collisions-reseau-arteriel/apercu.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<meta name="twitter:image" content="https://gabfortin.com/cartes/collisions-reseau-arteriel/apercu.jpg">
+<link rel="stylesheet" href="../../fonts/polices.css">
 <!-- Composant de carte commun (API de Leaflet dessinée par MapLibre, fond OpenFreeMap) : ../vendor/carte/ -->
 <link rel="stylesheet" href="../vendor/carte/maplibre-gl.css">
 <link rel="stylesheet" href="../vendor/carte/carte.css">
+<link rel="stylesheet" href="../vendor/chargement.css">
+<link rel="stylesheet" href="../chargement-scenes.css">
 <style>
   /* Gabarit : ../reseau-arteriel/carte.html (même système « verre », même carte de base) */
   :root {
@@ -375,23 +375,6 @@
     body:has(.gf-sidebar.open) .gf-summary { display: none; }
   }
 
-  /* ---------- Loading indicator ---------- */
-  .gf-loading {
-    position: fixed; top: calc(var(--gap) * 2 + 70px); left: 50%; transform: translateX(-50%);
-    z-index: 900; display: none; align-items: center; gap: 10px;
-    padding: 9px 18px; border-radius: 999px;
-    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);
-    font-size: .8rem; font-weight: 600; color: var(--ink-700);
-  }
-  .gf-loading.show { display: flex; }
-  .gf-spinner {
-    width: 14px; height: 14px; border-radius: 50%;
-    border: 2px solid rgba(15,122,55,.25); border-top-color: var(--brand-dark);
-    animation: gf-spin .7s linear infinite;
-  }
-  @keyframes gf-spin { to { transform: rotate(360deg); } }
-  @media (max-width: 760px) { .gf-loading { top: calc(20px + var(--gf-header-h, 60px)); } }
 
   /* ---------- Credits badge ---------- */
   .watermark {
@@ -479,7 +462,7 @@
   "name": "Collisions et réseau artériel de Montréal",
   "description": "Carte des collisions routières de Montréal (2012-2021) sur le réseau artériel : part des collisions sur les artères, les collectrices et les rues locales, par arrondissement.",
   "url": "https://gabfortin.com/cartes/collisions-reseau-arteriel/",
-  "image": "https://gabfortin.com/cartes/collisions-reseau-arteriel/apercu.png",
+  "image": "https://gabfortin.com/cartes/collisions-reseau-arteriel/apercu.jpg",
   "inLanguage": "fr-CA",
   "spatialCoverage": { "@type": "Place", "name": "Montréal, Québec" },
   "author": { "@type": "Person", "@id": "https://gabfortin.com/#gabriel-fortin", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
@@ -619,14 +602,14 @@
     <div class="gf-summary-row" id="gfSummaryRow"></div>
   </button>
 
-  <div class="gf-loading" id="gfLoading"><span class="gf-spinner"></span><span>Chargement…</span></div>
-
   <div class="watermark">
     <span>Gabriel Fortin · <a href="https://donnees.montreal.ca/dataset/collisions-routieres" target="_blank" rel="noopener">Données ouvertes, Ville de Montréal</a></span>
   </div>
 
   <script src="../vendor/carte/maplibre-gl.js"></script>
   <script src="../vendor/carte/carte.js"></script>
+  <script src="../vendor/chargement.js"></script>
+  <script src="../chargement-cartes.js"></script>
   <script>
     // Tronçons : ../reseau-arteriel/data/<slug>.json, [[[lng, lat], ...], classe, artere, nom]
     const TRONCONS_URL = '../reseau-arteriel/data/';
@@ -1024,10 +1007,13 @@
         return [streets, cols];
       });
     }
+    // Attente : carrefour, impact et points de collision (chargement-cartes.js)
+    const ATTENTE = attenteCarte('carrefour', 'Chargement des collisions…');
+
     function loadArrondissement(slug, fit) {
       state.slug = slug;
-      const loading = document.getElementById('gfLoading');
-      loading.classList.add('show');
+      const loading = ATTENTE;
+      loading.montrer(slug === 'all' ? 'Tous les arrondissements' : ((MANIFEST || []).find(a => a.slug === slug) || {}).name);
       const req = slug === 'all'
         ? loadAll()
         : Promise.all([fetchStreets(slug), fetchCollisions(slug).then(c => sortBySeverity(c.slice()))]);
@@ -1053,8 +1039,9 @@
       .catch(err => {
         console.error('Erreur de chargement', slug, err);
         document.getElementById('gfStats').innerHTML = '<p class="gf-stats-total">Les données n\'ont pas pu être chargées.</p>';
+        if (state.slug === slug) { loading.erreur(); return 'erreur'; }
       })
-      .finally(() => { if (state.slug === slug) loading.classList.remove('show'); });
+      .then(r => { if (state.slug === slug && r !== 'erreur') loading.cacher(); });
     }
 
     // ---------- Contrôles ----------

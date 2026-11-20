@@ -1,0 +1,79 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Scènes d’attente des cartes de gabfortin.com/cartes/ (base : vendor/chargement.css, modèle outils/communs/)
+   ch-urne (élections), ch-rues (réseau artériel), ch-carrefour (collisions).
+   =========================================================================== */
+
+/* ── Urne : des bulletins tombent dans la fente, l'urne sursaute, les
+   pastilles des partis jaillissent comme des résultats ─────────────────── */
+.u-urne {
+  left: 24%; right: 24%; bottom: 14%; height: 40%; border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .95), rgba(var(--ch-rgb), .25));
+  box-shadow: inset 0 0 0 3px var(--ch-accent), 0 6px 16px rgba(0, 0, 0, .15);
+  animation: u-sursaut 1.5s cubic-bezier(.3, 1.6, .5, 1) infinite;
+}
+.u-urne::before { content: ""; position: absolute; left: 30%; right: 30%; top: 10%; height: 7%; border-radius: 4px; background: rgba(10, 20, 14, .75); }
+.u-urne::after { content: "✓"; position: absolute; left: 0; right: 0; top: 38%; text-align: center; font: 900 20px/1 inherit; color: var(--ch-accent); }
+.u-bulletin {
+  left: 50%; top: 4%; width: 18%; height: 22%; margin-left: -9%; border-radius: 2px;
+  background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+  animation: u-glisse 1.5s cubic-bezier(.5, 0, .7, .4) infinite;
+}
+.u-bulletin::after { content: "✕"; position: absolute; inset: 0; display: grid; place-items: center; font: 900 12px/1 inherit; color: #1d4ed8; }
+.u-b2 { animation-delay: .5s; } .u-b3 { animation-delay: 1s; }
+.u-parti { width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; opacity: 0; animation: u-jaillit 1.5s cubic-bezier(.2, .9, .3, 1.5) infinite; }
+.u-p1 { left: 16%; top: 30%; background: #1ebf3a; box-shadow: 0 0 10px #1ebf3a; }
+.u-p2 { left: 84%; top: 34%; background: #9b59b6; box-shadow: 0 0 10px #9b59b6; animation-delay: .4s; }
+.u-p3 { left: 22%; top: 62%; background: #f39c12; box-shadow: 0 0 10px #f39c12; animation-delay: .8s; }
+.u-p4 { left: 80%; top: 66%; background: #5dade2; box-shadow: 0 0 10px #5dade2; animation-delay: 1.2s; }
+@keyframes u-glisse { 0% { transform: translateY(-60%) rotate(-8deg); opacity: 0; } 15% { opacity: 1; } 60% { transform: translateY(150%) rotate(0); opacity: 1; } 75%, 100% { transform: translateY(190%) scaleY(.2); opacity: 0; } }
+@keyframes u-sursaut { 0%, 55% { transform: none; } 62% { transform: translateY(3px) scaleY(.96); } 72% { transform: translateY(-3px); } 80%, 100% { transform: none; } }
+@keyframes u-jaillit { 0% { opacity: 0; transform: scale(.2); } 25% { opacity: 1; transform: scale(1.4); } 45%, 75% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(.6); } }
+@media (prefers-reduced-motion: reduce) { .u-parti { opacity: 1; } .u-b2, .u-b3 { display: none; } }
+
+/* ── Rues : le plan se trace par ordre d'importance, des artères principales
+   (rouge) aux rues locales (gris), comme la légende de la carte ────────── */
+.r-plan { inset: -20%; transform: rotate(-34deg); }
+.r-plan i { position: absolute; border-radius: 3px; transform-origin: 0 50%; animation: r-trace 3s cubic-bezier(.6, 0, .2, 1) infinite; }
+.r-plan i.r-v { transform-origin: 50% 0; animation-name: r-trace-v; }
+.r-principale { height: 6px; left: 0; right: 0; background: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, .8); }
+.r-secondaire { height: 4px; left: 0; right: 0; background: #f97316; animation-delay: .35s !important; }
+.r-collectrice { height: 3px; left: 0; right: 0; background: #3b82f6; animation-delay: .7s !important; }
+.r-locale { height: 2px; left: 0; right: 0; background: #94a3b8; animation-delay: 1.05s !important; }
+.r-v.r-principale, .r-v.r-secondaire, .r-v.r-collectrice, .r-v.r-locale { top: 0; bottom: 0; right: auto; height: auto; }
+.r-v.r-principale { width: 6px; } .r-v.r-secondaire { width: 4px; } .r-v.r-collectrice { width: 3px; } .r-v.r-locale { width: 2px; }
+.r-h1 { top: 50%; } .r-h2 { top: 30%; } .r-h3 { top: 70%; } .r-h4 { top: 40%; } .r-h5 { top: 60%; } .r-h6 { top: 20%; } .r-h7 { top: 80%; }
+.r-v1 { left: 46%; } .r-v2 { left: 28%; } .r-v3 { left: 66%; } .r-v4 { left: 37%; } .r-v5 { left: 56%; } .r-v6 { left: 76%; } .r-v7 { left: 18%; }
+.r-curseur {                                       /* crayon lumineux */
+  left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
+  background: #fff; box-shadow: 0 0 0 3px var(--ch-accent), 0 0 18px var(--ch-clair);
+  animation: r-curseur 3s ease-in-out infinite;
+}
+@keyframes r-trace { 0% { transform: scaleX(0); opacity: 1; } 40%, 85% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+@keyframes r-trace-v { 0% { transform: scaleY(0); opacity: 1; } 40%, 85% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+@keyframes r-curseur { 0% { transform: translate(-60px, 20px); } 25% { transform: translate(40px, -30px); } 50% { transform: translate(-20px, 40px); } 75% { transform: translate(45px, 25px); } 100% { transform: translate(-60px, 20px); } }
+
+/* ── Carrefour : deux voitures arrivent, l'impact éclate, les points de
+   collision s'allument autour comme sur la carte ─────────────────────── */
+.k-route-h, .k-route-v { background: rgba(80, 88, 96, .55); }
+.k-route-h { left: -5%; right: -5%; top: 38%; height: 24%; }
+.k-route-v { top: -5%; bottom: -5%; left: 38%; width: 24%; }
+.k-route-h::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: repeating-linear-gradient(90deg, #fde68a 0 8px, transparent 8px 16px); }
+.k-route-v::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: repeating-linear-gradient(0deg, #fde68a 0 8px, transparent 8px 16px); }
+.k-auto { width: 15%; height: 9%; border-radius: 4px; background: #fff; box-shadow: 0 0 8px rgba(0, 0, 0, .3); }
+.k-a1 { top: 41%; left: 0; background: #3b82f6; animation: k-a1 1.8s cubic-bezier(.5, 0, .9, .6) infinite; }
+.k-a2 { left: 42%; top: 0; width: 9%; height: 15%; background: #f59e0b; animation: k-a2 1.8s cubic-bezier(.5, 0, .9, .6) infinite; }
+.k-choc {
+  left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  background: #dc2626; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  filter: drop-shadow(0 0 8px rgba(220, 38, 38, .9)); opacity: 0;
+  animation: k-choc 1.8s cubic-bezier(.2, .9, .3, 1.6) infinite;
+}
+.k-onde { left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; border: 2px solid #dc2626; opacity: 0; animation: k-onde 1.8s ease-out infinite; }
+.k-point { width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #dc2626; box-shadow: 0 0 10px rgba(220, 38, 38, .9); animation: k-pulse 1.8s ease-in-out infinite; }
+.k-pt1 { top: 18%; left: 20%; } .k-pt2 { top: 80%; left: 78%; animation-delay: .5s; } .k-pt3 { top: 22%; left: 80%; animation-delay: .9s; } .k-pt4 { top: 76%; left: 18%; animation-delay: 1.3s; }
+@keyframes k-a1 { 0% { transform: translateX(-120%); } 45% { transform: translateX(240%); } 100% { transform: translateX(240%); } }
+@keyframes k-a2 { 0% { transform: translateY(-120%); } 45% { transform: translateY(240%); } 100% { transform: translateY(240%); } }
+@keyframes k-choc { 0%, 44% { opacity: 0; transform: scale(.2) rotate(0); } 52% { opacity: 1; transform: scale(1.3) rotate(15deg); } 62%, 85% { opacity: 1; transform: scale(1) rotate(10deg); } 100% { opacity: 0; } }
+@keyframes k-onde { 0%, 46% { opacity: 0; transform: scale(.4); } 50% { opacity: 1; } 100% { opacity: 0; transform: scale(3.6); } }
+@keyframes k-pulse { 50% { transform: scale(1.6); opacity: .5; } }
+@media (prefers-reduced-motion: reduce) { .k-choc { opacity: 1; } .k-a1, .k-a2 { display: none; } }

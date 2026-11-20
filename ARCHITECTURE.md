@@ -79,7 +79,9 @@ Pour ajouter une carte « à venir » (grisée, non cliquable) : utiliser un `<d
 
 **Composant de carte commun** : toutes les cartes de `cartes/` chargent `cartes/vendor/carte/` (modèle `~/Developer/outils/communs/carte/`, copie à tenir à jour) au lieu de Leaflet : même API (`L.map`, `L.geoJSON`…, Folium compris), dessinée par MapLibre GL sur le fond vectoriel OpenFreeMap (Positron, ou Dark en mode sombre). Les appels `L.tileLayer` vers OpenStreetMap ou CARTO sont ignorés. Ordre : `maplibre-gl.css`, `carte.css`, puis `maplibre-gl.js`, `carte.js`, puis le code de la page. Recette : `~/Developer/MAP-DESIGN-SYSTEM.md`.
 
-**Mode sombre des cartes verre** : `cartes/reseau-arteriel/carte.html`, `cartes/collisions-reseau-arteriel/index.html`, `cartes/modes-rapides-et-frequents/map.html` et les deux cartes `cartes/elections-2025/Par*.html` chargent `cartes/carte-sombre.css` **après** leur `<style>`. Cette feuille ne contient que les règles sombres (jetons du dashboard verre, textes de marque, popups ; le fond sombre vient du style Dark d'OpenFreeMap) ; le mode clair reste dans chaque page. Une nouvelle carte de `cartes/` doit la relier aussi, et toute couleur claire écrite en dur dans une carte doit y être surchargée. Recette : `~/Developer/MAP-DESIGN-SYSTEM.md`, section « Mode sombre ».
+**Attente des cartes** : `cartes/chargement-cartes.js` (`attenteCarte(scène, titre)`) et `cartes/chargement-scenes.css` (urne, rues, carrefour), sur la base commune `cartes/vendor/chargement.js` + `.css` (copies de `~/Developer/outils/communs/`). Une nouvelle carte ajoute sa propre scène liée à ses données (DESIGN-PAGES.md, « Attente et arrivée d'un résultat »).
+
+**Mode sombre des cartes verre** : `cartes/reseau-arteriel/carte.html`, `cartes/collisions-reseau-arteriel/index.html`, `cartes/modes-rapides-et-frequents/map.html` et les deux cartes `cartes/elections-2025/Par*.html` chargent `cartes/carte-sombre.css` **après** leur `<style>`. Cette feuille ne contient que les règles sombres (jetons du dashboard verre, textes de marque, popups ; le fond sombre vient du style Dark d'OpenFreeMap) ; le mode clair reste dans chaque page. Une nouvelle carte de `cartes/` doit la relier aussi, et toute couleur claire écrite en dur dans une carte doit y être surchargée. C'est une copie du modèle commun `~/Developer/outils/communs/carte/carte-sombre.css` (aussi utilisé par securite-plateau) : la changer dans le modèle, puis `recopier_communs.py --appliquer`. Recette : `~/Developer/MAP-DESIGN-SYSTEM.md`, section « Mode sombre ».
 #### Données (`/donnees/`)
 
 1. **Compteurs Vélo Montréal** → https://compteurvelo.com
@@ -140,7 +142,7 @@ Les icônes d'onglet sont la photo de Gabriel en cercle, générées par `script
 - `favicon-48.png`, `favicon-192.png` : icônes d'onglet et de résultats Google (cercle sur fond transparent)
 - `apple-touch-icon.png` (180 px) : écran d'accueil iOS ; photo carrée pleine, car iOS arrondit les coins lui-même et remplit la transparence en noir
 
-La barre de navigation n'affiche plus de logo : un lien texte « Accueil » (`.nav-home`, `aria-current="page"` sur l'accueil) est à gauche, les autres liens à droite. L'image du flux RSS reste l'ancien logo : `favicon-96.png`, dérivé de `favico.png` (1254 px, 1,4 Mo, plus chargé par les pages). Le script n'y touche pas.
+La barre de navigation n'affiche plus de logo : un lien texte « Accueil » (`.nav-home`, `aria-current="page"` sur l'accueil) est à gauche, les autres liens au centre (grille `1fr auto 1fr`) et « Me supporter » à droite. La barre est recopiée dans chaque page : après un changement, `python3 ~/Developer/outils/verifier_barre.py` vérifie qu'elle est identique partout. L'image du flux RSS reste l'ancien logo : `favicon-96.png`, dérivé de `favico.png` (1254 px, 1,4 Mo, plus chargé par les pages). Le script n'y touche pas.
 
 Chaque page doit inclure, à la fin du `<head>` :
 
@@ -168,6 +170,6 @@ Les cartes interactives ouvertes dans une fenêtre modale sont comptées comme d
 - **Statistiques** : GoatCounter (voir [CONTENU.md](CONTENU.md), « Statistiques de visite »)
 - **SEO / IA** : Open Graph, JSON-LD (schema.org), `sitemap.xml`, `llms.txt`, flux RSS
 - **Performance** : aucune dépendance externe (sauf les bibliothèques des cartes interactives)
-- **Police** : Inter variable hébergée localement dans `fonts/` (licence SIL OFL, `fonts/OFL.txt`), déclarée en haut de `css/site.css`. Ne pas remettre le lien Google Fonts.
+- **Police** : Inter variable hébergée localement dans `fonts/` (licence SIL OFL, `fonts/OFL.txt`), déclarée en haut de `css/site.css`. Les cartes de `cartes/` lient `fonts/polices.css` (Inter + Poppins, modèle commun `outils/communs/polices/`). Ne pas remettre le lien Google Fonts.
 - **Images** : les balises `<img>` utilisent des fichiers `.webp` redimensionnés à la taille d'affichage (×2 à ×3 pour les écrans Retina). Les originaux PNG/JPG sont conservés pour `og:image`, le JSON-LD et le flux RSS, car certains réseaux sociaux acceptent mal le WebP. Pour une nouvelle image : la convertir en WebP (qualité 85) et garder l'original à côté si elle sert d'aperçu de partage.
 - **Images de partage de l'accueil et de `/don`** : `img/og-accueil.jpg` et `img/og-don.jpg` (1200 × 630, même famille que celles d'avantapres et de montrealaccessible.ca) sont faites à partir du gabarit `scripts/og-image.html` (`?page=don` pour la seconde). Pour les modifier, éditer le gabarit, puis suivre les étapes en commentaire en tête du fichier.

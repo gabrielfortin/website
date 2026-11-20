@@ -13,7 +13,12 @@ par section de vote faits à l'automne 2025, pour référence future.
 - `mairie2025-metro.html` — **obsolète**, conservé uniquement comme redirection
   (meta-refresh) vers `ParSectionDeVote.html`, pour ne pas casser d'anciens liens.
 - `resultats-detailles-2025.csv` — résultats officiels finaux (source de vérité).
-- `script/` — script de génération (`genmap3.py`) et son `README.md`.
+- `data/` — **les données des deux cartes**, découpées par arrondissement et
+  écrites par `script/genmap3.py` (ne pas modifier à la main). Voir
+  « Architecture : données chargées à la demande » plus bas.
+- `img/` — photos du bandeau de crédits (84 px), écrites par le même script.
+- `script/` — script de génération (`genmap3.py`), ses sources (GeoJSON,
+  `postes.csv`, photos d'origine) et son `README.md`.
 
 ## Audit des données (résultats préliminaires → résultats finaux)
 
@@ -106,16 +111,73 @@ Points vérifiés/corrigés spécifiquement pour le mobile (≤ 760px) :
   (`min(280px, 100vw - 72px)`) pour éviter tout débordement sur les très petits
   téléphones.
 
+## Architecture : données chargées à la demande (novembre 2026)
+
+Avant : `ParSectionDeVote.html` pesait 29 Mo (6,9 Mo compressés) et
+`ParDistrict.html` 6,3 Mo, avec tout le GeoJSON, les résultats et deux photos
+en base64 dans la page. Maintenant, les deux pages ne contiennent plus
+aucune donnée (42 Ko et 24 Ko) : elles chargent ce qu'il faut dans `data/`.
+C'est le modèle des « cartes lourdes » de `~/Developer/MAP-DESIGN-SYSTEM.md`.
+
+Fichiers de `data/` (tous écrits par `script/genmap3.py`) :
+
+| Fichier | Contenu | Chargé par |
+|---|---|---|
+| `manifeste.json` | Groupes (clé, postes, nombre de sections, tailles) | ParSectionDeVote |
+| `postes.json` | Libellé de chaque poste (`POSTE_LABELS`) | ParSectionDeVote |
+| `districts.json` | Contours des 58 districts (avec `NOM_DISTRICT`, `NOM_ARR`) | les deux cartes |
+| `metro.json` | Tracé du métro (lignes 1, 2, 4, 5) | ParSectionDeVote, à la 1re activation du calque |
+| `gagnants-districts.json` | Gagnant de la mairie de Montréal par district (votes additionnés) | ParDistrict |
+| `resultats/<groupe>.json` | Résultats par section pour les postes du groupe | ParSectionDeVote |
+| `sections/<groupe>.json` | Polygones des sections de vote de l'arrondissement | ParSectionDeVote |
+
+**Groupes** : le code avant le point dans la clé d'un poste. `0` = mairie de
+Montréal (toutes les sections : la page charge alors les 19 fichiers de
+sections) ; `1` à `19` = les arrondissements. Une section est rangée dans
+l'arrondissement dont les postes en donnent les résultats ; le script
+s'arrête si une section tombe dans deux arrondissements ou dans aucun.
+
+**Comportement** : à l'ouverture, mairie de Montréal (3,0 Mo compressés au
+total). Choisir un arrondissement charge seulement ses résultats et ses
+sections (0,1 Mo de plus pour le Plateau), recentre la carte dessus et
+n'affiche que ses sections. Avant, les sections des autres arrondissements
+restaient dessinées en gris (sans données pour ce poste). Pendant le chargement,
+une animation d'attente (urne et bulletins, `../chargement-cartes.js`) s'affiche au
+centre de la carte. Chaque fichier est
+gardé en mémoire : revenir à un arrondissement ne refait pas de requête.
+
+**Transformations** : aucune sur les valeurs. Les coordonnées sont arrondies
+à 6 décimales (environ 11 cm) et le JSON est écrit sans espaces.
+
+**Vérification faite à la conversion** : le script reproduit exactement les
+données de l'ancienne page (résultats des 103 postes, libellés, districts,
+sections, métro) ; les fichiers recombinés sont identiques (géométries =
+originales arrondies) ; un relevé dans un navigateur sans écran, avant et
+après, donne les mêmes menus, résultats globaux, couleurs de sections,
+popups (719 comparés) et districts (couleur et infobulle des 58) : 0 écart.
+
+**ParDistrict** : la liste de districts à colorer en violet, codée en dur,
+est remplacée par la règle « gagnant = Ensemble Montréal → violet, sinon
+vert » (identique pour les 58 districts). Les bibliothèques chargées par
+Folium et inutilisées (jQuery, Bootstrap, Font Awesome, awesome-markers)
+sont retirées : la page ne contacte plus jsDelivr, cdnjs ni code.jquery.com.
+Sans Bootstrap, l'en-tête et le bandeau reprennent la taille de texte des
+autres cartes.
+
+**Barre latérale** : elle suit la hauteur réelle de l'en-tête
+(`--gf-header-h`), qui passe sur deux lignes avec un nom d'arrondissement
+long ; avant, l'en-tête cachait le haut de la barre.
+
 ## Régénérer les données
 
-Voir `script/README.md`. En résumé :
+Voir `script/README.md`. En résumé (pandas et Pillow nécessaires) :
 
 ```
 cd script
 python3 genmap3.py
 ```
 
-Le script lit `../resultats-detailles-2025.csv` et produit `genmap3.html`, qui contient
-les blocs de données (`DATA_DISTRICTS`, `DATA_SECTIONS`, `RESULTS_INDEX`,
-`POSTE_LABELS`, `METRO_GEO_*`, etc.) à reprendre si les résultats officiels sont
-corrigés ou mis à jour.
+Le script lit `../resultats-detailles-2025.csv`, `postes.csv` et les GeoJSON de
+`geojson/`, vide `../data/` puis réécrit tous les fichiers (et `../img/`). Il
+affiche la taille de chaque fichier. Les pages n'ont rien à modifier, sauf si
+la liste des groupes change de nature.

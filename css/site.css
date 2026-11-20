@@ -134,10 +134,12 @@ hr {
 }
 
 /* NAV */
+/* Grille 1fr auto 1fr : accueil à gauche, menu centré, don à droite
+   (barre commune, DESIGN-PAGES.md). Sur mobile, retour en flex. */
 nav {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
   padding: 0 2rem;
   height: 64px;
@@ -151,7 +153,6 @@ nav {
 }
 
 .nav-links {
-  margin-left: auto;
   display: flex;
   gap: 1.75rem;
   align-items: center;
@@ -167,6 +168,7 @@ nav {
 }
 
 .nav-home {
+  justify-self: start;
   flex-shrink: 0;
   white-space: nowrap;
 }
@@ -178,23 +180,11 @@ nav {
   color: var(--text);
 }
 
-.nav-pill {
-  color: var(--text) !important;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 13px !important;
-  border: 1px solid var(--border-strong);
-  transition: background 0.2s ease !important;
-}
-
-.nav-pill:hover {
-  background: var(--surface);
-}
-
 /* Bouton « Faire un don » : hors de .nav-links pour rester visible sur
    mobile (la liste y défile). Contour vert plutôt que fond vert : le texte
    garde le contraste de --text. Sur mobile, le cœur seul. */
 .nav-don {
+  justify-self: end;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -805,10 +795,13 @@ footer {
 
 @media (max-width: 600px) {
   nav {
+    display: flex;
+    justify-content: space-between;
     padding: 0 16px;
   }
 
   .nav-links {
+    margin-left: auto;
     min-width: 0;
     gap: 0.85rem;
     overflow-x: auto;
@@ -819,10 +812,6 @@ footer {
   .nav-links a {
     font-size: 13px;
     white-space: nowrap;
-  }
-
-  .nav-pill {
-    display: none;
   }
 
   .nav-don {

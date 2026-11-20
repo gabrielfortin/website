@@ -17,18 +17,18 @@
 <meta property="og:title" content="Réseau artériel de Montréal, par arrondissement">
 <meta property="og:description" content="Carte interactive du réseau artériel administratif de Montréal, classée par type de voie et filtrable par arrondissement, à partir des données ouvertes de la Ville.">
 <meta property="og:url" content="https://gabfortin.com/cartes/reseau-arteriel/carte.html">
-<meta property="og:image" content="https://gabfortin.com/cartes/reseau-arteriel/Arteriel.png">
+<meta property="og:image" content="https://gabfortin.com/cartes/reseau-arteriel/Arteriel.jpg">
 <meta property="og:locale" content="fr_CA">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Réseau artériel de Montréal, par arrondissement">
 <meta name="twitter:description" content="Carte interactive du réseau artériel administratif de Montréal, classée par type de voie et filtrable par arrondissement, à partir des données ouvertes de la Ville.">
-<meta name="twitter:image" content="https://gabfortin.com/cartes/reseau-arteriel/Arteriel.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<meta name="twitter:image" content="https://gabfortin.com/cartes/reseau-arteriel/Arteriel.jpg">
+<link rel="stylesheet" href="../../fonts/polices.css">
 <!-- Composant de carte commun (API de Leaflet dessinée par MapLibre, fond OpenFreeMap) : ../vendor/carte/ -->
 <link rel="stylesheet" href="../vendor/carte/maplibre-gl.css">
 <link rel="stylesheet" href="../vendor/carte/carte.css">
+<link rel="stylesheet" href="../vendor/chargement.css">
+<link rel="stylesheet" href="../chargement-scenes.css">
 <style>
   :root {
     --brand: #16a34a;
@@ -302,22 +302,6 @@
     .gf-sidebar-scrim.open { opacity: 1; pointer-events: auto; z-index: 1440; }
   }
 
-  /* ---------- Loading indicator ---------- */
-  .gf-loading {
-    position: fixed; top: calc(var(--gap) * 2 + 70px); left: 50%; transform: translateX(-50%);
-    z-index: 900; display: none; align-items: center; gap: 10px;
-    padding: 9px 18px; border-radius: 999px;
-    background: var(--glass-strong); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);
-    font-size: .8rem; font-weight: 600; color: var(--ink-700);
-  }
-  .gf-loading.show { display: flex; }
-  .gf-spinner {
-    width: 14px; height: 14px; border-radius: 50%;
-    border: 2px solid rgba(15,122,55,.25); border-top-color: var(--brand-dark);
-    animation: gf-spin .7s linear infinite;
-  }
-  @keyframes gf-spin { to { transform: rotate(360deg); } }
 
   /* ---------- Credits badge ---------- */
   .watermark {
@@ -444,7 +428,7 @@
   "name": "Réseau artériel de Montréal, par arrondissement",
   "description": "Carte interactive du réseau artériel administratif de Montréal, classée par type de voie et filtrable par arrondissement, à partir des données ouvertes de la Ville.",
   "url": "https://gabfortin.com/cartes/reseau-arteriel/carte.html",
-  "image": "https://gabfortin.com/cartes/reseau-arteriel/Arteriel.png",
+  "image": "https://gabfortin.com/cartes/reseau-arteriel/Arteriel.jpg",
   "author": { "@type": "Person", "@id": "https://gabfortin.com/#gabriel-fortin", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
   "creator": { "@type": "Person", "@id": "https://gabfortin.com/#gabriel-fortin", "name": "Gabriel Fortin", "url": "https://gabfortin.com" },
   "isPartOf": { "@type": "CollectionPage", "url": "https://gabfortin.com/cartes/reseau-arteriel/" },
@@ -531,14 +515,14 @@
 
   <button type="button" class="gf-focus-exit" id="gfFocusExit"><span aria-hidden="true">✕</span><span>Afficher toutes les rues de nouveau</span></button>
 
-  <div class="gf-loading" id="gfLoading"><span class="gf-spinner"></span><span>Chargement…</span></div>
-
   <div class="watermark" title="Carte du réseau artériel">
     <span>Gabriel Fortin · <a href="https://donnees.montreal.ca/dataset/reseau-arteriel-administratif" target="_blank" rel="noopener">Données ouvertes, Ville de Montréal</a></span>
   </div>
 
   <script src="../vendor/carte/maplibre-gl.js"></script>
   <script src="../vendor/carte/carte.js"></script>
+  <script src="../vendor/chargement.js"></script>
+  <script src="../chargement-cartes.js"></script>
   <script>
     const MANIFEST = [
       {"name": "Ahuntsic-Cartierville", "slug": "ahuntsic-cartierville"},
@@ -782,14 +766,17 @@
         .then(rows => { dataCache.set(slug, rows); return rows; });
     }
 
+    // Attente : les rues se tracent par ordre d'importance (chargement-cartes.js)
+    const ATTENTE = attenteCarte('rues', 'Tracé des rues…');
+
     function loadArrondissement(slug, fit) {
-      const loading = document.getElementById('gfLoading');
+      const loading = ATTENTE;
       if (dataCache.has(slug)) {
         currentData = dataCache.get(slug);
         showResult(currentData, fit);
         return;
       }
-      loading.classList.add('show');
+      loading.montrer(slug === 'all' ? 'Tous les arrondissements' : (MANIFEST.find(a => a.slug === slug) || {}).name);
       const request = slug === 'all'
         ? Promise.all(MANIFEST.map(a => fetchArrondissement(a.slug))).then(all => {
             const combined = [].concat(...all);
@@ -802,8 +789,8 @@
           currentData = rows;
           showResult(rows, fit);
         })
-        .catch(err => { console.error('Erreur de chargement', slug, err); })
-        .finally(() => loading.classList.remove('show'));
+        .then(() => loading.cacher())
+        .catch(err => { console.error('Erreur de chargement', slug, err); loading.erreur(); });
     }
 
     const sel = document.getElementById('arrondSelect');

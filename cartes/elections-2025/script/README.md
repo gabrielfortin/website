@@ -1,10 +1,19 @@
-Version 1
+# Données des cartes des élections 2025
 
-python3 generate_map.py \
-  --csv resultats-detailles-2025.csv \
-  --outhtml map.html --winner-poste 0 --poste-alias poste_alias.json --wm-img1 ./img/Gabriel.JPG --wm-img2 ./img/Nic.png
+`genmap3.py` prépare les données des deux cartes (`../ParSectionDeVote.html`
+et `../ParDistrict.html`) à partir des résultats officiels. Les pages ne
+contiennent aucune donnée : elles chargent les fichiers de `../data/`.
 
+```
+cd script
+python3 genmap3.py        # pandas et Pillow nécessaires
+```
 
-Version 3
+Sources lues : `../resultats-detailles-2025.csv`, `postes.csv`,
+`geojson/districts.geojson`, `geojson/sections.geojson`,
+`geojson/metro_route_{1,2,4,5}.geojson`, `img/Gabriel.JPG`, `img/nicolas.png`.
 
-python3 genmap3.py
+Écrit : `../data/` (vidé d'abord) et `../img/`. Détail des fichiers,
+découpage par arrondissement et vérifications : `../NOTES.md`, section
+« Architecture : données chargées à la demande ». Méthode générale :
+`~/Developer/MAP-DESIGN-SYSTEM.md`, section « Carte lourde ».

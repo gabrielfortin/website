@@ -15,7 +15,7 @@ collectrices, rues locales…). Créée en novembre 2026.
 - `data/meta.json` : date de préparation, version de la source, période,
   libellés de `GRAVITE`.
 - `script/preparer_collisions.py` : produit tout `data/` (stdlib seulement).
-- `apercu.png` : image Open Graph 1200 × 630 (capture de la carte).
+- `apercu.jpg` : image Open Graph 1200 × 630 (capture de la carte).
 
 Les tracés de rues ne sont **pas** copiés ici : la carte lit
 `../reseau-arteriel/data/<slug>.json`. Toucher à ces fichiers change aussi le
@@ -151,5 +151,5 @@ python3 preparer_collisions.py ~/Downloads/collisions_routieres.geojson 2022-10-
 Le script s'arrête sur un `NO_SEQ_COLL` d'un format inattendu ou en double,
 ou sur une `GRAVITE` inconnue, plutôt que de publier un chiffre faux. Il
 affiche les totaux de contrôle à la fin : les comparer avec ceux ci-dessus,
-puis mettre à jour cette section et l'image `apercu.png` si les chiffres
+puis mettre à jour cette section et l'image `apercu.jpg` si les chiffres
 changent.

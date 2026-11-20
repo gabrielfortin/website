@@ -3,19 +3,35 @@
 """
 genmap3.py
 
-Génère une carte HTML interactive pour les résultats de l'élection de Montréal 2025 :
-- Districts : contours noirs, transparents
-- Sections de vote : colorées selon le parti gagnant pour le poste sélectionné
-- Dropdown pour choisir le poste (tous les postes disponibles dans le CSV),
-  avec les noms issus de postes.csv sous la forme : "<type> <poste>"
-- Popup détaillé sur clic d'une section, incluant les pourcentages de vote
-- Bannière subtile en bas à droite avec deux images et des noms
+Prépare les données des cartes des élections municipales de Montréal 2025
+(ParSectionDeVote.html et ParDistrict.html) à partir des résultats officiels.
 
-Dépendances : pandas
+Les pages HTML ne contiennent aucune donnée : elles chargent, avec fetch(),
+seulement les fichiers de ../data/ dont elles ont besoin (architecture des
+« cartes lourdes », voir ~/Developer/MAP-DESIGN-SYSTEM.md) :
+
+  data/manifeste.json          liste des groupes (arrondissements) et de leurs fichiers
+  data/postes.json             libellé de chaque poste (clé « <arrondissement>.<poste> »)
+  data/districts.json          contours des 58 districts électoraux
+  data/metro.json              tracé du métro (calque optionnel)
+  data/gagnants-districts.json gagnant de la mairie de Montréal par district (ParDistrict)
+  data/resultats/<groupe>.json résultats de chaque section pour les postes du groupe
+  data/sections/<groupe>.json  polygones des sections de vote de l'arrondissement
+  img/gabriel.jpg, img/nicolas.jpg  photos du bandeau de crédits (84 px)
+
+Groupe « 0 » : mairie de Montréal (toutes les sections). Les autres groupes
+sont les arrondissements (code avant le point dans la clé du poste).
+
+Les valeurs sont celles du CSV, sans modification. Seule transformation : les
+coordonnées des polygones sont arrondies à 6 décimales (environ 11 cm), comme
+dans cartes/reseau-arteriel, et le JSON est écrit sans espaces.
+
+Dépendances : pandas, Pillow (photos du bandeau)
+Usage : cd script && python3 genmap3.py
 """
 
 import json
-import base64
+import shutil
 import unicodedata
 from pathlib import Path
 from typing import Optional, Dict, Any
@@ -33,11 +49,11 @@ METRO_GEOJSON_PATH_1 = Path("geojson/metro_route_1.geojson")
 METRO_GEOJSON_PATH_2 = Path("geojson/metro_route_2.geojson")
 METRO_GEOJSON_PATH_4 = Path("geojson/metro_route_4.geojson")
 METRO_GEOJSON_PATH_5 = Path("geojson/metro_route_5.geojson")
-OUTPUT_HTML = Path("genmap3.html")
+DOSSIER_DONNEES = Path("../data")
+DOSSIER_IMG = Path("../img")
 
-WM_TEXT = "Gabriel Fortin · Nicolas Jolicoeur"
-WM_IMG1_PATH = Path("./img/gabriel.jpg")
-WM_IMG2_PATH = Path("./img/nicolas.png")
+PHOTOS_BANDEAU = {"gabriel.jpg": Path("img/Gabriel.JPG"), "nicolas.jpg": Path("img/nicolas.png")}
+TAILLE_PHOTO = 84  # 3 × les 28 px affichés
 
 
 # --- Utilitaires ---
@@ -59,19 +75,6 @@ def normalize_str(value: Any) -> str:
     # normalisation unicode (accents, etc.)
     s = unicodedata.normalize("NFC", s)
     return s
-
-
-def img_to_data_uri(path: Path) -> Optional[str]:
-    """Convertit une image locale en data URI (base64) pour l'inclure dans le HTML."""
-    if not path:
-        return None
-    if not path.exists():
-        print(f"⚠️  Image introuvable: {path}")
-        return None
-    suffix = path.suffix.lower()
-    mime = "image/png" if suffix == ".png" else "image/jpeg"
-    b64 = base64.b64encode(path.read_bytes()).decode("ascii")
-    return f"data:{mime};base64,{b64}"
 
 
 # --- Construction des données à partir du CSV de résultats ---
@@ -219,399 +222,158 @@ def load_poste_labels(postes_csv: Path, poste_codes: Dict[str, Any]) -> Dict[str
     return final_labels
 
 
-# --- Génération du HTML Leaflet ---
+# --- Gagnant de la mairie de Montréal par district (ParDistrict.html) ---
 
 
-def generate_html(
-    districts_geojson: Dict[str, Any],
-    sections_geojson: Dict[str, Any],
-    results_index: Dict[str, Dict[str, Dict[str, Any]]],
-    poste_labels: Dict[str, str],
-    out_html: Path,
-    wm_text: str,
-    wm_img1_data_uri: Optional[str],
-    wm_img2_data_uri: Optional[str],
-    metro_geojson_1: Dict[str, Any],
-    metro_geojson_2: Dict[str, Any],
-    metro_geojson_4: Dict[str, Any],
-    metro_geojson_5: Dict[str, Any]
-) -> None:
-    js_districts = json.dumps(districts_geojson, ensure_ascii=False)
-    js_sections = json.dumps(sections_geojson, ensure_ascii=False)
-    js_results = json.dumps(results_index, ensure_ascii=False)
-    js_poste_labels = json.dumps(poste_labels, ensure_ascii=False)
-    js_wm_text = json.dumps(wm_text, ensure_ascii=False)
-    js_wm_img1 = json.dumps(wm_img1_data_uri)
-    js_wm_img2 = json.dumps(wm_img2_data_uri)
-    js_metro_geo_1 = json.dumps(metro_geojson_1, ensure_ascii=False)
-    js_metro_geo_2 = json.dumps(metro_geojson_2, ensure_ascii=False)
-    js_metro_geo_4 = json.dumps(metro_geojson_4, ensure_ascii=False)
-    js_metro_geo_5 = json.dumps(metro_geojson_5, ensure_ascii=False)
-
-    # Template avec placeholders, qu'on remplace ensuite
-    html_template = """<!DOCTYPE html>
-<html lang=\"fr\">
-<head>
-  <meta charset=\"utf-8\" />
-  <title>Carte des résultats par section et districts</title>
-  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
-  <link
-    rel=\"stylesheet\"
-    href=\"https://unpkg.com/leaflet@1.9.4/dist/leaflet.css\"
-    integrity=\"sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=\"
-    crossorigin=\"\"/>
-  <style>
-    html, body {
-      margin: 0; padding: 0; height: 100%; width: 100%;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;
-    }
-    #map {
-      width: 100%;
-      height: 100%;
-    }
-    .poste-control {
-      position: absolute;
-      top: 10px;
-      left: 50px;
-      z-index: 1000;
-      background: rgba(255,255,255,0.95);
-      padding: 6px 10px;
-      border-radius: 9999px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-    }
-    .poste-control select {
-      font-size: 13px;
-      border-radius: 9999px;
-      padding: 2px 8px;
-      border: 1px solid #ccc;
-    }
-    @media (max-width: 600px) {
-      .poste-control {
-        left: 10px;
-        right: 10px;
-        justify-content: space-between;
-      }
-    }
-
-    /* Bannière / watermark bottom-right */
-    .watermark {
-      position: absolute; right: 10px; bottom: 10px; z-index: 1000;
-      background: rgba(255,255,255,0.80); backdrop-filter: blur(2px);
-      border-radius: 9999px; padding: 6px 10px; display: inline-flex; align-items: center; gap: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15); font: 11px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color: #111; opacity: 0.8; transition: opacity .2s ease;
-    }
-    .watermark:hover { opacity: 1; }
-    .wm-avatars { display: inline-flex; align-items: center; gap: 6px; }
-    .wm-avatar {
-      width: 22px; height: 22px; border-radius: 50%; object-fit: cover;
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
-    }
-    @media (max-width: 560px) {
-      .watermark { padding: 4px 8px; font-size: 10px; gap: 4px; }
-      .wm-avatar { width: 18px; height: 18px; }
-    }
-  </style>
-</head>
-<body>
-  <div id=\"map\"></div>
-  <div class=\"poste-control\">
-    <span>Poste :</span>
-    <select id=\"posteSelect\"></select>
-  </div>
-
-  <!-- Bannière avec images et noms, en bas à droite -->
-  <div id=\"wm\" class=\"watermark\" title=\"Carte des résultats 2025\">
-    <div class=\"wm-avatars\" id=\"wmAvatars\"></div>
-    <div class=\"wm-text\" id=\"wmText\"></div>
-  </div>
-
-  <script
-    src=\"https://unpkg.com/leaflet@1.9.4/dist/leaflet.js\"
-    integrity=\"sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=\"
-    crossorigin=\"\"></script>
-  <script>
-    const DATA_DISTRICTS = __DATA_DISTRICTS__;
-    const DATA_SECTIONS = __DATA_SECTIONS__;
-    const RESULTS_INDEX = __RESULTS_INDEX__;
-    const POSTE_LABELS = __POSTE_LABELS__;
-    const WM_TEXT = __WM_TEXT__;
-    const WM_IMG1 = __WM_IMG1__;
-    const WM_IMG2 = __WM_IMG2__;
-    const METRO_GEO_1 = __METRO_GEO_1__;
-    const METRO_GEO_2 = __METRO_GEO_2__;
-    const METRO_GEO_4 = __METRO_GEO_4__;
-    const METRO_GEO_5 = __METRO_GEO_5__;
-
-    function partyColor(parti) {
-      if (!parti) return "#cccccc";
-      const p = String(parti).toLowerCase();
-      // Projet Montréal : vert
-      if (p.includes("projet montr")) return "#1ebf3a";
-      // Ensemble Montréal : mauve
-      if (p.includes("ensemble montr")) return "#9b59b6";
-      // Transition : orange
-      if (p.includes("transition")) return "#f39c12";
-      // Action : bleu pâle
-      if (p.includes("action")) return "#5dade2";
-      return "#cccccc";
-    }
-
-    function sectionKeyFromFeature(f) {
-      const props = f.properties || {};
-      const c = String(props.CODE_SECTION ?? "");
-      return c;
-    }
-
-    const posteKeys = Object.keys(RESULTS_INDEX).sort();
-    let currentPosteKey = posteKeys.length > 0 ? posteKeys[0] : null;
-
-    function currentPosteLabel() {
-      if (!currentPosteKey) return "";
-      return POSTE_LABELS[currentPosteKey] || currentPosteKey;
-    }
-
-    const map = L.map('map');
-    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Districts : contours noirs transparents
-    function styleDistrict(feature) {
-      return {
-        color: "#000000",
-        weight: 1.2,
-        fillColor: "transparent",
-        fillOpacity: 0.0
-      };
-    }
-
-    const districtsLayer = L.geoJSON(DATA_DISTRICTS, {
-      style: styleDistrict
-    }).addTo(map);
-
-    // Sections : remplies selon le parti gagnant pour le poste choisi
-    function styleSection(feature) {
-      const key = sectionKeyFromFeature(feature);
-      const posteData = currentPosteKey ? RESULTS_INDEX[currentPosteKey] : null;
-      const info = posteData ? posteData[key] : null;
-      const color = info ? partyColor(info.winner_party) : "#eeeeee";
-      return {
-        color: "#555",
-        weight: 0.5,
-        fillColor: color,
-        fillOpacity: 0.7
-      };
-    }
-
-    function buildPopupHtml(info, sectionKey) {
-      if (!info) {
-        return "<div><strong>Section " + sectionKey + "</strong><br>Aucune donnée pour ce poste.</div>";
-      }
-      let html = "";
-      html += "<div>";
-      html += "<strong>District " + (info.district_id ?? "") + " · Bureau " + (info.bureau ?? "") + "</strong><br/>";
-      html += "Poste : " + currentPosteLabel() + "<br/><br/>";
-      if (info.total_votes != null) {
-        html += "Total votes : " + info.total_votes + "<br/>";
-      }
-      if (info.total_valid != null) {
-        html += "Votes valides : " + info.total_valid + "<br/>";
-      }
-      if (info.total_rejected != null) {
-        html += "Votes rejetés : " + info.total_rejected + "<br/>";
-      }
-      html += "<br/><strong>Résultats par candidat·e</strong><br/>";
-      html += "<table style='border-collapse:collapse; font-size:12px; margin-top:4px;'>";
-      html += "<thead><tr>";
-      html += "<th style='border-bottom:1px solid #ccc; padding:2px 6px; text-align:left;'>Candidat·e</th>";
-      html += "<th style='border-bottom:1px solid #ccc; padding:2px 6px; text-align:left;'>Parti</th>";
-      html += "<th style='border-bottom:1px solid #ccc; padding:2px 6px; text-align:right;'>Votes</th>";
-      html += "<th style='border-bottom:1px solid #ccc; padding:2px 6px; text-align:right;'>%</th>";
-      html += "</tr></thead><tbody>";
-      (info.breakdown || []).forEach(row => {
-        const votes = (row.votes != null) ? row.votes : "";
-        let pctStr = "";
-        if (row.pct != null) {
-          try {
-            pctStr = Number(row.pct).toFixed(1) + " %";
-          } catch (e) {
-            pctStr = "";
-          }
+def build_district_winners(csv_path: Path) -> Dict[str, Dict[str, Any]]:
+    """Additionne les votes du poste 0,00 (mairie de Montréal) par district et
+    retient le candidat qui en a le plus. S'arrête en cas d'égalité."""
+    df = pd.read_csv(csv_path, encoding="utf-8")
+    df = df[df["Poste"].astype(str) == "0,00"].copy()
+    df["Votes"] = pd.to_numeric(df["Votes"], errors="coerce").fillna(0).astype(int)
+    df["ElectoralDistrictID"] = pd.to_numeric(df["ElectoralDistrictID"], errors="coerce").astype(int)
+    gagnants: Dict[str, Dict[str, Any]] = {}
+    for district, grp in df.groupby("ElectoralDistrictID"):
+        totaux = grp.groupby(["Candidat", "Partie"], as_index=False)["Votes"].sum().sort_values("Votes", ascending=False)
+        if len(totaux) > 1 and totaux.iloc[0]["Votes"] == totaux.iloc[1]["Votes"]:
+            raise SystemExit(f"Égalité au district {district} : gagnant impossible à déterminer")
+        premier = totaux.iloc[0]
+        gagnants[str(int(district))] = {
+            "winner_candidate": normalize_str(premier["Candidat"]),
+            "winner_party": normalize_str(premier["Partie"]),
+            "winner_votes": int(premier["Votes"]),
         }
-        html += "<tr>";
-        html += "<td style='padding:2px 6px;'>" + (row.candidat || "") + "</td>";
-        html += "<td style='padding:2px 6px;'>" + (row.parti || "") + "</td>";
-        html += "<td style='padding:2px 6px; text-align:right;'>" + votes + "</td>";
-        html += "<td style='padding:2px 6px; text-align:right;'>" + pctStr + "</td>";
-        html += "</tr>";
-      });
-      html += "</tbody></table>";
-      html += "</div>";
-      return html;
+    return gagnants
+
+
+# --- Écriture des fichiers de données ---
+
+
+def arrondir(valeur: Any) -> Any:
+    """Arrondit les coordonnées (nombres réels) à 6 décimales, récursivement."""
+    if isinstance(valeur, float):
+        return round(valeur, 6)
+    if isinstance(valeur, list):
+        return [arrondir(v) for v in valeur]
+    return valeur
+
+
+def alleger(fc: Dict[str, Any], features=None) -> Dict[str, Any]:
+    """Copie d'une FeatureCollection, propriétés intactes, coordonnées arrondies."""
+    return {
+        **{k: v for k, v in fc.items() if k != "features"},
+        "features": [
+            {**f, "geometry": {**f["geometry"], "coordinates": arrondir(f["geometry"]["coordinates"])}}
+            for f in (fc["features"] if features is None else features)
+        ],
     }
 
-    function onEachSection(feature, layer) {
-      const key = sectionKeyFromFeature(feature);
-      layer.on('click', function() {
-        const posteData = currentPosteKey ? RESULTS_INDEX[currentPosteKey] : null;
-        const info = posteData ? posteData[key] : null;
-        const html = buildPopupHtml(info, key);
-        layer.bindPopup(html, {maxWidth: 360}).openPopup();
-      });
-    }
 
-    const sectionsLayer = L.geoJSON(DATA_SECTIONS, {
-      style: styleSection,
-      onEachFeature: onEachSection
-    }).addTo(map);
+def ecrire_json(chemin: Path, donnees: Any) -> int:
+    chemin.parent.mkdir(parents=True, exist_ok=True)
+    texte = json.dumps(donnees, ensure_ascii=False, separators=(",", ":"))
+    chemin.write_text(texte, encoding="utf-8")
+    return len(texte.encode("utf-8"))
 
-    let genmetro = true
-    if (genmetro) {
-      const metroLayer1 = L.geoJSON(METRO_GEO_1, {
-        style: {
-          weight: 7,
-          color:  "#005900"
-        }
-      }).addTo(map);
-      const metroLayer2 = L.geoJSON(METRO_GEO_2, {
-        style: {
-          weight: 7,
-          color: "#D95700"
-        }
-      }).addTo(map);
-      const metroLayer4 = L.geoJSON(METRO_GEO_4, {
-        style: {
-          weight: 7,
-          color: "#FFD900"
-        }
-      }).addTo(map);
-      const metroLayer5 = L.geoJSON(METRO_GEO_5, {
-        style: {
-          weight: 7,
-          color: "#0047AB"
-        }
-    }).addTo(map);
-    }
-    
 
-    // Adapter la carte à l'étendue
-    try {
-      map.fitBounds(districtsLayer.getBounds());
-    } catch (e) {
-      try {
-        map.fitBounds(sectionsLayer.getBounds());
-      } catch (e2) {
-        map.setView([45.55, -73.6], 11);
-      }
-    }
+def groupe_de(poste: str) -> str:
+    return poste.split(".")[0]
 
-    // Dropdown de postes
-    const sel = document.getElementById('posteSelect');
-    posteKeys.forEach(k => {
-      const opt = document.createElement('option');
-      opt.value = k;
-      const label = POSTE_LABELS[k] || k;
-      opt.textContent = label;
-      sel.appendChild(opt);
-    });
-    if (currentPosteKey) {
-      sel.value = currentPosteKey;
-    }
 
-    sel.addEventListener('change', function() {
-      currentPosteKey = this.value;
-      sectionsLayer.setStyle(styleSection);
-      map.closePopup();
-    });
+def repartir_sections(sections_geojson, results_index) -> Dict[str, list]:
+    """Range chaque section de vote dans l'arrondissement (groupe) dont les
+    postes en donnent les résultats. Une section sans résultat d'arrondissement
+    suit les autres sections de son district."""
+    groupe_section: Dict[str, str] = {}
+    for poste, sections in results_index.items():
+        g = groupe_de(poste)
+        if g == "0":
+            continue
+        for code in sections:
+            if groupe_section.setdefault(code, g) != g:
+                raise SystemExit(f"Section {code} dans deux arrondissements ({groupe_section[code]} et {g})")
+    groupe_district: Dict[str, str] = {}
+    for code, g in groupe_section.items():
+        district = code.split("-")[0]
+        if groupe_district.setdefault(district, g) != g:
+            raise SystemExit(f"District {district} dans deux arrondissements")
+    par_groupe: Dict[str, list] = {}
+    for f in sections_geojson["features"]:
+        code = str(f["properties"].get("CODE_SECTION", ""))
+        g = groupe_section.get(code) or groupe_district.get(code.split("-")[0])
+        if g is None:
+            raise SystemExit(f"Section {code} : arrondissement introuvable")
+        par_groupe.setdefault(g, []).append(f)
+    return par_groupe
 
-    // Initialiser la bannière images + noms
-    (function initBanner() {
-      const t = document.getElementById('wmText');
-      const a = document.getElementById('wmAvatars');
-      if (!t || !a) return;
-      t.textContent = WM_TEXT || "Gabriel Fortin · Nicolas Jolicoeur";
-      if (WM_IMG1) {
-        const img1 = document.createElement('img');
-        img1.src = WM_IMG1; img1.alt = 'Photo 1'; img1.className = 'wm-avatar';
-        a.appendChild(img1);
-      }
-      if (WM_IMG2) {
-        const img2 = document.createElement('img');
-        img2.src = WM_IMG2; img2.alt = 'Photo 2'; img2.className = 'wm-avatar';
-        a.appendChild(img2);
-      }
-    })();
-  </script>
-</body>
-</html>"""  # fin template
 
-    html = (
-        html_template
-        .replace("__DATA_DISTRICTS__", js_districts)
-        .replace("__DATA_SECTIONS__", js_sections)
-        .replace("__RESULTS_INDEX__", js_results)
-        .replace("__POSTE_LABELS__", js_poste_labels)
-        .replace("__WM_TEXT__", js_wm_text)
-        .replace("__WM_IMG1__", js_wm_img1)
-        .replace("__WM_IMG2__", js_wm_img2)
-        .replace("__METRO_GEO_1__", js_metro_geo_1)
-        .replace("__METRO_GEO_2__", js_metro_geo_2)
-        .replace("__METRO_GEO_4__", js_metro_geo_4)
-        .replace("__METRO_GEO_5__", js_metro_geo_5)
-    )
+def ecrire_donnees(districts_geojson, sections_geojson, results_index, poste_labels, metro, gagnants) -> None:
+    if DOSSIER_DONNEES.exists():
+        shutil.rmtree(DOSSIER_DONNEES)   # repartir de zéro : pas de fichier orphelin
+    tailles: Dict[str, int] = {}
+    tailles["postes.json"] = ecrire_json(DOSSIER_DONNEES / "postes.json", poste_labels)
+    tailles["districts.json"] = ecrire_json(DOSSIER_DONNEES / "districts.json", alleger(districts_geojson))
+    tailles["metro.json"] = ecrire_json(DOSSIER_DONNEES / "metro.json", metro)
+    tailles["gagnants-districts.json"] = ecrire_json(DOSSIER_DONNEES / "gagnants-districts.json", gagnants)
 
-    out_html.write_text(html, encoding="utf-8")
-    print(f"Carte générée : {out_html}")
+    par_groupe = repartir_sections(sections_geojson, results_index)
+    groupes = sorted({groupe_de(p) for p in results_index}, key=lambda g: int(g))
+    manifeste = {"groupes": []}
+    for g in groupes:
+        resultats = {p: v for p, v in results_index.items() if groupe_de(p) == g}
+        t_res = ecrire_json(DOSSIER_DONNEES / "resultats" / f"{g}.json", resultats)
+        entree = {"cle": g, "postes": sorted(resultats), "resultats_octets": t_res}
+        if g != "0":
+            feats = par_groupe.get(g, [])
+            entree["sections"] = len(feats)
+            entree["sections_octets"] = ecrire_json(DOSSIER_DONNEES / "sections" / f"{g}.json", alleger(sections_geojson, feats))
+        manifeste["groupes"].append(entree)
+    if set(par_groupe) - set(groupes):
+        raise SystemExit(f"Sections rangées dans des groupes sans poste : {set(par_groupe) - set(groupes)}")
+    total_sections = sum(e.get("sections", 0) for e in manifeste["groupes"])
+    if total_sections != len(sections_geojson["features"]):
+        raise SystemExit(f"{total_sections} sections écrites sur {len(sections_geojson['features'])}")
+    ecrire_json(DOSSIER_DONNEES / "manifeste.json", manifeste)
+
+    for g in manifeste["groupes"]:
+        print(f"  groupe {g['cle']:>2} : {len(g['postes'])} poste(s), {g.get('sections', '—')} sections, "
+              f"résultats {g['resultats_octets'] // 1024} Ko, sections {g.get('sections_octets', 0) // 1024} Ko")
+    for nom, t in tailles.items():
+        print(f"  {nom} : {t // 1024} Ko")
+
+
+def ecrire_photos() -> None:
+    from PIL import Image, ImageOps
+    DOSSIER_IMG.mkdir(exist_ok=True)
+    for nom, source in PHOTOS_BANDEAU.items():
+        img = ImageOps.exif_transpose(Image.open(source)).convert("RGB")
+        img = ImageOps.fit(img, (TAILLE_PHOTO, TAILLE_PHOTO), Image.LANCZOS)
+        img.save(DOSSIER_IMG / nom, "JPEG", quality=85, optimize=True, progressive=True)
+        print(f"  img/{nom} : {(DOSSIER_IMG / nom).stat().st_size // 1024} Ko")
 
 
 # --- main ---
 
 
 def main() -> None:
-    # Vérifier les fichiers
-    if not CSV_PATH.exists():
-        raise SystemExit(f"CSV introuvable : {CSV_PATH}")
-    if not POSTES_CSV_PATH.exists():
-        raise SystemExit(f"postes.csv introuvable : {POSTES_CSV_PATH}")
-    if not DISTRICTS_GEOJSON_PATH.exists():
-        raise SystemExit(f"GeoJSON districts introuvable : {DISTRICTS_GEOJSON_PATH}")
-    if not SECTIONS_GEOJSON_PATH.exists():
-        raise SystemExit(f"GeoJSON sections introuvable : {SECTIONS_GEOJSON_PATH}")
+    for chemin in (CSV_PATH, POSTES_CSV_PATH, DISTRICTS_GEOJSON_PATH, SECTIONS_GEOJSON_PATH):
+        if not chemin.exists():
+            raise SystemExit(f"Fichier introuvable : {chemin}")
 
     results_index = build_results_index(CSV_PATH)
     poste_labels = load_poste_labels(POSTES_CSV_PATH, results_index)
-
+    gagnants = build_district_winners(CSV_PATH)
     districts_geojson = json.loads(DISTRICTS_GEOJSON_PATH.read_text(encoding="utf-8"))
     sections_geojson = json.loads(SECTIONS_GEOJSON_PATH.read_text(encoding="utf-8"))
-
-    wm_img1_uri = img_to_data_uri(WM_IMG1_PATH)
-    wm_img2_uri = img_to_data_uri(WM_IMG2_PATH)
-
-    metro_geojson_1 = json.loads(METRO_GEOJSON_PATH_1.read_text(encoding="utf-8"))
-    metro_geojson_2 = json.loads(METRO_GEOJSON_PATH_2.read_text(encoding="utf-8"))
-    metro_geojson_4 = json.loads(METRO_GEOJSON_PATH_4.read_text(encoding="utf-8"))
-    metro_geojson_5 = json.loads(METRO_GEOJSON_PATH_5.read_text(encoding="utf-8"))
-
-    generate_html(
-        districts_geojson,
-        sections_geojson,
-        results_index,
-        poste_labels,
-        OUTPUT_HTML,
-        WM_TEXT,
-        wm_img1_uri,
-        wm_img2_uri,
-        metro_geojson_1,
-        metro_geojson_2,
-        metro_geojson_4,
-        metro_geojson_5
-    )
+    metro = {
+        cle: json.loads(chemin.read_text(encoding="utf-8"))
+        for cle, chemin in (("1", METRO_GEOJSON_PATH_1), ("2", METRO_GEOJSON_PATH_2),
+                            ("4", METRO_GEOJSON_PATH_4), ("5", METRO_GEOJSON_PATH_5))
+    }
+    print("Écriture de ../data/ :")
+    ecrire_donnees(districts_geojson, sections_geojson, results_index, poste_labels, metro, gagnants)
+    print("Photos du bandeau :")
+    ecrire_photos()
 
 
 if __name__ == "__main__":

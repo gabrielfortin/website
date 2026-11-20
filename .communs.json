@@ -8,6 +8,13 @@
     "cartes/vendor/carte/carte.js": "carte/carte.js",
     "cartes/vendor/carte/carte.css": "carte/carte.css",
     "cartes/vendor/carte/LICENSE-maplibre.txt": "carte/LICENSE-maplibre.txt",
-    "cartes/vendor/don.js": "don.js"
+    "cartes/vendor/don.js": "don.js",
+    "cartes/carte-sombre.css": "carte/carte-sombre.css",
+    "fonts/poppins-600-latin.woff2": "polices/poppins-600-latin.woff2",
+    "fonts/poppins-700-latin.woff2": "polices/poppins-700-latin.woff2",
+    "fonts/OFL-Poppins.txt": "polices/OFL-Poppins.txt",
+    "fonts/polices.css": "polices/polices.css",
+    "cartes/vendor/chargement.css": "chargement.css",
+    "cartes/vendor/chargement.js": "chargement.js"
   }
 }
