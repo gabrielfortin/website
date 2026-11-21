@@ -23,12 +23,12 @@
 <meta name="twitter:title" content="Réseau artériel de Montréal, par arrondissement">
 <meta name="twitter:description" content="Carte interactive du réseau artériel administratif de Montréal, classée par type de voie et filtrable par arrondissement, à partir des données ouvertes de la Ville.">
 <meta name="twitter:image" content="https://gabfortin.com/cartes/reseau-arteriel/Arteriel.jpg">
-<link rel="stylesheet" href="../../fonts/polices.css?v=1.2.0">
+<link rel="stylesheet" href="../../fonts/polices.css?v=1.3.0">
 <!-- Composant de carte commun (API de Leaflet dessinée par MapLibre, fond OpenFreeMap) : ../vendor/carte/ -->
-<link rel="stylesheet" href="../vendor/carte/maplibre-gl.css?v=1.2.0">
-<link rel="stylesheet" href="../vendor/carte/carte.css?v=1.2.0">
-<link rel="stylesheet" href="../vendor/chargement.css?v=1.2.0">
-<link rel="stylesheet" href="../chargement-scenes.css?v=1.2.0">
+<link rel="stylesheet" href="../vendor/carte/maplibre-gl.css?v=1.3.0">
+<link rel="stylesheet" href="../vendor/carte/carte.css?v=1.3.0">
+<link rel="stylesheet" href="../vendor/chargement.css?v=1.3.0">
+<link rel="stylesheet" href="../chargement-scenes.css?v=1.3.0">
 <style>
   :root {
     --brand: #16a34a;
@@ -131,27 +131,13 @@
     position: relative;
     display: flex; align-items: center; justify-content: center;
     width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
-    border: none; background: linear-gradient(140deg, var(--brand-light), var(--brand-dark));
-    color: #fff; cursor: pointer;
-    box-shadow: 0 4px 14px -4px rgba(15, 122, 55, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.45);
-    transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+    padding: 0;
+    border: 1.5px solid currentColor; background: transparent;
+    color: var(--gf-info-trait, var(--brand-ink, var(--brand-dark))); cursor: pointer;
+    transition: background-color .2s ease;
   }
   .gf-info-btn svg { width: 16px; height: 16px; position: relative; z-index: 1; }
-  .gf-info-btn::before {
-    content: ''; position: absolute; inset: -5px; border-radius: 50%;
-    border: 2px solid var(--brand); opacity: .4;
-    animation: gf-info-pulse 2.6s ease-out infinite; pointer-events: none;
-  }
-  .gf-info-btn:hover {
-    box-shadow: 0 8px 22px -4px rgba(15, 122, 55, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    transform: translateY(-1px) scale(1.1);
-  }
-  .gf-info-btn:active { transform: scale(0.94); }
-  @keyframes gf-info-pulse {
-    0% { transform: scale(0.6); opacity: 0.45; }
-    80% { transform: scale(1.7); opacity: 0; }
-    100% { transform: scale(1.7); opacity: 0; }
-  }
+  .gf-info-btn:hover { background: color-mix(in srgb, currentColor 12%, transparent); }
   .gf-info-overlay {
     position: fixed; inset: 0; z-index: 2000;
     background: rgba(11, 17, 32, 0.45);
@@ -420,7 +406,7 @@
     .gf-focus-exit { top: calc(20px + var(--gf-header-h, 60px)); left: auto; right: 10px; transform: none; }
   }
 </style>
-<link rel="stylesheet" href="../carte-sombre.css?v=1.2.0">
+<link rel="stylesheet" href="../carte-sombre.css?v=1.3.0">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -461,7 +447,7 @@
         <path d="M12 11v6.2" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
       </svg>
     </button>
-    <script src="../vendor/don.js?v=1.2.0"></script>
+    <script src="../vendor/don.js?v=1.3.0"></script>
   </div>
 
   <div class="gf-info-overlay" id="gfInfoOverlay" role="dialog" aria-modal="true" aria-labelledby="gfInfoTitle">
@@ -519,10 +505,10 @@
     <span>Gabriel Fortin · <a href="https://donnees.montreal.ca/dataset/reseau-arteriel-administratif" target="_blank" rel="noopener">Données ouvertes, Ville de Montréal</a></span>
   </div>
 
-  <script src="../vendor/carte/maplibre-gl.js?v=1.2.0"></script>
-  <script src="../vendor/carte/carte.js?v=1.2.0"></script>
-  <script src="../vendor/chargement.js?v=1.2.0"></script>
-  <script src="../chargement-cartes.js?v=1.2.0"></script>
+  <script src="../vendor/carte/maplibre-gl.js?v=1.3.0"></script>
+  <script src="../vendor/carte/carte.js?v=1.3.0"></script>
+  <script src="../vendor/chargement.js?v=1.3.0"></script>
+  <script src="../chargement-cartes.js?v=1.3.0"></script>
   <script>
     const MANIFEST = [
       {"name": "Ahuntsic-Cartierville", "slug": "ahuntsic-cartierville"},
