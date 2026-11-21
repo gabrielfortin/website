@@ -72,6 +72,7 @@ Navigation principale: Blogue, Cartes, Données, Parcours.
 6. **Résultats des élections 2025** → `./elections-2025/ParSectionDeVote.html`
 7. **Modes rapides et fréquents**
 8. **Stationnement Plateau** → https://parking.gabfortin.com
+9. **Accès aux tiers lieux** → `./tiers-lieux/` (carte lourde : `data/arrondissements/<clé>.json` écrit par `script/preparer_tiers_lieux.py`, vérifié par `script/verifier_tiers_lieux.py` ; méthode dans son `NOTES.md`)
 
 La carte « Sens uniques et parcours traversants » a été retirée (novembre 2026) : elle est devenue l'onglet « Simulateur » de l'outil privé `securite-plateau` (pld.gabfortin.com), avec son script et ses données. `cartes/sens-uniques/index.html` ne fait que renvoyer vers `/cartes/`.
 

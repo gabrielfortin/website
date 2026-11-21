@@ -1,2 +1,4 @@
 *.DS_Store
 CLAUDE.md
+# Sources brutes des cartes (volumineuses, retéléchargées par les scripts)
+cartes/*/script/sources/

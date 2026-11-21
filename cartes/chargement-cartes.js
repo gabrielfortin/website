@@ -25,6 +25,8 @@
     carrefour: '<span class="k-route-h"></span><span class="k-route-v"></span><span class="k-point k-pt1"></span>' +
       '<span class="k-point k-pt2"></span><span class="k-point k-pt3"></span><span class="k-point k-pt4"></span>' +
       '<span class="k-auto k-a1"></span><span class="k-auto k-a2"></span><span class="k-onde"></span><span class="k-choc"></span>',
+    // Tiers lieux : autour d'un parc, les lots passent du rouge au vert, du plus proche au plus loin
+    tiers: '<span class="t-rues"></span><i class="t-lot t-l1"></i><i class="t-lot t-l2"></i><i class="t-lot t-l3"></i><i class="t-lot t-l4"></i><i class="t-lot t-l5"></i><i class="t-lot t-l6"></i><i class="t-lot t-l7"></i><i class="t-lot t-l8"></i><i class="t-lot t-l9"></i><i class="t-lot t-l10"></i><i class="t-lot t-l11"></i><i class="t-lot t-l12"></i><span class="t-parc"></span><span class="t-onde"></span><span class="t-onde t-o2"></span>',
   };
 
   window.attenteCarte = function (scene, titre) {

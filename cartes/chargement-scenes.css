@@ -77,3 +77,23 @@
 @keyframes k-onde { 0%, 46% { opacity: 0; transform: scale(.4); } 50% { opacity: 1; } 100% { opacity: 0; transform: scale(3.6); } }
 @keyframes k-pulse { 50% { transform: scale(1.6); opacity: .5; } }
 @media (prefers-reduced-motion: reduce) { .k-choc { opacity: 1; } .k-a1, .k-a2 { display: none; } }
+
+/* ── Tiers lieux : un parc au centre ; ses ondes « atteignent » les lots, qui
+   passent du rouge au vert, du plus proche au plus loin, comme sur la carte ── */
+.t-rues { inset: 0; background:
+  linear-gradient(90deg, transparent 31%, rgba(80, 88, 96, .35) 31% 35%, transparent 35% 65%, rgba(80, 88, 96, .35) 65% 69%, transparent 69%),
+  linear-gradient(0deg, transparent 31%, rgba(80, 88, 96, .35) 31% 35%, transparent 35% 65%, rgba(80, 88, 96, .35) 65% 69%, transparent 69%); }
+.t-lot { width: 12%; height: 12%; border-radius: 3px; background: #d73027; animation: t-vert 3s ease-in-out infinite; }
+.t-l1 { left: 9%; top: 9%; animation-delay: .9s; }   .t-l2 { left: 22%; top: 9%; animation-delay: .9s; }
+.t-l3 { left: 66%; top: 9%; animation-delay: .9s; }  .t-l4 { left: 79%; top: 9%; animation-delay: .9s; }
+.t-l5 { left: 9%; top: 44%; animation-delay: .45s; } .t-l6 { left: 79%; top: 44%; animation-delay: .45s; }
+.t-l7 { left: 44%; top: 9%; animation-delay: .45s; } .t-l8 { left: 44%; top: 79%; animation-delay: .45s; }
+.t-l9 { left: 9%; top: 79%; animation-delay: .9s; }  .t-l10 { left: 22%; top: 79%; animation-delay: .9s; }
+.t-l11 { left: 66%; top: 79%; animation-delay: .9s; } .t-l12 { left: 79%; top: 79%; animation-delay: .9s; }
+.t-parc { left: 38%; top: 38%; width: 24%; height: 24%; border-radius: 6px; background: #15803d; box-shadow: 0 0 14px rgba(21, 128, 61, .8); }
+.t-parc::after { content: ""; position: absolute; left: 50%; top: 50%; width: 40%; height: 40%; margin: -20% 0 0 -20%; border-radius: 50%; background: #4ade80; }
+.t-onde { left: 50%; top: 50%; width: 24%; height: 24%; margin: -12% 0 0 -12%; border-radius: 50%; border: 2px solid #22c55e; opacity: 0; animation: t-onde 3s ease-out infinite; }
+.t-o2 { animation-delay: .45s; }
+@keyframes t-vert { 0%, 10% { background: #d73027; transform: scale(1); } 25% { background: #fee08b; transform: scale(1.12); } 40%, 80% { background: #1a9850; transform: scale(1); } 100% { background: #d73027; } }
+@keyframes t-onde { 0% { opacity: .9; transform: scale(.6); } 60%, 100% { opacity: 0; transform: scale(3.6); } }
+@media (prefers-reduced-motion: reduce) { .t-lot { animation: none; background: #1a9850; } .t-onde { display: none; } }
