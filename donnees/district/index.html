@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trouver le district — Gabriel Fortin</title>
+  <meta name="description" content="Collez une adresse de Montréal : district électoral, arrondissement et courriel des élu·es qui le représentent. Données ouvertes de la Ville de Montréal.">
+  <link rel="canonical" href="https://gabfortin.com/donnees/district/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gabriel Fortin">
+  <meta property="og:title" content="Trouver le district">
+  <meta property="og:description" content="Collez une adresse de Montréal : district électoral, arrondissement et courriel des élu·es qui le représentent. Données ouvertes de la Ville de Montréal.">
+  <meta property="og:url" content="https://gabfortin.com/donnees/district/">
+  <meta property="og:locale" content="fr_CA">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Trouver le district",
+    "description": "Collez une adresse de Montréal : district électoral, arrondissement et courriel des élu·es qui le représentent. Données ouvertes de la Ville de Montréal.",
+    "url": "https://gabfortin.com/donnees/district/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "isAccessibleForFree": true,
+    "author": {
+      "@type": "Person",
+      "@id": "https://gabfortin.com/#gabriel-fortin",
+      "name": "Gabriel Fortin",
+      "url": "https://gabfortin.com"
+    },
+    "spatialCoverage": { "@type": "City", "name": "Montréal" },
+    "inLanguage": "fr-CA"
+  }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="./img/favicon.svg">
+  <script data-goatcounter="https://gabfortin.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+  <link rel="stylesheet" href="./css/style-d.css?v=1.4.0">
+  <link rel="stylesheet" href="./css/hybride.css?v=1.4.0">
+  <link rel="stylesheet" href="./css/outils.css?v=1.4.0">
+</head>
+<body>
+  <a class="skip-link" href="#principal">Aller au contenu</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="#principal" aria-label="Trouver le district"><span class="brand-icone" aria-hidden="true">📍</span><span class="brand-texte">Trouver le district</span></a>
+      <nav class="main-nav" aria-label="Navigation principale">
+        <a href="../">← Données</a>
+      </nav>
+      <button type="button" class="gf-info-btn" id="gfInfoBtn" aria-label="À propos de cet outil" aria-haspopup="dialog" aria-controls="gfInfoOverlay" title="À propos">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="7.6" r="1.4" fill="currentColor"/><path d="M12 11v6.2" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/></svg>
+      </button>
+      <a class="topbar-profile" href="../../" title="gabfortin.com">
+        <span class="topbar-profile-name">gabfortin.com</span>
+        <img src="./img/gabriel-fortin.jpg" alt="Gabriel Fortin" width="32" height="32">
+      </a>
+    </div>
+  </header>
+  <script src="./js/titre-barre.js?v=1.4.0"></script>
+
+  <main id="principal">
+    <section class="hero">
+      <div class="wrap">
+        <h1>Trouver le district</h1>
+        <p class="lede">Collez une adresse de Montréal : l’outil donne le district électoral, l’arrondissement et le courriel des élu·es qui le représentent.</p>
+        <p class="freshness" id="fraicheur">Chargement des données…</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="wrap">
+        <form class="card recherche" id="formulaire" autocomplete="off">
+          <label for="adresse">Adresse</label>
+          <div class="recherche-ligne">
+            <div class="champ-suggestions">
+              <input type="search" id="adresse" name="adresse" placeholder="Ex. : 4801, rue Saint-Denis, app. 3" spellcheck="false" autofocus aria-describedby="adresse-aide"
+                role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestions">
+              <ul class="suggestions" id="suggestions" role="listbox" aria-label="Rues proposées" hidden></ul>
+            </div>
+            <button type="submit" class="bouton" id="bouton-trouver" disabled>Trouver</button>
+          </div>
+          <p class="aide" id="adresse-aide">Numéro et rue suffisent : des rues sont proposées pendant la frappe, Entrée choisit la première. Code postal, appartement et « Montréal » sont ignorés. Coller lance la recherche.</p>
+        </form>
+
+        <div id="resultat" class="resultat" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="gf-info-overlay" id="gfInfoOverlay">
+    <div class="gf-info-panel" role="dialog" aria-modal="true" aria-labelledby="gfInfoTitle">
+      <button type="button" class="gf-info-close" id="gfInfoClose" aria-label="Fermer « À propos »">✕</button>
+      <h2 id="gfInfoTitle">À propos de cet outil</h2>
+      <p>Pour une adresse de l’agglomération de Montréal : le district électoral, l’arrondissement et les élu·es à joindre (conseiller·ères de la Ville et d’arrondissement, maire·sse d’arrondissement).</p>
+      <p><strong>Données</strong> (Ville de Montréal, CC BY 4.0) :</p>
+      <ul>
+        <li><a href="https://donnees.montreal.ca/dataset/adresses-ponctuelles" target="_blank" rel="noopener">Adresse ponctuelle</a> : registre officiel des adresses, avec la position de chaque bâtiment.</li>
+        <li><a href="https://donnees.montreal.ca/dataset/districts-electoraux" target="_blank" rel="noopener">Districts électoraux 2025</a> et <a href="https://donnees.montreal.ca/dataset/limites-administratives-agglomeration" target="_blank" rel="noopener">limites administratives</a> (villes liées).</li>
+        <li><a href="https://donnees.montreal.ca/dataset/listes-des-elus-de-la-ville-de-montreal" target="_blank" rel="noopener">Liste des élus de la Ville de Montréal</a> au 2 novembre 2025 : une élection partielle ou une démission n’y apparaît qu’à sa mise à jour par la Ville.</li>
+      </ul>
+      <p><span id="donnees-maj" hidden>Données préparées le <time id="donnees-maj-date"></time>. </span>L’adresse saisie reste dans votre navigateur : elle n’est envoyée à aucun service. Seul le fond de la carte du résultat vient d’<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, qui voit donc le secteur affiché, pas l’adresse.</p>
+      <p>Initiative indépendante : ni produite ni approuvée par la Ville de Montréal.</p>
+      <p>Développé par <a href="https://gabfortin.com" target="_blank" rel="noopener">Gabriel Fortin</a> · <a href="../../confidentialite/index.html">Confidentialité</a></p>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Données : <a href="https://donnees.montreal.ca" target="_blank" rel="noopener">Ville de Montréal</a> (adresses, districts électoraux 2025, liste des élus), CC BY 4.0. Fond de carte : <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a>, © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a>, données © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>.</p>
+      <p>Initiative indépendante : ni produite ni approuvée par la Ville de Montréal.</p>
+      <p>Développé par <a href="https://gabfortin.com" target="_blank" rel="noopener">Gabriel Fortin</a> · <a href="../../confidentialite/index.html">Confidentialité</a> · v<span data-version>1.4.0</span></p>
+    </div>
+  </footer>
+
+  <script type="module" src="./js/district.js?v=1.4.0"></script>
+  <script src="./js/apropos.js?v=1.4.0"></script>
+</body>
+</html>

@@ -89,7 +89,8 @@ Pour ajouter une carte « à venir » (grisée, non cliquable) : utiliser un `<d
 1. **Compteurs Vélo Montréal** → https://compteurvelo.com
 2. **Mobilité Montréal (ARTM)** → https://artm.gabfortin.com
 3. **Déchets Montréal** → https://dechets.gabfortin.com
-4. **Résultats élections municipales Montréal 2025** → `./elections-2025/resultats.html`
+4. **Trouver le district** → `./district/` : adresse → district, arrondissement, élu·es. Copie publique de l'outil du cabinet (`outils-cabinet/district/`, cabinet.gabfortin.com) : mêmes `js/adresse.js`, `js/district.js` et `data/district/`, dans son propre dossier (style D, barre du haut des outils). Le composant de carte est celui de `cartes/vendor/carte/`. Les données se régénèrent dans outils-cabinet (`scripts/preparer_district.py`) puis se recopient ici (`cp -r ../outils-cabinet/data donnees/district/`), de même que toute correction de `adresse.js` ou `district.js`.
+5. **Résultats élections municipales Montréal 2025** → `./elections-2025/resultats.html`
 
 #### Blogue (`/articles/`) : articles et plans
 

@@ -15,6 +15,20 @@
     "fonts/OFL-Poppins.txt": "polices/OFL-Poppins.txt",
     "fonts/polices.css": "polices/polices.css",
     "cartes/vendor/chargement.css": "chargement.css",
-    "cartes/vendor/chargement.js": "chargement.js"
+    "cartes/vendor/chargement.js": "chargement.js",
+    "donnees/district/js/apropos.js": "apropos.js",
+    "donnees/district/js/titre-barre.js": "titre-barre.js",
+    "donnees/district/css/style-d.css": "style-d.css",
+    "donnees/district/fonts/plex-sans.css": "polices/plex-sans.css",
+    "donnees/district/fonts/plex-sans-latin.woff2": "polices/plex-sans-latin.woff2",
+    "donnees/district/fonts/plex-sans-latin-ext.woff2": "polices/plex-sans-latin-ext.woff2",
+    "donnees/district/fonts/OFL-IBMPlexSans.txt": "polices/OFL-IBMPlexSans.txt"
+  },
+  "blocs": {
+    "donnees/district/css/hybride.css": [
+      "hybride.css",
+      "apropos.css",
+      "titre-barre.css"
+    ]
   }
 }

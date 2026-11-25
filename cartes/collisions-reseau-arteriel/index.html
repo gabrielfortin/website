@@ -23,12 +23,12 @@
 <meta name="twitter:title" content="Collisions et réseau artériel de Montréal">
 <meta name="twitter:description" content="Carte des collisions routières de Montréal (2012-2021) sur le réseau artériel : part des collisions sur les artères, les collectrices et les rues locales, par arrondissement.">
 <meta name="twitter:image" content="https://gabfortin.com/cartes/collisions-reseau-arteriel/apercu.jpg">
-<link rel="stylesheet" href="../../fonts/polices.css?v=1.3.0">
+<link rel="stylesheet" href="../../fonts/polices.css?v=1.4.0">
 <!-- Composant de carte commun (API de Leaflet dessinée par MapLibre, fond OpenFreeMap) : ../vendor/carte/ -->
-<link rel="stylesheet" href="../vendor/carte/maplibre-gl.css?v=1.3.0">
-<link rel="stylesheet" href="../vendor/carte/carte.css?v=1.3.0">
-<link rel="stylesheet" href="../vendor/chargement.css?v=1.3.0">
-<link rel="stylesheet" href="../chargement-scenes.css?v=1.3.0">
+<link rel="stylesheet" href="../vendor/carte/maplibre-gl.css?v=1.4.0">
+<link rel="stylesheet" href="../vendor/carte/carte.css?v=1.4.0">
+<link rel="stylesheet" href="../vendor/chargement.css?v=1.4.0">
+<link rel="stylesheet" href="../chargement-scenes.css?v=1.4.0">
 <style>
   /* Gabarit : ../reseau-arteriel/carte.html (même système « verre », même carte de base) */
   :root {
@@ -439,7 +439,7 @@
     :root:not([data-theme="light"]) .gf-person img { border-color: rgba(255, 255, 255, 0.2); }
   }
 </style>
-<link rel="stylesheet" href="../carte-sombre.css?v=1.3.0">
+<link rel="stylesheet" href="../carte-sombre.css?v=1.4.0">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -481,7 +481,7 @@
         <path d="M12 11v6.2" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
       </svg>
     </button>
-    <script src="../vendor/don.js?v=1.3.0"></script>
+    <script src="../vendor/don.js?v=1.4.0"></script>
   </div>
 
   <div class="gf-info-overlay" id="gfInfoOverlay" role="dialog" aria-modal="true" aria-labelledby="gfInfoTitle">
@@ -591,10 +591,10 @@
     <span>Gabriel Fortin · <a href="https://donnees.montreal.ca/dataset/collisions-routieres" target="_blank" rel="noopener">Données ouvertes, Ville de Montréal</a></span>
   </div>
 
-  <script src="../vendor/carte/maplibre-gl.js?v=1.3.0"></script>
-  <script src="../vendor/carte/carte.js?v=1.3.0"></script>
-  <script src="../vendor/chargement.js?v=1.3.0"></script>
-  <script src="../chargement-cartes.js?v=1.3.0"></script>
+  <script src="../vendor/carte/maplibre-gl.js?v=1.4.0"></script>
+  <script src="../vendor/carte/carte.js?v=1.4.0"></script>
+  <script src="../vendor/chargement.js?v=1.4.0"></script>
+  <script src="../chargement-cartes.js?v=1.4.0"></script>
   <script>
     // Tronçons : ../reseau-arteriel/data/<slug>.json, [[[lng, lat], ...], classe, artere, nom]
     const TRONCONS_URL = '../reseau-arteriel/data/';

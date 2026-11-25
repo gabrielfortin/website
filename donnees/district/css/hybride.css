@@ -1,0 +1,384 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Style « dashboard détaillé » (hybride) — référence pour les portails de
+   données denses (voir ~/Developer/DESIGN-PAGES.md, style D).
+
+   Entre l'ancien style sobre d'artm-data et le style verre de
+   compteurvelo.com :
+   - garde : fond neutre chaud, barre du haut pleine largeur, cartes presque
+     opaques, chiffres en noir, rayons modérés, aucune animation ;
+   - prend du verre : accent vert, trait vert sous le titre, barre verte
+     sur les KPI, léger verre dépoli, boutons pilules ;
+   - sobriété (21 novembre 2026) : police IBM Plex Sans au lieu d'Inter,
+     fond uni, plus de pastille devant les titres de section.
+
+   Chargé APRÈS style.css (qui porte la mise en page et les couleurs de
+   séries). --surface-1 reste OPAQUE : fond des infobulles des graphiques.
+   Mode sombre : suit l'appareil uniquement (pas de bouton de thème).
+   ═══════════════════════════════════════════════════════════════════════════ */
+/* ── Style D « dashboard détaillé » : bloc commun (outils/communs/hybride.css) ──
+   Identique dans artm-data, dechets-montreal, outils-cabinet et panneau-admin,
+   vérifié par le hook (outils/verifier_communs.py). Ne pas le modifier ici :
+   changer le modèle, puis le recopier dans chaque site. Les règles propres à
+   un site vont juste APRÈS ce bloc (elles l'emportent à spécificité égale). */
+@import url("../fonts/plex-sans.css");   /* IBM Plex Sans hébergée sur le site (outils/communs/polices/), depuis le 21 novembre 2026 */
+
+:root {
+  --accent:        #1DB860;
+  --accent-strong: #129a4c;
+  --accent-soft:   rgba(29,184,96,.12);
+
+  --card-bg:     rgba(255,255,255,.84);
+  --card-border: rgba(11,11,11,.08);
+  --card-blur:   saturate(160%) blur(10px);
+  --card-inner:  inset 0 1px 0 rgba(255,255,255,.9);
+  --header-bg:   rgba(252,252,251,.8);
+  --control-bg:  rgba(255,255,255,.7);
+
+  --page:   #f7f7f4;
+  --mesh-1: rgba(29,184,96,.10);
+  --mesh-2: rgba(41,171,226,.08);
+  --mesh-3: rgba(139,92,246,.05);
+
+  --surface-1: #fcfcfb;                /* opaque : infobulles */
+  --surface-2: rgba(242,241,237,.8);
+  --page-plane: transparent;
+  --text-muted: #6f6e69;               /* un peu plus foncé que l'ancien, pour le contraste */
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --shadow-card: 0 1px 2px rgba(11,11,11,.04), 0 6px 20px -8px rgba(11,11,11,.10), var(--card-inner);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.print-light):where(:not([data-theme="light"])) {
+    --accent-strong: #3ddc84;
+    --accent-soft:   rgba(29,184,96,.18);
+    --card-bg:     rgba(28,29,27,.82);
+    --card-border: rgba(255,255,255,.08);
+    --card-inner:  inset 0 1px 0 rgba(255,255,255,.04);
+    --header-bg:   rgba(22,22,21,.82);
+    --control-bg:  rgba(255,255,255,.06);
+    --page:   #0e0f0e;
+    --mesh-1: rgba(29,184,96,.07);
+    --mesh-2: rgba(41,171,226,.05);
+    --mesh-3: rgba(139,92,246,.04);
+    --surface-1: #1c1d1b;
+    --surface-2: rgba(255,255,255,.05);
+    --page-plane: transparent;
+    --text-muted: #9a9991;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -10px rgba(0,0,0,.5), var(--card-inner);
+  }
+}
+/* Thème sombre forcé (futur bouton de thème : <html data-theme="dark">), mêmes règles que ci-dessus. */
+  :root:not(.print-light):where([data-theme="dark"]) {
+    --accent-strong: #3ddc84;
+    --accent-soft:   rgba(29,184,96,.18);
+    --card-bg:     rgba(28,29,27,.82);
+    --card-border: rgba(255,255,255,.08);
+    --card-inner:  inset 0 1px 0 rgba(255,255,255,.04);
+    --header-bg:   rgba(22,22,21,.82);
+    --control-bg:  rgba(255,255,255,.06);
+    --page:   #0e0f0e;
+    --mesh-1: rgba(29,184,96,.07);
+    --mesh-2: rgba(41,171,226,.05);
+    --mesh-3: rgba(139,92,246,.04);
+    --surface-1: #1c1d1b;
+    --surface-2: rgba(255,255,255,.05);
+    --page-plane: transparent;
+    --text-muted: #9a9991;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -10px rgba(0,0,0,.5), var(--card-inner);
+  }
+
+
+/* ── Base : fond neutre uni (sobriété, 21 novembre 2026 : plus de taches de couleur) ── */
+html { background: var(--page); }
+body {
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Pas de 'tnum' sur le texte courant : chiffres tabulaires là où ils
+     comptent (KPI, tableaux, graphiques), avec font-variant-numeric. */
+  font-feature-settings: normal;
+  background: var(--page);
+}
+::selection { background: rgba(29,184,96,.22); }
+a { color: var(--accent-strong); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ── Barre du haut : pleine largeur comme avant, en verre léger ──────────── */
+header.site-header {
+  background: var(--header-bg);
+  -webkit-backdrop-filter: saturate(160%) blur(14px); backdrop-filter: saturate(160%) blur(14px);
+}
+nav.main-nav a { border-radius: 999px; font-weight: 550; font-size: 13px; padding: 7px 8px; }
+nav.main-nav { gap: 0; }
+.site-header .wrap { gap: 14px; }
+@media (max-width: 760px) {
+  nav.main-nav a { padding: 6px 9px; }
+}
+nav.main-nav a:hover { background: var(--accent-soft); color: var(--text-primary); }
+/* Lien vers gabfortin.com en haut à droite (photo + nom), comme compteurvelo */
+.topbar-profile {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  padding: 3px 3px 3px 12px; border-radius: 999px;
+  text-decoration: none; color: var(--text-secondary);
+  font-size: 13px; font-weight: 550;
+  border: 1px solid var(--card-border); background: var(--control-bg);
+  transition: color .2s, border-color .2s;
+}
+.topbar-profile:hover { color: var(--text-primary); border-color: var(--accent); }
+/* Barre épurée : la photo seule sert de lien, le texte « gabfortin.com » reste
+   lu par les lecteurs d'écran ; menu de 5 liens au plus (DESIGN-PAGES.md) ;
+   sous 1200 px, le sous-titre de la marque disparaît aussi. */
+.topbar-profile { padding: 2px; }
+.topbar-profile-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 1200px) { .brand small { display: none; } }
+.topbar-profile img {
+  width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: block;
+  box-shadow: 0 0 0 2px var(--surface-1);
+}
+
+/* ── Titres : sobres, avec la touche verte (trait sous le grand titre) ───── */
+.hero h1 { font-weight: 800; letter-spacing: -.03em; }
+.hero h1::after {
+  content: ""; display: block; width: 56px; height: 4px; margin-top: 16px;
+  border-radius: 4px; background: var(--accent);
+}
+.hero .byline a { color: var(--accent-strong); }
+.eyebrow { color: var(--accent-strong); }
+.section-head h2 { display: flex; align-items: center; gap: 10px; letter-spacing: -.015em; }
+
+/* ── Cartes : presque opaques, verre léger ───────────────────────────────── */
+.card, .kpi-card {
+  background: var(--card-bg);
+  -webkit-backdrop-filter: var(--card-blur); backdrop-filter: var(--card-blur);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-card);
+}
+.kpi-card { position: relative; overflow: hidden; }
+.kpi-card::before {
+  content: ""; position: absolute; left: 18px; right: 18px; top: 0; height: 3px;
+  border-radius: 0 0 3px 3px; background: var(--accent);
+}
+.kpi-card .kpi-value { flex-wrap: wrap; row-gap: 2px; }
+.callout { background: var(--card-bg); border-color: var(--card-border); }
+.stat-strip .stat { border-left-color: var(--accent); }
+
+/* ── Contrôles : pilules ─────────────────────────────────────────────────── */
+.table-toggle {
+  border-radius: 999px; padding: 6px 12px;
+  background: var(--control-bg); border-color: var(--card-border);
+  font-weight: 500;
+}
+.table-toggle:hover { border-color: var(--accent); color: var(--accent-strong); }
+
+/* ── Pied de page ────────────────────────────────────────────────────────── */
+footer.site-footer a { color: var(--text-secondary); }
+footer.site-footer a:hover { color: var(--accent-strong); }
+
+/* ── Utilitaire : texte lu par les lecteurs d'écran seulement ────────────── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ── Haut de page : fraîcheur des données ────────────────────── */
+.hero .lede { margin-bottom: 14px; }
+.freshness {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 0 22px; font-size: 13px; color: var(--text-muted);
+}
+.freshness::before {
+  content: ""; flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--status-good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--status-good) 20%, transparent);
+}
+.hero .byline { margin-top: 0; }
+
+/* ── KPI : libellé court + note détaillée plus pâle ──────────────────────── */
+.kpi-card .kpi-note { margin-top: 4px; font-size: 12px; line-height: 1.35; color: var(--text-muted); opacity: .85; }
+
+/* ── Menu qui suit la lecture ────────────────────────────────────────────── */
+nav.main-nav a[aria-current="location"] { background: var(--accent-soft); color: var(--accent-strong); }
+
+/* ── Source sous le titre de section (et non poussée à droite) ───────────── */
+.section-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+.section-head .source-tag { order: 2; }
+
+/* ── Lien direct vers une section ────────────────────────────────────────── */
+.anchor-link {
+  margin-inline-start: 4px;
+  border: 1px solid var(--card-border); background: var(--control-bg);
+  border-radius: 999px; padding: 2px 9px;
+  font-family: inherit; font-size: 13px; font-weight: 600; line-height: 1.4; color: var(--text-muted);
+  cursor: pointer; opacity: 0; transition: opacity .15s, color .15s, border-color .15s;
+}
+.section-head h2:hover .anchor-link, .anchor-link:focus-visible, .anchor-link.copied { opacity: 1; }
+.anchor-link:hover { color: var(--accent-strong); border-color: var(--accent); }
+.anchor-link.copied { color: var(--accent-strong); border-color: var(--accent); }
+@media (hover: none) { .anchor-link { opacity: 1; } }   /* tactile : toujours visible */
+
+/* ── Impression (séance du conseil, rapport) ─────────────────────────────── */
+@media print {
+  :root { --page: #fff; --card-bg: #fff; }
+  html, body { background: #fff !important; color: #000; }
+  header.site-header, .skip-link, .topbar-profile, .table-toggle,
+  .anchor-link, footer.site-footer a[href$="confidentialite.html"] { display: none !important; }
+  .card, .kpi-card, .callout {
+    background: #fff !important; box-shadow: none !important;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    border: 1px solid #ccc; break-inside: avoid;
+  }
+  section.panel { padding: 18px 0; break-before: auto; }
+  .section-head { break-after: avoid; }
+  .hero h1::after { background: #000; }
+  .data-table-wrap { display: block !important; }        /* les tableaux de données s'impriment */
+  a { color: #000; text-decoration: underline; }
+  .source-tag a::after, .src-name a::after { content: " (" attr(href) ")"; font-size: 10px; word-break: break-all; }
+  @page { margin: 14mm; }
+}
+/* ── Fin du bloc commun du style D ── */
+
+/* ── Propre à ce site (après le bloc commun) ─────────────────────────────── */
+@media print { .controles { display: none !important; } }
+
+/* ── Titre dans la barre : apparaît quand le grand titre sort de l'écran ─────
+   js/titre-barre.js pose .titre-en-vue sur la barre tant que le grand titre
+   est visible, puis .titre-anime après le chargement (barre et titre : voir
+   le script). Seul le texte disparaît :
+   l'icône reste en haut à gauche. Sans JS, le titre reste
+   simplement affiché dans la barre. Entrée : dévoilement de gauche à droite,
+   flou → net, léger mouvement vers le haut ; puis le trait vert se dessine
+   dessous, en écho à celui du grand titre. */
+.brand-texte {
+  display: inline-block;
+  position: relative;
+  padding-bottom: 5px;
+  clip-path: inset(0 0 0 0);
+}
+.brand-texte::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  width: 22px; height: 3px; border-radius: 3px;
+  background: var(--accent);
+  transform-origin: left;
+}
+.titre-anime .brand-texte {
+  transition:
+    clip-path .6s cubic-bezier(.2, .8, .2, 1),
+    transform .6s cubic-bezier(.2, .8, .2, 1),
+    filter .45s ease,
+    opacity .35s ease,
+    visibility 0s 0s;
+}
+.titre-anime .brand-texte::after { transition: transform .45s cubic-bezier(.2, .8, .2, 1) .3s; }
+.titre-en-vue .brand-texte {
+  clip-path: inset(0 100% 0 0);
+  transform: translateY(8px);
+  filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+}
+/* En sortie : tout repart en même temps, et visibility attend la fin. */
+.titre-anime.titre-en-vue .brand-texte {
+  transition:
+    clip-path .35s ease-in,
+    transform .35s ease-in,
+    filter .3s ease-in,
+    opacity .3s ease-in,
+    visibility 0s .35s;
+}
+.titre-en-vue .brand-texte::after { transform: scaleX(0); transition-delay: 0s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .titre-anime .brand-texte,
+  .titre-anime.titre-en-vue .brand-texte { transition: opacity .2s, visibility 0s; }
+  .titre-en-vue .brand-texte { clip-path: none; transform: none; filter: none; }
+  .brand-texte::after { transition: none !important; }
+}
+@media print {
+  .titre-en-vue .brand-texte { opacity: 1; visibility: visible; clip-path: none; transform: none; filter: none; }
+}
+
+/* Couleurs du bouton « i » et de la modale « À propos » (bloc commun ci-dessous) */
+:root {
+  --gf-info-1: #1DB860; --gf-info-2: #129a4c; --gf-info-trait: var(--accent-strong);
+  --gf-info-fond: var(--surface-1); --gf-info-bordure: var(--card-border);
+  --gf-info-rayon: var(--radius-lg); --gf-info-fermer: var(--surface-2);
+  --gf-info-titre: var(--text-primary); --gf-info-texte: var(--text-secondary); --gf-info-lien: var(--accent-strong);
+}
+/* Le « i » se colle à la photo, à droite de la barre. Sur ordinateur, le menu
+   garde sa place entre la marque et le groupe de droite. */
+.site-header .gf-info-btn { margin-left: auto; margin-right: -6px; }
+@media (min-width: 761px) { .site-header nav.main-nav { margin-left: auto; } }
+
+/* ── Bouton « i » + modale « À propos » ──────────────────────────────────────
+   Version sobre (novembre 2026), la même que sur les cartes
+   (MAP-DESIGN-SYSTEM.md) : cercle à contour de 1,5 px, fond transparent, sans
+   dégradé, ombre, pulsation ni grossissement ; teinte légère au survol.
+   Bloc identique dans tous les sites hors cartes ; seules les variables
+   --gf-info-* (définies juste au-dessus) changent d'un site à l'autre.
+   --gf-info-trait : couleur du contour et du « i » (repli : --gf-info-2) ;
+   la faire suivre le mode sombre. Script : apropos.js. */
+.gf-info-btn {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  padding: 0;
+  border: 1.5px solid currentColor;   /* même épaisseur que « Me soutenir » (don.js) */
+  background: transparent;
+  color: var(--gf-info-trait, var(--gf-info-2)); cursor: pointer;
+  transition: background-color .2s ease;
+}
+.gf-info-btn svg { width: 16px; height: 16px; }
+.gf-info-btn:hover { background: color-mix(in srgb, currentColor 12%, transparent); }
+.gf-info-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.gf-info-overlay {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(10,16,13,.45);
+  -webkit-backdrop-filter: blur(8px) saturate(140%); backdrop-filter: blur(8px) saturate(140%);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .25s ease, visibility 0s .25s;
+}
+.gf-info-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .25s ease, visibility 0s; }
+.gf-info-panel {
+  position: relative; width: min(480px, 100%); max-height: min(84vh, 680px); overflow-y: auto;
+  background: var(--gf-info-fond);
+  border: 1px solid var(--gf-info-bordure); border-radius: var(--gf-info-rayon);
+  box-shadow: 0 24px 60px -16px rgba(0,0,0,.35);
+  padding: 30px 26px 26px; text-align: left;
+  transform: scale(.94) translateY(8px); opacity: 0;
+  transition: transform .28s cubic-bezier(.22,.68,0,1), opacity .28s cubic-bezier(.22,.68,0,1);
+}
+.gf-info-overlay.open .gf-info-panel { transform: none; opacity: 1; }
+.gf-info-panel h2 {
+  display: block; margin: 0 0 12px; padding-right: 36px;
+  font-size: 1.25rem; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; color: var(--gf-info-titre);
+}
+.gf-info-panel h2::before, .gf-info-panel h2::after { content: none; display: none; }
+.gf-info-panel p, .gf-info-panel li { font-size: .88rem; line-height: 1.6; color: var(--gf-info-texte); }
+.gf-info-panel p { margin: 0 0 14px; }
+.gf-info-panel p:last-child { margin-bottom: 0; }
+.gf-info-panel ul { margin: 0 0 14px; padding-left: 20px; }
+.gf-info-panel li + li { margin-top: 4px; }
+.gf-info-panel a { color: var(--gf-info-lien); font-weight: 600; text-decoration: none; }
+.gf-info-panel a:hover { text-decoration: underline; }
+.gf-info-panel strong { color: var(--gf-info-titre); }
+.gf-info-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--gf-info-bordure); background: var(--gf-info-fermer);
+  color: var(--gf-info-titre); cursor: pointer; font: inherit; font-size: 14px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .18s ease;
+}
+.gf-info-close:hover { transform: scale(1.08); }
+@media (max-width: 760px) {
+  .gf-info-btn { width: 28px; height: 28px; }
+  .gf-info-btn svg { width: 14px; height: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gf-info-btn, .gf-info-panel { transition: none; }
+  .gf-info-panel { transform: none; }
+}
+@media print { .gf-info-btn, .gf-info-overlay { display: none !important; } }
+
+/* Bas de page en trois lignes : données, indépendance, signature et version (DESIGN-PAGES.md) */
+footer.site-footer p { margin: 0; }
+footer.site-footer p + p { margin-top: 6px; }
