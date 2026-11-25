@@ -56,7 +56,7 @@ Page principale : présentation, puis
 
 Les sections ne sont jamais cachées en attendant le défilement (robots, aperçus de lien, impression) : seule une section encore sous l'écran au chargement s'anime en y entrant (`.section.apparait`).
 
-Barre du haut, sur toutes les pages : à gauche la marque (photo ronde `img/avatar.jpg` + « Gabriel Fortin », la photo seule sous 600 px), menu centré, « Me supporter » à droite.
+Barre du haut, sur toutes les pages : à gauche la marque (photo ronde `img/avatar.jpg` + « Gabriel Fortin », la photo seule sous 600 px), menu centré, « Me soutenir » à droite.
 
 Navigation principale: Blogue, Cartes, Données, Parcours.
 
@@ -144,7 +144,7 @@ Les icônes d'onglet sont la photo de Gabriel en cercle, générées par `script
 - `favicon-48.png`, `favicon-192.png` : icônes d'onglet et de résultats Google (cercle sur fond transparent)
 - `apple-touch-icon.png` (180 px) : écran d'accueil iOS ; photo carrée pleine, car iOS arrondit les coins lui-même et remplit la transparence en noir
 
-La barre de navigation n'affiche plus de logo : un lien texte « Accueil » (`.nav-home`, `aria-current="page"` sur l'accueil) est à gauche, les autres liens au centre (grille `1fr auto 1fr`) et « Me supporter » à droite. La barre est recopiée dans chaque page : après un changement, `python3 ~/Developer/outils/verifier_barre.py` vérifie qu'elle est identique partout. L'image du flux RSS reste l'ancien logo : `favicon-96.png`, dérivé de `favico.png` (1254 px, 1,4 Mo, plus chargé par les pages). Le script n'y touche pas.
+La barre de navigation n'affiche plus de logo : un lien texte « Accueil » (`.nav-home`, `aria-current="page"` sur l'accueil) est à gauche, les autres liens au centre (grille `1fr auto 1fr`) et « Me soutenir » à droite. La barre est recopiée dans chaque page : après un changement, `python3 ~/Developer/outils/verifier_barre.py` vérifie qu'elle est identique partout. L'image du flux RSS reste l'ancien logo : `favicon-96.png`, dérivé de `favico.png` (1254 px, 1,4 Mo, plus chargé par les pages). Le script n'y touche pas.
 
 Chaque page doit inclure, à la fin du `<head>` :
 
